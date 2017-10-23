@@ -17,16 +17,15 @@
                 <Grid Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Margin="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
-                        <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition Height="67.72"/>
                     </Grid.RowDefinitions>
-                    <DataGrid x:Name="ClaimsDataGrid" Margin="3,5" HeadersVisibility="Row" SelectionMode="Single" Background="{DynamicResource {x:Static SystemColors.GradientActiveCaptionBrushKey}}" Grid.ColumnSpan="2"/>
-                    <ToggleButton Content="_Привезти" HorizontalAlignment="Left" Height="50" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="100" Grid.Row="1" FontWeight="Bold" />
-                    <ToggleButton Content="_Увезти" HorizontalAlignment="Center" Height="50" Margin="387,0,387,10" VerticalAlignment="Bottom" Width="100" Grid.Row="1" FontWeight="Bold" Grid.ColumnSpan="2"/>
-                    <ToggleButton Content="_Отменить" HorizontalAlignment="Right" Height="50" Margin="0,7.72,10,0" VerticalAlignment="Top" Width="100" Grid.Row="1" FontWeight="Bold" Grid.Column="1" />
+                    <DataGrid x:Name="ClaimsDataGrid" Margin="3,5" HeadersVisibility="Row" SelectionMode="Single" Background="{DynamicResource {x:Static SystemColors.GradientActiveCaptionBrushKey}}"/>
+                    <ToggleButton Content="_Привезти" HorizontalAlignment="Left" Height="50" Width="100" Margin="10,0,0,10"         VerticalAlignment="Bottom"  FontWeight="Bold" Grid.Row="1"  />
+                    <ToggleButton Content="_Увезти" HorizontalAlignment="Center"  Height="50" Width="100" Margin="387,7.72,387,0"  VerticalAlignment="Top"  FontWeight="Bold" Grid.Row="1" MinWidth="100" MinHeight="50" />
+                    <ToggleButton Content="_Отменить" HorizontalAlignment="Right" Height="50" Width="100" Margin="0,7.72,10,0"      VerticalAlignment="Top"     FontWeight="Bold" Grid.Row="1" />
                 </Grid>
             </TabItem>
             <TabItem Header="_Ручной режим">
@@ -66,7 +65,7 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Настройка">
-                <Grid Background="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}">
+                <Grid Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
@@ -75,15 +74,47 @@
                         <RowDefinition/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <Grid Grid.ColumnSpan="2" Margin="3" Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}">
-                        <GroupBox Header="Координаты ячеек" Margin="3,0,3,3" Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"/>
-                    </Grid>
-                    <Grid Grid.Row="1" Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Margin="3">
-                        <GroupBox Header="Перейти на координаты" Margin="3,0,3,3" Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"/>
-                    </Grid>
-                    <Grid Grid.Column="1" Grid.Row="1" Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Margin="3">
-                        <GroupBox Header="Премещение" Margin="3,0,3,3" Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"/>
-                    </Grid>
+                    <GroupBox Header="Координаты ячеек" Margin="10,0,10,3" Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Grid.ColumnSpan="2">
+                        <Grid Grid.ColumnSpan="2" Margin="0,0,-2,0" Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="123*"/>
+                                <ColumnDefinition Width="733*"/>
+                            </Grid.ColumnDefinitions>
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox VerticalContentAlignment="Bottom" Margin="10,0,3,3" Grid.Row="1" Header="Перейти на координаты">
+                        <Grid Grid.Row="1" Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Margin="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Button Content="Перейти" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Grid.ColumnSpan="2" Margin="156,168.58,156,10" Height="36.5"/>
+                            <TextBox HorizontalAlignment="Center" Height="30" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Center" Width="100" RenderTransformOrigin="0.492,0.45" Grid.ColumnSpan="2" Margin="156,41.28,156,143.8" MinWidth="100" MinHeight="30" MaxWidth="100" MaxHeight="30"/>
+                            <TextBox HorizontalAlignment="Center" Height="30" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Center" Width="100" Grid.ColumnSpan="2" Margin="156,116.08,156,69" MinWidth="100" MinHeight="30" MaxWidth="100" MaxHeight="30"/>
+                            <Label Content="X" HorizontalAlignment="Center" Margin="156,11.28,156,173.8" VerticalAlignment="Center" Width="100" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="30" MinWidth="100" MinHeight="30" MaxWidth="100" MaxHeight="30"/>
+                            <Label Content="Y" HorizontalAlignment="Center" Margin="156,86.08,156,99" VerticalAlignment="Center" Width="100" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="30" MinWidth="100" MinHeight="30" MaxWidth="100" MaxHeight="30"/>
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox Header="Премещение" Margin="3,0,10,3" Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Grid.Column="1" Grid.Row="1">
+                        <Grid Grid.Column="1" Grid.Row="1" Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Margin="3">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Button Content="БЛИЖЕ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="51.585,27.234,51.415,27.306" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="2" Height="50"/>
+                            <Button Content="ВНИЗ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="51.709,27.453,51.291,27.087" Grid.ColumnSpan="2" Grid.Row="2" Grid.Column="1" Grid.RowSpan="2" Height="50"/>
+                            <Button Content="ВВЕРХ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="51.75,26.85,51.25,27.69" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="2" Height="50"/>
+                            <Button Content="ДАЛЬШЕ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="51.709,27.567,51.291,26.973" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="2" Height="50"/>
+                        </Grid>
+                    </GroupBox>
                 </Grid>
             </TabItem>
         </TabControl>
