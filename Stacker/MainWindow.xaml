@@ -11,25 +11,26 @@
             <RowDefinition/>
             <RowDefinition Height="Auto" MinHeight="30"/>
         </Grid.RowDefinitions>
-        <StatusBar Margin="3,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="14" Background="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" Grid.Row="1"/>
-        <TabControl Margin="3" FontSize="16">
-            <TabItem Header="_Автоматический режим">
-                <Grid Background="#FFE5E5E5">
+        <StatusBar HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="14" Background="{DynamicResource {x:Static SystemColors.GradientActiveCaptionBrushKey}}" Grid.Row="1" Margin="0,0,0,-4"/>
+        <TabControl Margin="3" FontSize="16" Background="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}" BorderBrush="{x:Null}">
+            <TabItem Header="_Автоматический режим " Margin="4.5,0,0,0">
+                <Grid Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Margin="0">
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition Height="67.72"/>
                     </Grid.RowDefinitions>
-                    <DataGrid x:Name="ClaimsDataGrid" Margin="5,5,0,10" Background="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}" HeadersVisibility="Row" SelectionMode="Single"/>
-                    <ToggleButton Content="_Привезти" HorizontalAlignment="Left" Height="50" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="100" Grid.Row="1" />
-                    <ToggleButton Content="_Увезти" HorizontalAlignment="Left" Height="50" Margin="387,7.72,0,0" VerticalAlignment="Top" Width="100" Grid.Row="1"/>
-                    <ToggleButton Content="_Отменить" HorizontalAlignment="Right" Height="50" Margin="0,7.72,10,0" VerticalAlignment="Top" Width="100" Grid.Row="1" />
+                    <DataGrid x:Name="ClaimsDataGrid" Margin="3,5" HeadersVisibility="Row" SelectionMode="Single" Background="{DynamicResource {x:Static SystemColors.GradientActiveCaptionBrushKey}}" Grid.ColumnSpan="2"/>
+                    <ToggleButton Content="_Привезти" HorizontalAlignment="Left" Height="50" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="100" Grid.Row="1" FontWeight="Bold" />
+                    <ToggleButton Content="_Увезти" HorizontalAlignment="Center" Height="50" Margin="387,0,387,10" VerticalAlignment="Bottom" Width="100" Grid.Row="1" FontWeight="Bold" Grid.ColumnSpan="2"/>
+                    <ToggleButton Content="_Отменить" HorizontalAlignment="Right" Height="50" Margin="0,7.72,10,0" VerticalAlignment="Top" Width="100" Grid.Row="1" FontWeight="Bold" Grid.Column="1" />
                 </Grid>
             </TabItem>
             <TabItem Header="_Ручной режим">
-                <Grid Margin="3">
+                <Grid Margin="3" Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}">
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>
@@ -37,19 +38,20 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="87*"/>
-                        <ColumnDefinition Width="260*"/>
-                        <ColumnDefinition Width="87*"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <ToggleButton Content="X" HorizontalAlignment="Left" Height="50" Margin="100,26.717,0,0" VerticalAlignment="Top" Width="50"  FontSize="20" Grid.Column="1" MinWidth="50" MinHeight="50"/>
-                    <ToggleButton Content="Y" HorizontalAlignment="Right" Height="50" Margin="0,26.717,100,0" Width="50"  FontSize="20" Grid.Column="1" VerticalAlignment="Top"/>
-                    <Label Content="Стеллаж" Grid.Column="1" Height="50" Margin="205.01,26.717,164.99,0" VerticalAlignment="Top" Width="150" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                    <ComboBox Grid.Column="1" HorizontalAlignment="Left" Margin="100,33.462,0,0" Width="60" Grid.Row="1" Height="50" VerticalAlignment="Top"/>
-                    <Label Content="Ряд" Grid.Column="1" HorizontalAlignment="Center" Height="50" Margin="235,33.462,175,0" VerticalAlignment="Top" Width="110" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="1"/>
-                    <ComboBox Grid.Column="1" HorizontalAlignment="Left" Height="50" Margin="100,32.86,0,0" VerticalAlignment="Top" Width="60" Grid.Row="2"/>
-                    <Label Content="Этаж" Grid.Column="1" HorizontalAlignment="Center" Height="50" Margin="235,32.86,175,0" VerticalAlignment="Top" Width="110" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="2"/>
-                    <ToggleButton Content="Привезти" Grid.Column="1" HorizontalAlignment="Left" Height="50" Margin="10,0,0,10" Grid.Row="3" VerticalAlignment="Bottom" Width="100" FontSize="20"/>
-                    <ToggleButton Content="Увезти" Grid.Column="1" HorizontalAlignment="Right" Height="50" Margin="0,0,10,10" Grid.Row="3" VerticalAlignment="Bottom" Width="100" FontSize="20"/>
+                    <ToggleButton Content="X" HorizontalAlignment="Left" Height="50" Margin="10,26.717,0,0" VerticalAlignment="Top" Width="50"  FontSize="20" Grid.Column="1" MinWidth="50" MinHeight="50"/>
+                    <ToggleButton Content="Y" HorizontalAlignment="Right" Height="50" Margin="0,26.717,10,0" Width="50"  FontSize="20" Grid.Column="2" VerticalAlignment="Top"/>
+                    <Label Content="Стеллаж" Grid.Column="1" Height="50" Margin="152,25.062,148,0" VerticalAlignment="Top" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.ColumnSpan="2" FontWeight="Bold"/>
+                    <ComboBox Grid.Column="1" HorizontalAlignment="Left" Margin="10,33.462,0,0" Width="60" Grid.Row="1" Height="50" VerticalAlignment="Top"/>
+                    <Label Content="Ряд" Grid.Column="1" HorizontalAlignment="Center" Height="50" Margin="192,33.462,182,0" VerticalAlignment="Top" Width="60" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="1" Grid.ColumnSpan="2" FontWeight="Bold"/>
+                    <ComboBox Grid.Column="1" HorizontalAlignment="Left" Height="50" Margin="10,32.86,0,0" VerticalAlignment="Top" Width="60" Grid.Row="2"/>
+                    <Label Content="Этаж" Grid.Column="1" HorizontalAlignment="Center" Height="50" Margin="187,32.86,187,0" VerticalAlignment="Top" Width="60" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="2" Grid.ColumnSpan="2" FontWeight="Bold"/>
+                    <ToggleButton Content="Привезти" Grid.Column="1" HorizontalAlignment="Left" Height="50" Margin="10,0,0,10" Grid.Row="3" VerticalAlignment="Bottom" Width="100" FontSize="16" FontWeight="Bold"/>
+                    <ToggleButton Content="Увезти" Grid.Column="2" HorizontalAlignment="Right" Height="50" Margin="0,0,10,10" Grid.Row="3" VerticalAlignment="Bottom" Width="100" FontSize="16" FontWeight="Bold"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Ошибки">
@@ -64,7 +66,25 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Настройка">
-                <Grid Background="#FFE5E5E5"/>
+                <Grid Background="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.ColumnSpan="2" Margin="3" Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}">
+                        <GroupBox Header="Координаты ячеек" Margin="3,0,3,3" Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"/>
+                    </Grid>
+                    <Grid Grid.Row="1" Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Margin="3">
+                        <GroupBox Header="Перейти на координаты" Margin="3,0,3,3" Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"/>
+                    </Grid>
+                    <Grid Grid.Column="1" Grid.Row="1" Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Margin="3">
+                        <GroupBox Header="Премещение" Margin="3,0,3,3" Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"/>
+                    </Grid>
+                </Grid>
             </TabItem>
         </TabControl>
     </Grid>
