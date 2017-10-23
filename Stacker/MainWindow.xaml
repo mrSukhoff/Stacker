@@ -26,9 +26,9 @@
                         <RowDefinition Height="67.72"/>
                     </Grid.RowDefinitions>
                     <DataGrid x:Name="ClaimsDataGrid" Margin="3,5" HeadersVisibility="Row" SelectionMode="Single" Background="{DynamicResource {x:Static SystemColors.GradientActiveCaptionBrushKey}}" Grid.ColumnSpan="4"/>
-                    <ToggleButton Content="_Привезти" HorizontalAlignment="Left" Height="50" Width="100" Margin="171,0,0,10"         VerticalAlignment="Bottom"  FontWeight="Bold" Grid.Row="1" Grid.ColumnSpan="2"  />
-                    <ToggleButton Content="_Отменить" HorizontalAlignment="Right" Height="50" Width="100" Margin="0,8,167,0"      VerticalAlignment="Top"     FontWeight="Bold" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" />
-                    <ToggleButton Content="_Увезти" HorizontalAlignment="Center"  Height="50" Width="100" Margin="163,8,168,0"  VerticalAlignment="Top"  FontWeight="Bold" Grid.Row="1" MinWidth="100" MinHeight="50" MaxWidth="104" Grid.Column="1" Grid.ColumnSpan="2" />
+                    <ToggleButton Content="_Привезти" HorizontalAlignment="Right" Height="50" Width="100" Margin="0,0,168,10"         VerticalAlignment="Bottom"  FontWeight="Bold" Grid.Row="1" Grid.ColumnSpan="2"  />
+                    <ToggleButton Content="_Увезти" HorizontalAlignment="Center" Width="100" Margin="167,8,172,10"  FontWeight="Bold" Grid.Row="1" MinWidth="100" MinHeight="50" MaxWidth="104" Grid.Column="1" Grid.ColumnSpan="2" />
+                    <ToggleButton Content="_Отменить" HorizontalAlignment="Left" Width="100" Margin="172,0,0,10"     FontWeight="Bold" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Height="50" VerticalAlignment="Bottom" />
                 </Grid>
             </TabItem>
             <TabItem Header="_Ручной режим">
