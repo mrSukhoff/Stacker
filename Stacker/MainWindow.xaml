@@ -107,8 +107,8 @@
                             <TextBox HorizontalAlignment="Center" TextWrapping="Wrap" Width="100" Margin="72.429,0,72.143,5" Height="36" Grid.Column="2" Text="TextBox" Grid.ColumnSpan="2" Grid.Row="1" VerticalAlignment="Bottom"/>
                             <TextBox HorizontalAlignment="Center" TextWrapping="Wrap" Text="TextBox" Width="100" Margin="72.463,0,72.109,5" Grid.Row="1" Height="36" Grid.Column="3" Grid.ColumnSpan="2" VerticalAlignment="Bottom"/>
                             <TextBox HorizontalAlignment="Center" TextWrapping="Wrap" Text="TextBox" Width="100" Margin="72.357,0,72.214,5" Grid.Row="1" Height="36" Grid.Column="4" Grid.ColumnSpan="2" VerticalAlignment="Bottom"/>
-                            <CheckBox Content="Ячейка&#xD;&#xA;отсутсвует" Grid.Column="5" HorizontalAlignment="Center" Height="50" Margin="72.569,0,72.002,3.339" Grid.Row="1" VerticalAlignment="Bottom" Width="100" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20"/>
-                            <Button Content="Button" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="100" Margin="11.143,0,11.143,10" Grid.Row="2" Height="36" Grid.Column="3"/>
+                            <CheckBox Content="Ячейка&#xD;&#xA;отсутсвует" Grid.Column="5" HorizontalAlignment="Center" Height="50" Margin="72.879,0,47.228,3" Grid.Row="1" VerticalAlignment="Bottom" Width="125" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20"/>
+                            <Button Content="Записать" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="100" Margin="11.143,0,11.143,10" Grid.Row="2" Height="36" Grid.Column="3" FontWeight="Bold"/>
                             <Label Content="Стеллаж" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="72.356,26.651,72.215,56.393" Grid.ColumnSpan="2" Width="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Height="36" Grid.RowSpan="2"/>
                             <Label Content="Ряд" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.ColumnSpan="2" Grid.Column="1" Margin="73.769,26.651,70.802,56.393" Width="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Height="36" Grid.RowSpan="2"/>
                             <Label Content="Этаж" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="2" Margin="72.446,26.651,72.126,56.393" Grid.ColumnSpan="2" Width="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Height="36" Grid.RowSpan="2"/>
@@ -127,7 +127,7 @@
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            <Button Content="Перейти" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Grid.ColumnSpan="2" Margin="159,27,159,10" Height="36" Grid.Row="2" MinWidth="101" MinHeight="36" MaxWidth="110" MaxHeight="41"/>
+                            <Button Content="Перейти" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Grid.ColumnSpan="2" Margin="159,27,159,10" Height="36" Grid.Row="2" MinWidth="101" MinHeight="36" MaxWidth="110" MaxHeight="41" FontWeight="Bold"/>
                             <TextBox HorizontalAlignment="Center" Height="30" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Center" Width="100" RenderTransformOrigin="0.492,0.45" Grid.ColumnSpan="2" Margin="159,37,159,6" MinWidth="100" MinHeight="30" MaxWidth="100" MaxHeight="30" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                             <TextBox HorizontalAlignment="Center" Height="30" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Center" Width="100" Grid.ColumnSpan="2" Margin="159,34,159,8" MinWidth="100" MinHeight="30" MaxWidth="100" MaxHeight="30" Grid.Row="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                             <Label Content="X" HorizontalAlignment="Center" Margin="159,7,159,36" VerticalAlignment="Center" Width="100" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="30" MinWidth="100" MinHeight="30" MaxWidth="100" MaxHeight="30" FontSize="20"/>
@@ -148,10 +148,10 @@
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            <Button Content="БЛИЖЕ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="51.585,27.234,51.415,27.306" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="2" Height="50"/>
-                            <Button Content="ВНИЗ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="51.709,27.453,51.291,27.087" Grid.ColumnSpan="2" Grid.Row="2" Grid.Column="1" Grid.RowSpan="2" Height="50"/>
-                            <Button Content="ВВЕРХ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="51.75,26.85,51.25,27.69" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="2" Height="50"/>
-                            <Button Content="ДАЛЬШЕ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="51.709,27.567,51.291,26.973" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="2" Height="50"/>
+                            <Button Content="БЛИЖЕ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="103" Margin="53,28,50,28" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="2" Height="50" FontWeight="Bold"/>
+                            <Button Content="ВНИЗ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="53,29,53,27" Grid.ColumnSpan="2" Grid.Row="2" Grid.Column="1" Grid.RowSpan="2" Height="50" FontWeight="Bold"/>
+                            <Button Content="ВВЕРХ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="51.75,26.85,51.25,27.69" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="2" Height="50" FontWeight="Bold"/>
+                            <Button Content="ДАЛЬШЕ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="103" Margin="49,28,54,28" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="2" Height="50" FontWeight="Bold"/>
                         </Grid>
                     </GroupBox>
                 </Grid>
