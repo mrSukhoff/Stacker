@@ -15,7 +15,7 @@ namespace Probe1
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            FillTable();
+            //FillTable();
         }
 
         private void FillTable()
