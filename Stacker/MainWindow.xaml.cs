@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.IO;
+using System.Threading;
 using System.Windows;
 
 namespace Stacker
@@ -13,9 +15,14 @@ namespace Stacker
             InitializeComponent();
         }
 
+        static private string OrdersFile = @"d:\WORK\Stacker\Orders\instr_exp.txt"; //путь к файлу с заявками
+        static private string ArchiveFile = @"d:\WORK\Stacker\Orders\instr_imp.txt"; //путь к файлу с отработанными заявками
+        Timer FileTimer;
+                
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            //FillTable();
+            ReadOrders(null);
+            FileTimer = new Timer(ReadOrders, null, 0, 10000);
         }
 
         private void FillTable()
@@ -29,6 +36,15 @@ namespace Stacker
             testListView.ItemsSource = result;*/
         }
 
-      
+
+        static private void ReadOrders(object obj)
+        { 
+            FileInfo fileInf = new FileInfo(OrdersFile);
+            if (fileInf.Exists)
+            {
+                MessageBox.Show("file exist!");
+            };
+              
+        }
     }
 }
