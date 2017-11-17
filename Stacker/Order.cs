@@ -6,22 +6,22 @@ namespace Stacker
     class Order : IEquatable<Order>
     {
         public string OrderType { get;}    //1-поступление, 2-отпуск
-        public  string OrderNumber { get;}
-        public  string LineNumberInOrder { get;}
-        public  string ProductCode { get; }
-        public  string ProductDescription { get; }
-        public  string BatchERPLN { get; }
-        public  string ManufacturersBatchNumber { get; }
-        public  string Amount { get; }
-        public  string StackerNumber { get; }
-        public  string Row { get; }
-        public  string Floor { get; }
-        public  string Cell { get; } // уточнить что за сущность
-        public  string OriginalString { get; }
+        public string OrderNumber { get;}
+        public string LineNumberInOrder { get;}
+        public string ProductCode { get; }
+        public string ProductDescription { get; }
+        public string BatchERPLN { get; }
+        public string ManufacturersBatchNumber { get; }
+        public string Amount { get; }
+        public string StackerNumber { get; }
+        public string Row { get; }
+        public string Floor { get; }
+        public string Cell { get; } // уточнить что за сущность
+        public string OriginalString { get; }
 
         public Order(string str)
         {
-            this.OriginalString = str;
+            this.OriginalString = str.Trim('\r', '\n');
 
             //проверяем количество разделителей
             int z = 0;
