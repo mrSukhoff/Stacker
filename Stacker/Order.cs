@@ -3,25 +3,25 @@
 
 namespace Stacker
 {
-    class Order
+    class Order : IEquatable<Order>
     {
-        public readonly string OrderType;    //1-поступление, 2-отпуск
-        public readonly string OrderNumber;  
-        public readonly string LineNumberInOrder;
-        public readonly string ProductCode;
-        public readonly string ProductDescription;
-        public readonly string BatchERPLN;
-        public readonly string ManufacturersBatchNumber;
-        public readonly string Amount;
-        public readonly string StackerNumber;
-        public readonly string Row;
-        public readonly string Floor;
-        public readonly string Cell; // уточнить что за сущность
-        public readonly string OriginalString;
-                
+        public string OrderType { get;}    //1-поступление, 2-отпуск
+        public  string OrderNumber { get;}
+        public  string LineNumberInOrder { get;}
+        public  string ProductCode { get; }
+        public  string ProductDescription { get; }
+        public  string BatchERPLN { get; }
+        public  string ManufacturersBatchNumber { get; }
+        public  string Amount { get; }
+        public  string StackerNumber { get; }
+        public  string Row { get; }
+        public  string Floor { get; }
+        public  string Cell { get; } // уточнить что за сущность
+        public  string OriginalString { get; }
+
         public Order(string str)
         {
-            OriginalString = str;
+            this.OriginalString = str;
 
             //проверяем количество разделителей
             int z = 0;
@@ -37,18 +37,26 @@ namespace Stacker
             //разбиваем строку и заносим данные в соответсвтующие поля
             string[] strings = str.Split('~');
             if (strings.Length == 1)
-            OrderType = strings[0];
-            OrderNumber = strings[1];
-            LineNumberInOrder = strings[2];
-            ProductCode = strings[3];
-            ProductDescription = strings[4];
-            BatchERPLN = strings[5];
-            ManufacturersBatchNumber = strings[6];
-            Amount = strings[7];
-            StackerNumber = strings[8];
-            Row = strings[9];
-            Floor = strings[10];
-            Cell = strings[11].Trim('\r','\n'); //тут могут оказаться CRLF
+            this.OrderType = strings[0];
+            this.OrderNumber = strings[1];
+            this.LineNumberInOrder = strings[2];
+            this.ProductCode = strings[3];
+            this.ProductDescription = strings[4];
+            this.BatchERPLN = strings[5];
+            this.ManufacturersBatchNumber = strings[6];
+            this.Amount = strings[7];
+            this.StackerNumber = strings[8];
+            this.Row = strings[9];
+            this.Floor = strings[10];
+            this.Cell = strings[11].Trim('\r','\n'); //тут могут оказаться CRLF
+        }
+
+        public bool Equals(Order other)
+        {
+            return  (this.ProductCode == other.ProductCode)&&
+                    (this.StackerNumber == other.StackerNumber)&&
+                    (this.Row == other.Row)&&
+                    (this.Floor==other.Floor);
         }
     }
 }

@@ -24,7 +24,6 @@ namespace Stacker
                 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            //ReadOrders(null);
             FileTimer = new Timer(ReadOrders, null, 0, 10000);
             OrdersDataGrid.ItemsSource = Orders;
         }
@@ -34,7 +33,7 @@ namespace Stacker
             FileInfo fileInf = new FileInfo(OrdersFile);
             if (fileInf.Exists)
             {
-                using (StreamReader sr = new StreamReader(OrdersFile))
+                using (StreamReader sr = new StreamReader(OrdersFile,System.Text.Encoding.Default))
                 {
                     string[] lines = sr.ReadToEnd().Split('\n');
                     foreach (string str in lines)
