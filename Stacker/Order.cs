@@ -21,7 +21,8 @@ namespace Stacker
 
         public Order(string str)
         {
-            this.OriginalString = str.Trim('\r', '\n');
+            str = str.TrimEnd('\r', '\n');
+            this.OriginalString = str;
 
             //проверяем количество разделителей
             int z = 0;
@@ -31,7 +32,7 @@ namespace Stacker
             }
             if (z!=11)
             {
-                throw new ArgumentException("Invalid order string");
+                throw new ArgumentException("Неправильный формат заявки");
             }
             
             //разбиваем строку и заносим данные в соответсвтующие поля
@@ -48,7 +49,7 @@ namespace Stacker
             this.StackerNumber = strings[8];
             this.Row = strings[9];
             this.Floor = strings[10];
-            this.Cell = strings[11].Trim('\r','\n'); //тут могут оказаться CRLF
+            this.Cell = strings[11];
         }
 
         public bool Equals(Order other)

@@ -19,6 +19,7 @@ namespace Stacker
 
         private string OrdersFile = @"d:\WORK\Stacker\Orders\instr_exp.txt"; //путь к файлу с заявками
         private string ArchiveFile = @"d:\WORK\Stacker\Orders\instr_imp.txt"; //путь к файлу с отработанными заявками
+        DateTime LastOrdersFileAccessTime = DateTime.Now;
         Timer FileTimer;
 
         List<Order> Orders= new List<Order>();
@@ -31,47 +32,33 @@ namespace Stacker
         
         private void ReadOrders(object obj)
         {
-            FileStream fs = null;
             try
             {
-                fs = new FileStream(OrdersFile, FileMode.Open);
-                using (StreamReader sr = new StreamReader(fs,System.Text.Encoding.Default))
+                if (File.GetLastWriteTime(OrdersFile) != LastOrdersFileAccessTime)
                 {
-                    string[] lines = sr.ReadToEnd().TrimEnd('\r', '\n').Split('\n');
+
+                    string[] lines = File.ReadAllLines(OrdersFile, System.Text.Encoding.Default);
                     foreach (string str in lines)
                     {
-                        Order o = null;
-                        try
-                        {
-                            Console.WriteLine(str);
-                            o = new Order(str);
-                        }
-                        catch (ArgumentException e)
-                        {
-                            MessageBox.Show(str,"Неверный формат строки заказа");
-                            //MessageBox.Show(e.Message);
-                        }
-                        if ((o != null) && !Orders.Contains(o))
-                        {
-                            Orders.Add(o);
-                        }
+                        Order o = new Order(str);
+                        if (!Orders.Contains(o)) Orders.Add(o);
                     }
+                    LastOrdersFileAccessTime = File.GetLastWriteTime(OrdersFile);
                 }
+            }
+            catch (ArgumentException ae)
+            {
+                FileTimer.Dispose();
+                MessageBox.Show(messageBoxText: "Чтение заявок приостановлено!", caption: ae.Message);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-            finally
-            {
-                if (fs != null) fs.Dispose();
-            }
-              
         }
 
         private void SaveAndDeleteOrder(Order order,string res)
         {
-            int orderIndex = Orders.IndexOf(order);
             try
             {
                 File.AppendAllText(ArchiveFile,
