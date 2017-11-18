@@ -26,11 +26,12 @@ namespace Stacker
                 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            FileTimer = new Timer(ReadOrders, null, 0, 10000);
-            OrdersDataGrid.ItemsSource = Orders;
+            FileTimer = new Timer(ReadOrdersFile, null, 0, 10000);
+            OrdersLitsView.ItemsSource = Orders;
+            testListView.ItemsSource = Orders;
         }
         
-        private void ReadOrders(object obj)
+        private void ReadOrdersFile(object ob)
         {
             try
             {
