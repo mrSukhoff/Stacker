@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace Stacker
 {
@@ -27,10 +29,42 @@ namespace Stacker
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             FileTimer = new Timer(ReadOrdersFile, null, 0, 10000);
-            OrdersLitsView.ItemsSource = Orders;
             testListView.ItemsSource = Orders;
+            OrdersLitsView.ItemsSource = Orders;
+            GridSetUp();
         }
         
+        private void GridSetUp()
+        {
+            GridView OrdersGridView = new GridView();
+            GridViewColumn gvc1 = new GridViewColumn();
+            GridViewColumn gvc2 = new GridViewColumn();
+            GridViewColumn gvc3 = new GridViewColumn();
+            GridViewColumn gvc4 = new GridViewColumn();
+            GridViewColumn gvc5 = new GridViewColumn();
+            GridViewColumn gvc6 = new GridViewColumn();
+            gvc1.Header = "Тип";
+            gvc1.DisplayMemberBinding = new Binding("OrderType");
+            gvc2.Header = "Номер заказа";
+            gvc2.DisplayMemberBinding = new Binding("OrderNumber");
+            gvc3.Header = "Кодовое обозначение";
+            gvc3.DisplayMemberBinding = new Binding("ProductCode");
+            gvc4.Header = "Описание";
+            gvc4.DisplayMemberBinding = new Binding("ProductDescription");
+            gvc5.Header = "Кол-во";
+            gvc5.DisplayMemberBinding = new Binding("Amount");
+            gvc6.Header = "Ячейка";
+            gvc6.DisplayMemberBinding = new Binding("Address");
+            OrdersGridView.Columns.Add(gvc1);
+            OrdersGridView.Columns.Add(gvc2);
+            OrdersGridView.Columns.Add(gvc3);
+            OrdersGridView.Columns.Add(gvc4);
+            OrdersGridView.Columns.Add(gvc5);
+            OrdersGridView.Columns.Add(gvc6);
+            OrdersLitsView.View = OrdersGridView;
+            
+        }
+
         private void ReadOrdersFile(object ob)
         {
             try
@@ -81,7 +115,13 @@ namespace Stacker
 
         private void ToggleButton_Click(object sender, RoutedEventArgs e)
         {
-            SaveAndDeleteOrder(Orders[1], "done");
+            int i = OrdersLitsView.SelectedIndex;
+            if (i != -1)
+            {
+                SaveAndDeleteOrder(Orders[i], "done");
+                OrdersLitsView.UpdateLayout();
+                Console.WriteLine(Orders.Count);
+            }
         }
     }
 }

@@ -18,6 +18,7 @@ namespace Stacker
         public string Floor { get; }
         public string Cell { get; } // уточнить что за сущность
         public string OriginalString { get; }
+        public string Address { get; }
 
         public Order(string str)
         {
@@ -37,7 +38,6 @@ namespace Stacker
             
             //разбиваем строку и заносим данные в соответсвтующие поля
             string[] strings = str.Split('~');
-            if (strings.Length == 1)
             this.OrderType = strings[0];
             this.OrderNumber = strings[1];
             this.LineNumberInOrder = strings[2];
@@ -50,14 +50,12 @@ namespace Stacker
             this.Row = strings[9];
             this.Floor = strings[10];
             this.Cell = strings[11];
+            this.Address = StackerNumber +"-"+ Row + "-" + Floor;
         }
 
         public bool Equals(Order other)
         {
-            return  (this.ProductCode == other.ProductCode)&&
-                    (this.StackerNumber == other.StackerNumber)&&
-                    (this.Row == other.Row)&&
-                    (this.Floor==other.Floor);
+            return  (this.ProductCode == other.ProductCode)&&(this.Address == other.Address);
         }
     }
 }
