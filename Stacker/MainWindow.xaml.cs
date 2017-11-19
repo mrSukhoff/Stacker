@@ -36,6 +36,11 @@ namespace Stacker
         {
             FileTimer = new Timer(ReadOrdersFile, null, 0, 10000);
             GridSetUp();
+            CellsGrid LeftStacker = new CellsGrid(30, 20);
+
+            LeftStacker[0, 0].X = 123;
+            LeftStacker[0, 0].Y = 321;
+            LeftStacker[0, 0].IsNotAvailable = true;
         }
         
         //метод настройки вида списка
@@ -130,7 +135,6 @@ namespace Stacker
             {
                 SaveAndDeleteOrder(Orders[i], "done");
                 OrdersLitsView.Items.Refresh();
-                Console.WriteLine(Orders.Count);
             }
         }
     }
