@@ -19,21 +19,26 @@ namespace Stacker
             InitializeComponent();
         }
 
+        //места хранения файлов
         private string OrdersFile = @"d:\WORK\Stacker\Orders\instr_exp.txt"; //путь к файлу с заявками
         private string ArchiveFile = @"d:\WORK\Stacker\Orders\instr_imp.txt"; //путь к файлу с отработанными заявками
+        // переменная для контроля изменения файла заявок
         DateTime LastOrdersFileAccessTime = DateTime.Now;
+        // таймер для контроля изменения файла заявок
         Timer FileTimer;
+        delegate void RefreshList();
 
+        //коллекция заявок
         List<Order> Orders= new List<Order>();
-                
+        
+                 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             FileTimer = new Timer(ReadOrdersFile, null, 0, 10000);
-            testListView.ItemsSource = Orders;
-            OrdersLitsView.ItemsSource = Orders;
             GridSetUp();
         }
         
+        //метод настройки вида списка
         private void GridSetUp()
         {
             GridView OrdersGridView = new GridView();
@@ -62,9 +67,11 @@ namespace Stacker
             OrdersGridView.Columns.Add(gvc5);
             OrdersGridView.Columns.Add(gvc6);
             OrdersLitsView.View = OrdersGridView;
-            
+            OrdersLitsView.ItemsSource = Orders;
+
         }
 
+        //метода проверки и чтения заявок из файла
         private void ReadOrdersFile(object ob)
         {
             try
@@ -79,6 +86,7 @@ namespace Stacker
                         if (!Orders.Contains(o)) Orders.Add(o);
                     }
                     LastOrdersFileAccessTime = File.GetLastWriteTime(OrdersFile);
+                    Dispatcher.Invoke(new RefreshList( () =>  OrdersLitsView.Items.Refresh()));
                 }
             }
             catch (ArgumentException ae)
@@ -91,7 +99,9 @@ namespace Stacker
                 MessageBox.Show(ex.Message);
             }
         }
-
+        
+        //метод сохранения отработанной заявки в архиве и удаления из исходного файла 
+        //и коллекции заявок
         private void SaveAndDeleteOrder(Order order,string res)
         {
             try
@@ -119,7 +129,7 @@ namespace Stacker
             if (i != -1)
             {
                 SaveAndDeleteOrder(Orders[i], "done");
-                OrdersLitsView.UpdateLayout();
+                OrdersLitsView.Items.Refresh();
                 Console.WriteLine(Orders.Count);
             }
         }
