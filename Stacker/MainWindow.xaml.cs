@@ -17,8 +17,11 @@ namespace Stacker
             InitializeComponent();
         }
 
-        private string OrdersFile = @"d:\WORK\Stacker\Orders\instr_exp.txt"; //путь к файлу с заявками
-        private string ArchiveFile = @"d:\WORK\Stacker\Orders\instr_imp.txt"; //путь к файлу с отработанными заявками
+        //private string OrdersFile = @"d:\WORK\Stacker\Orders\instr_exp.txt"; //путь к файлу с заявками
+        //private string ArchiveFile = @"d:\WORK\Stacker\Orders\instr_imp.txt"; //путь к файлу с отработанными заявками
+        private string OrdersFile = @"D:\БЕРТА\БЕРТА Сухарев\Projects\Stacker\Orders\instr_exp.txt"; //путь к файлу с заявками
+        private string ArchiveFile = @"D:\БЕРТА\БЕРТА Сухарев\Projects\Stacker\Orders\instr_imp.txt"; //путь к файлу с отработанными заявками
+        
         DateTime LastOrdersFileAccessTime = DateTime.Now;
         Timer FileTimer;
 
@@ -54,6 +57,7 @@ namespace Stacker
             }
             catch (Exception ex)
             {
+                FileTimer.Dispose();
                 MessageBox.Show(ex.Message);
             }
         }
