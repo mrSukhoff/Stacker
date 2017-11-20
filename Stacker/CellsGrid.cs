@@ -46,12 +46,9 @@ namespace Stacker
             rowSize = RowSize > 0 ? RowSize : 0;
             floorSize = FloorSize > 0 ? FloorSize : 0;
             grid = new Cell[rowSize, floorSize];
-            for (int r=0;r<rowSize;r++)
+            for (int r=0;r<rowSize;r++) 
                 for (int f=0;f<floorSize;f++)
-                {
-                    grid[r, f] = new Cell();
-                }
-
+                    grid[r, f] = new Cell(); 
         }
 
         //конструктор считывает массив значений из файла

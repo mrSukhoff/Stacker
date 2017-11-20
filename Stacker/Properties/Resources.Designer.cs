@@ -61,14 +61,25 @@ namespace Stacker.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на 1~PL0000683~5~3918030804390334~Фреза ФКТП 3759 40 150 325 Р9М4К8 R20,0 Томский инструмент~~~10~1~2~3~8
-        ///1~PL0000683~6~3957014800000003~Пила 3421-0295 ГОСТ 980-80~~~36~1~1~5~3
-        ///1~PL0000683~7~3918019713770010~Нож 2020-0005 ВК8 60 ГОСТ 24359-80~~~20~1~6~11~13
+        ///   Ищет локализованную строку, похожую на [General]
+        ///OrderFile=D:\\БЕРТА\БЕРТА Сухарев\Projects\Stacker\Orders\instr_exp.txt
+        ///ArchiveFile=D:\\БЕРТА\БЕРТА Сухарев\Projects\Stacker\Orders\instr_imp.txt
+        ///
+        ///[Dimensions]
+        ///LeftRackName=А
+        ///LeftRackNumber=1
+        ///RightRackName=Б
+        ///RightRackNumber=2
+        ///Depth=30
+        ///Hight=16
+        ///
+        ///[PLC]
+        ///ComPort=Com10
         ///.
         /// </summary>
-        internal static string instr_exp {
+        internal static string Stacker {
             get {
-                return ResourceManager.GetString("instr_exp", resourceCulture);
+                return ResourceManager.GetString("Stacker", resourceCulture);
             }
         }
     }

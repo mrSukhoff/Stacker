@@ -22,8 +22,8 @@ namespace Stacker
         //места хранения файлов
         //private string OrdersFile = @"d:\WORK\Stacker\Orders\instr_exp.txt"; //путь к файлу с заявками
         //private string ArchiveFile = @"d:\WORK\Stacker\Orders\instr_imp.txt"; //путь к файлу с отработанными заявками
-        private string OrdersFile = @"D:\БЕРТА\БЕРТА Сухарев\Projects\Stacker\Orders\instr_exp.txt"; //путь к файлу с заявками
-        private string ArchiveFile = @"D:\БЕРТА\БЕРТА Сухарев\Projects\Stacker\Orders\instr_imp.txt"; //путь к файлу с отработанными заявками
+        private string OrdersFile;// = @"D:\БЕРТА\БЕРТА Сухарев\Projects\Stacker\Orders\instr_exp.txt"; //путь к файлу с заявками
+        private string ArchiveFile;// = @"D:\БЕРТА\БЕРТА Сухарев\Projects\Stacker\Orders\instr_imp.txt"; //путь к файлу с отработанными заявками
 
         // переменная для контроля изменения файла заявок
         DateTime LastOrdersFileAccessTime = DateTime.Now;
@@ -37,12 +37,25 @@ namespace Stacker
                  
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            FileTimer = new Timer(ReadOrdersFile, null, 0, 10000);
+            //Читаем первоначальные настройки
+            ReadINISetting();
+            //Настраиваем вид таблицы
             GridSetUp();
-            CellsGrid LeftStacker = new CellsGrid(30, 20);
-            int x = LeftStacker[0, 0].X;
+            //Запускаем таймер для проверки изменений списка заявок
+            FileTimer = new Timer(ReadOrdersFile, null, 0, 10000);
+            
+            
         }
-        
+
+        private void ReadINISetting()
+        {
+            string path = Environment.CurrentDirectory + "\\Stacker.ini";
+            INIManager manager = new INIManager(path);
+            OrdersFile = manager.GetPrivateString("General", "OrderFile");
+            ArchiveFile = manager.GetPrivateString("General", "ArchiveFile");
+            
+        }
+
         //метод настройки вида списка
         private void GridSetUp()
         {
