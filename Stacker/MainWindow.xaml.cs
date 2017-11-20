@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace Stacker
 {
@@ -17,23 +19,64 @@ namespace Stacker
             InitializeComponent();
         }
 
-        //private string OrdersFile = @"d:\WORK\Stacker\Orders\instr_exp.txt"; //путь к файлу с заявками
-        //private string ArchiveFile = @"d:\WORK\Stacker\Orders\instr_imp.txt"; //путь к файлу с отработанными заявками
-        private string OrdersFile = @"D:\БЕРТА\БЕРТА Сухарев\Projects\Stacker\Orders\instr_exp.txt"; //путь к файлу с заявками
-        private string ArchiveFile = @"D:\БЕРТА\БЕРТА Сухарев\Projects\Stacker\Orders\instr_imp.txt"; //путь к файлу с отработанными заявками
-        
+        //места хранения файлов
+        private string OrdersFile = @"d:\WORK\Stacker\Orders\instr_exp.txt"; //путь к файлу с заявками
+        private string ArchiveFile = @"d:\WORK\Stacker\Orders\instr_imp.txt"; //путь к файлу с отработанными заявками
+        // переменная для контроля изменения файла заявок
         DateTime LastOrdersFileAccessTime = DateTime.Now;
+        // таймер для контроля изменения файла заявок
         Timer FileTimer;
+        delegate void RefreshList();
 
+        //коллекция заявок
         List<Order> Orders= new List<Order>();
-                
+        
+                 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             FileTimer = new Timer(ReadOrdersFile, null, 0, 10000);
-            OrdersLitsView.ItemsSource = Orders;
-            testListView.ItemsSource = Orders;
+            GridSetUp();
+            CellsGrid LeftStacker = new CellsGrid(30, 20);
+
+            LeftStacker[0, 0].X = 123;
+            LeftStacker[0, 0].Y = 321;
+            LeftStacker[0, 0].IsNotAvailable = true;
         }
         
+        //метод настройки вида списка
+        private void GridSetUp()
+        {
+            GridView OrdersGridView = new GridView();
+            GridViewColumn gvc1 = new GridViewColumn();
+            GridViewColumn gvc2 = new GridViewColumn();
+            GridViewColumn gvc3 = new GridViewColumn();
+            GridViewColumn gvc4 = new GridViewColumn();
+            GridViewColumn gvc5 = new GridViewColumn();
+            GridViewColumn gvc6 = new GridViewColumn();
+            gvc1.Header = "Тип";
+            gvc1.DisplayMemberBinding = new Binding("OrderType");
+            gvc2.Header = "Номер заказа";
+            gvc2.DisplayMemberBinding = new Binding("OrderNumber");
+            gvc3.Header = "Кодовое обозначение";
+            gvc3.DisplayMemberBinding = new Binding("ProductCode");
+            gvc4.Header = "Описание";
+            gvc4.DisplayMemberBinding = new Binding("ProductDescription");
+            gvc5.Header = "Кол-во";
+            gvc5.DisplayMemberBinding = new Binding("Amount");
+            gvc6.Header = "Ячейка";
+            gvc6.DisplayMemberBinding = new Binding("Address");
+            OrdersGridView.Columns.Add(gvc1);
+            OrdersGridView.Columns.Add(gvc2);
+            OrdersGridView.Columns.Add(gvc3);
+            OrdersGridView.Columns.Add(gvc4);
+            OrdersGridView.Columns.Add(gvc5);
+            OrdersGridView.Columns.Add(gvc6);
+            OrdersLitsView.View = OrdersGridView;
+            OrdersLitsView.ItemsSource = Orders;
+
+        }
+
+        //метода проверки и чтения заявок из файла
         private void ReadOrdersFile(object ob)
         {
             try
@@ -48,6 +91,7 @@ namespace Stacker
                         if (!Orders.Contains(o)) Orders.Add(o);
                     }
                     LastOrdersFileAccessTime = File.GetLastWriteTime(OrdersFile);
+                    Dispatcher.Invoke(new RefreshList( () =>  OrdersLitsView.Items.Refresh()));
                 }
             }
             catch (ArgumentException ae)
@@ -57,11 +101,12 @@ namespace Stacker
             }
             catch (Exception ex)
             {
-                FileTimer.Dispose();
                 MessageBox.Show(ex.Message);
             }
         }
-
+        
+        //метод сохранения отработанной заявки в архиве и удаления из исходного файла 
+        //и коллекции заявок
         private void SaveAndDeleteOrder(Order order,string res)
         {
             try
@@ -85,7 +130,12 @@ namespace Stacker
 
         private void ToggleButton_Click(object sender, RoutedEventArgs e)
         {
-            SaveAndDeleteOrder(Orders[1], "done");
+            int i = OrdersLitsView.SelectedIndex;
+            if (i != -1)
+            {
+                SaveAndDeleteOrder(Orders[i], "done");
+                OrdersLitsView.Items.Refresh();
+            }
         }
     }
 }
