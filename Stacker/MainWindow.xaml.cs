@@ -19,11 +19,20 @@ namespace Stacker
             InitializeComponent();
         }
 
-        //места хранения файлов
-        //private string OrdersFile = @"d:\WORK\Stacker\Orders\instr_exp.txt"; //путь к файлу с заявками
-        //private string ArchiveFile = @"d:\WORK\Stacker\Orders\instr_imp.txt"; //путь к файлу с отработанными заявками
-        private string OrdersFile;// = @"D:\БЕРТА\БЕРТА Сухарев\Projects\Stacker\Orders\instr_exp.txt"; //путь к файлу с заявками
-        private string ArchiveFile;// = @"D:\БЕРТА\БЕРТА Сухарев\Projects\Stacker\Orders\instr_imp.txt"; //путь к файлу с отработанными заявками
+        //места хранения файлов заявлок и архива
+        private string OrdersFile;
+        private string ArchiveFile;
+
+        //размеры, имена и номера штабелеров
+        int StackerDepth=0;
+        int StackerHight=0;
+        char LeftRackName;
+        int LeftRackNumber;
+        char RightRackName;
+        int RightRackNumber;
+
+        //порт к которому подключен контроллер
+        string ComPort;
 
         // переменная для контроля изменения файла заявок
         DateTime LastOrdersFileAccessTime = DateTime.Now;
@@ -33,8 +42,7 @@ namespace Stacker
 
         //коллекция заявок
         List<Order> Orders= new List<Order>();
-        
-                 
+                         
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             //Читаем первоначальные настройки
@@ -50,10 +58,23 @@ namespace Stacker
         private void ReadINISetting()
         {
             string path = Environment.CurrentDirectory + "\\Stacker.ini";
-            INIManager manager = new INIManager(path);
-            OrdersFile = manager.GetPrivateString("General", "OrderFile");
-            ArchiveFile = manager.GetPrivateString("General", "ArchiveFile");
-            
+            try
+            {
+                INIManager manager = new INIManager(path);
+                OrdersFile = manager.GetPrivateString("General", "OrderFile");
+                ArchiveFile = manager.GetPrivateString("General", "ArchiveFile");
+                StackerDepth = Convert.ToInt16(manager.GetPrivateString("Stacker", "Depth").TrimEnd());
+                StackerHight = Convert.ToInt16(manager.GetPrivateString("Stacker", "Hight"));
+                LeftRackName = Convert.ToChar(manager.GetPrivateString("Stacker", "LeftRackName"));
+                LeftRackNumber = Convert.ToInt16(manager.GetPrivateString("Stacker", "LeftRackNumber"));
+                RightRackName = Convert.ToChar(manager.GetPrivateString("Stacker", "RightRackName"));
+                RightRackNumber = Convert.ToInt16(manager.GetPrivateString("Stacker", "RightRackNumber"));
+                ComPort = manager.GetPrivateString("PLC", "ComPort");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         //метод настройки вида списка
