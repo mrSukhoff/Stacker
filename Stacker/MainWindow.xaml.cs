@@ -49,12 +49,37 @@ namespace Stacker
             ReadINISetting();
             //Настраиваем вид таблицы
             GridSetUp();
+            //Настраиваем визуальные компоненты
+            SetUpButtons();
+
             //Запускаем таймер для проверки изменений списка заявок
             FileTimer = new Timer(ReadOrdersFile, null, 0, 10000);
             
             
         }
+        
+        //Настраиваем визуальные компоненты
+        private void SetUpButtons()
+        {
+            LeftRackManualButton.Content = LeftRackName;
+            RightRackManualButton.Content = RightRackName;
 
+            int[] rowItems = new int[StackerDepth];
+            for (int i=0; i<rowItems.Length;i++) { rowItems[i] = i; }
+            RowManualComboBox.ItemsSource = rowItems;
+            RowManualComboBox.SelectedIndex = 0;
+
+            int[] floorItems = new int[StackerHight];
+            for (int i = 0; i < floorItems.Length; i++) { floorItems[i] = i; }
+            FloorManualCombobox.ItemsSource = floorItems;
+            FloorManualCombobox.SelectedIndex = 0;
+
+            RackComboBox.Items.Add(LeftRackName);
+            RackComboBox.Items.Add(RightRackName);
+            RackComboBox.SelectedIndex = 0;
+        }
+
+        //Читаем первоначальные настройки
         private void ReadINISetting()
         {
             string path = Environment.CurrentDirectory + "\\Stacker.ini";
@@ -171,5 +196,6 @@ namespace Stacker
                 OrdersLitsView.Items.Refresh();
             }
         }
+
     }
 }
