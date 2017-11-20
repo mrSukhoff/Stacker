@@ -20,8 +20,11 @@ namespace Stacker
         }
 
         //места хранения файлов
-        private string OrdersFile = @"d:\WORK\Stacker\Orders\instr_exp.txt"; //путь к файлу с заявками
-        private string ArchiveFile = @"d:\WORK\Stacker\Orders\instr_imp.txt"; //путь к файлу с отработанными заявками
+        //private string OrdersFile = @"d:\WORK\Stacker\Orders\instr_exp.txt"; //путь к файлу с заявками
+        //private string ArchiveFile = @"d:\WORK\Stacker\Orders\instr_imp.txt"; //путь к файлу с отработанными заявками
+        private string OrdersFile = @"D:\БЕРТА\БЕРТА Сухарев\Projects\Stacker\Orders\instr_exp.txt"; //путь к файлу с заявками
+        private string ArchiveFile = @"D:\БЕРТА\БЕРТА Сухарев\Projects\Stacker\Orders\instr_imp.txt"; //путь к файлу с отработанными заявками
+
         // переменная для контроля изменения файла заявок
         DateTime LastOrdersFileAccessTime = DateTime.Now;
         // таймер для контроля изменения файла заявок
@@ -37,10 +40,7 @@ namespace Stacker
             FileTimer = new Timer(ReadOrdersFile, null, 0, 10000);
             GridSetUp();
             CellsGrid LeftStacker = new CellsGrid(30, 20);
-
-            LeftStacker[0, 0].X = 123;
-            LeftStacker[0, 0].Y = 321;
-            LeftStacker[0, 0].IsNotAvailable = true;
+            int x = LeftStacker[0, 0].X;
         }
         
         //метод настройки вида списка
