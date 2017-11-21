@@ -146,8 +146,8 @@ namespace Stacker
                     string[] lines = File.ReadAllLines(OrdersFile, System.Text.Encoding.Default);
                     foreach (string str in lines)
                     {
-                        Order o = new Order(str);
-                        if (!Orders.Contains(o)) Orders.Add(o);
+                        Order o = new Order(str,LeftRackName,LeftRackNumber,RightRackName,RightRackNumber);
+                        if ((!Orders.Contains(o)) && (o.StackerName != '?')) Orders.Add(o);
                     }
                     LastOrdersFileAccessTime = File.GetLastWriteTime(OrdersFile);
                     Dispatcher.Invoke(new RefreshList( () =>  OrdersLitsView.Items.Refresh()));

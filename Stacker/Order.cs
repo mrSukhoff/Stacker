@@ -19,8 +19,9 @@ namespace Stacker
         public string Cell { get; } // уточнить что за сущность
         public string OriginalString { get; }
         public string Address { get; }
+        public char StackerName { get; }
 
-        public Order(string str)
+        public Order(string str, char LeftStackerName, int LeftStackerNumber, char RightStackerName, int RightStackerNumber)
         {
             str = str.TrimEnd('\r', '\n');
             this.OriginalString = str;
@@ -50,7 +51,11 @@ namespace Stacker
             this.Row = strings[9];
             this.Floor = strings[10];
             this.Cell = strings[11];
-            this.Address = StackerNumber +"-"+ Row + "-" + Floor;
+            int sn = Convert.ToInt32(StackerNumber);
+            if ((sn == LeftStackerNumber) || (sn == RightStackerNumber))
+                StackerName = sn == LeftStackerNumber ? LeftStackerName : RightStackerName;
+            else StackerName = '?';
+            this.Address = StackerName +"-"+ Row + "-" + Floor;
         }
 
         public bool Equals(Order other)
