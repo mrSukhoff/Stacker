@@ -57,36 +57,28 @@ namespace Stacker
             if (File.Exists(path))
             {
                 string[] lines = File.ReadAllLines(path);
-                int rowSize = Convert.ToInt16(lines[0]);
-                int floorSize = Convert.ToInt16(lines[1]);
+                int rowSize = Convert.ToInt32(lines[0]);
+                int floorSize = Convert.ToInt32(lines[1]);
 
                 rowSize = rowSize > 1 ? rowSize - 1 : 0;
                 floorSize = floorSize > 1 ? floorSize - 1 : 0;
                 grid = new Cell[rowSize, floorSize];
-                try
+                for (int i = 0; i < lines.Length; i++)
                 {
-                    for (int i = 0; i < lines.Length; i++)
-                    {
-                        string[] line = lines[i].Split('~');
-                        int r = Convert.ToInt32(line[1]);
-                        int f = Convert.ToInt32(line[2]);
-                        int x = Convert.ToInt32(line[3]);
-                        int y = Convert.ToInt32(line[4]);
-                        bool isNotAvailable = Convert.ToBoolean(line[5]);
-                        grid[r, f].X = x;
-                        grid[r, f].Y = y;
-                        grid[r, f].IsNotAvailable = isNotAvailable;
-                    }
+                    string[] line = lines[i].Split('~');
+                    int r = Convert.ToInt32(line[1]);
+                    int f = Convert.ToInt32(line[2]);
+                    int x = Convert.ToInt32(line[3]);
+                    int y = Convert.ToInt32(line[4]);
+                    bool isNotAvailable = Convert.ToBoolean(line[5]);
+                    grid[r, f].X = x;
+                    grid[r, f].Y = y;
+                    grid[r, f].IsNotAvailable = isNotAvailable;
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-                
             }
         }
 
-    public void SaveCellsGrid(string path)
+        public void SaveCellsGrid(string path)
         {
             string[] lines = new string[rowSize*FloorSize+2];
             lines[0] = rowSize.ToString();
@@ -95,7 +87,7 @@ namespace Stacker
             {
                 for (int f = 0; f < floorSize; f++)
                 {
-                    lines[r*rowSize+f] = 
+                    lines[r+rowSize*f+2] = 
                         r.ToString()+'~'+
                         f.ToString() + '~' +
                         grid[r, f].X.ToString() + '~'+

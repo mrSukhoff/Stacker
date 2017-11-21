@@ -42,22 +42,35 @@ namespace Stacker
 
         //коллекция заявок
         List<Order> Orders= new List<Order>();
-                         
+        //Координаты ячеек
+        CellsGrid LeftStacker;
+        CellsGrid RightStacker;
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             //Читаем первоначальные настройки
             ReadINISetting();
-            //Настраиваем вид таблицы
-            GridSetUp();
+            //Загружаем таблицы координат ячеек
+            LoadCellGrid();
             //Настраиваем визуальные компоненты
             SetUpButtons();
-
+            //Настраиваем вид таблицы
+            GridSetUp();
             //Запускаем таймер для проверки изменений списка заявок
             FileTimer = new Timer(ReadOrdersFile, null, 0, 10000);
             
-            
         }
-        
+
+        //Загружаем таблицы координат ячеек
+        private void LoadCellGrid()
+        {
+            string path = Environment.CurrentDirectory;
+            LeftStacker = File.Exists(path + "\\LeftStack.cell") ? 
+                    new CellsGrid(path + "\\LeftStack.cell") : new CellsGrid(StackerDepth,StackerHight);
+            RightStacker = File.Exists(path + "\\RightStack.cell") ?
+                    new CellsGrid(path + "\\RightStack.cell") : new CellsGrid(StackerDepth, StackerHight);
+        }
+
         //Настраиваем визуальные компоненты
         private void SetUpButtons()
         {
@@ -67,12 +80,16 @@ namespace Stacker
             int[] rowItems = new int[StackerDepth];
             for (int i=0; i<rowItems.Length;i++) { rowItems[i] = i; }
             RowManualComboBox.ItemsSource = rowItems;
+            RowComboBox.ItemsSource = rowItems; 
             RowManualComboBox.SelectedIndex = 0;
+            RowComboBox.SelectedIndex = 0;
 
             int[] floorItems = new int[StackerHight];
             for (int i = 0; i < floorItems.Length; i++) { floorItems[i] = i; }
             FloorManualCombobox.ItemsSource = floorItems;
+            FloorComboBox.ItemsSource = floorItems;
             FloorManualCombobox.SelectedIndex = 0;
+            FloorComboBox.SelectedIndex = 0;
 
             RackComboBox.Items.Add(LeftRackName);
             RackComboBox.Items.Add(RightRackName);
@@ -197,5 +214,43 @@ namespace Stacker
             }
         }
 
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                LeftStacker.SaveCellsGrid("LeftStack.cell");
+                RightStacker.SaveCellsGrid("RightStack.cell");
+            }
+           catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void CellChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                int selectedRack = RackComboBox.SelectedIndex;
+                int row = RowComboBox.SelectedIndex;
+                int floor = FloorComboBox.SelectedIndex;
+                if (selectedRack == 0)
+                {
+                    CoordinateXTextBox.Text = LeftStacker[row, floor].X.ToString();
+                    CoordinateYTextBox.Text = LeftStacker[row, floor].Y.ToString();
+                    IsNOTAvailableCheckBox.IsChecked = LeftStacker[row, floor].IsNotAvailable;
+                }
+                else
+                {
+                    CoordinateXTextBox.Text = RightStacker[row, floor].X.ToString();
+                    CoordinateYTextBox.Text = RightStacker[row, floor].Y.ToString();
+                    IsNOTAvailableCheckBox.IsChecked = RightStacker[row, floor].IsNotAvailable;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
     }
 }
