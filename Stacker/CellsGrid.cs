@@ -43,8 +43,8 @@ namespace Stacker
         //конструктор создает массив и инициализирует его
         public CellsGrid(int RowSize, int FloorSize)
         {
-            rowSize = RowSize > 0 ? RowSize : 0;
-            floorSize = FloorSize > 0 ? FloorSize : 0;
+            rowSize = RowSize > 0 ? RowSize : 1;
+            floorSize = FloorSize > 0 ? FloorSize : 1;
             grid = new Cell[rowSize, floorSize];
             for (int r=0;r<rowSize;r++) 
                 for (int f=0;f<floorSize;f++)
@@ -59,18 +59,20 @@ namespace Stacker
                 string[] lines = File.ReadAllLines(path);
                 int rowSize = Convert.ToInt32(lines[0]);
                 int floorSize = Convert.ToInt32(lines[1]);
-
-                rowSize = rowSize > 1 ? rowSize - 1 : 0;
-                floorSize = floorSize > 1 ? floorSize - 1 : 0;
-                grid = new Cell[rowSize, floorSize];
-                for (int i = 0; i < lines.Length; i++)
+                rowSize = rowSize > 0 ? rowSize : 1;
+                floorSize = floorSize > 0 ? floorSize : 1;
+                this.grid = new Cell[rowSize, floorSize];
+                for (int r = 0; r < rowSize; r++)
+                    for (int f = 0; f < floorSize; f++)
+                        grid[r, f] = new Cell();
+                for (int i = 2; i < lines.Length; i++)
                 {
                     string[] line = lines[i].Split('~');
-                    int r = Convert.ToInt32(line[1]);
-                    int f = Convert.ToInt32(line[2]);
-                    int x = Convert.ToInt32(line[3]);
-                    int y = Convert.ToInt32(line[4]);
-                    bool isNotAvailable = Convert.ToBoolean(line[5]);
+                    int r = Convert.ToInt32(line[0]);
+                    int f = Convert.ToInt32(line[1]);
+                    int x = Convert.ToInt32(line[2]);
+                    int y = Convert.ToInt32(line[3]);
+                    bool isNotAvailable = Convert.ToBoolean(line[4]);
                     grid[r, f].X = x;
                     grid[r, f].Y = y;
                     grid[r, f].IsNotAvailable = isNotAvailable;
@@ -101,7 +103,7 @@ namespace Stacker
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, caption:"SaveCellGrid");
             }
         }
     }

@@ -49,16 +49,39 @@ namespace Stacker
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             //Читаем первоначальные настройки
-            ReadINISetting();
+            ReadINISettings();
             //Загружаем таблицы координат ячеек
             LoadCellGrid();
             //Настраиваем визуальные компоненты
             SetUpButtons();
-            //Настраиваем вид таблицы
+            //Настраиваем вид списка заявок
             GridSetUp();
             //Запускаем таймер для проверки изменений списка заявок
             FileTimer = new Timer(ReadOrdersFile, null, 0, 10000);
             
+        }
+
+        //Читаем первоначальные настройки
+        private void ReadINISettings()
+        {
+            string path = Environment.CurrentDirectory + "\\Stacker.ini";
+            try
+            {
+                INIManager manager = new INIManager(path);
+                OrdersFile = manager.GetPrivateString("General", "OrderFile");
+                ArchiveFile = manager.GetPrivateString("General", "ArchiveFile");
+                StackerDepth = Convert.ToInt16(manager.GetPrivateString("Stacker", "Depth").TrimEnd());
+                StackerHight = Convert.ToInt16(manager.GetPrivateString("Stacker", "Hight"));
+                LeftRackName = Convert.ToChar(manager.GetPrivateString("Stacker", "LeftRackName"));
+                LeftRackNumber = Convert.ToInt16(manager.GetPrivateString("Stacker", "LeftRackNumber"));
+                RightRackName = Convert.ToChar(manager.GetPrivateString("Stacker", "RightRackName"));
+                RightRackNumber = Convert.ToInt16(manager.GetPrivateString("Stacker", "RightRackNumber"));
+                ComPort = manager.GetPrivateString("PLC", "ComPort");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, caption: "ReadINISettings");
+            }
         }
 
         //Загружаем таблицы координат ячеек
@@ -96,30 +119,7 @@ namespace Stacker
             RackComboBox.SelectedIndex = 0;
         }
 
-        //Читаем первоначальные настройки
-        private void ReadINISetting()
-        {
-            string path = Environment.CurrentDirectory + "\\Stacker.ini";
-            try
-            {
-                INIManager manager = new INIManager(path);
-                OrdersFile = manager.GetPrivateString("General", "OrderFile");
-                ArchiveFile = manager.GetPrivateString("General", "ArchiveFile");
-                StackerDepth = Convert.ToInt16(manager.GetPrivateString("Stacker", "Depth").TrimEnd());
-                StackerHight = Convert.ToInt16(manager.GetPrivateString("Stacker", "Hight"));
-                LeftRackName = Convert.ToChar(manager.GetPrivateString("Stacker", "LeftRackName"));
-                LeftRackNumber = Convert.ToInt16(manager.GetPrivateString("Stacker", "LeftRackNumber"));
-                RightRackName = Convert.ToChar(manager.GetPrivateString("Stacker", "RightRackName"));
-                RightRackNumber = Convert.ToInt16(manager.GetPrivateString("Stacker", "RightRackNumber"));
-                ComPort = manager.GetPrivateString("PLC", "ComPort");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        //метод настройки вида списка
+        //метод настройки вида списка заявок
         private void GridSetUp()
         {
             GridView OrdersGridView = new GridView();
@@ -173,11 +173,11 @@ namespace Stacker
             catch (ArgumentException ae)
             {
                 FileTimer.Dispose();
-                MessageBox.Show(messageBoxText: "Чтение заявок приостановлено!", caption: ae.Message);
+                MessageBox.Show(messageBoxText: "Чтение заявок приостановлено!", caption: "ReadOrdersFile");
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, caption: "ReadOrdersFile");
             }
         }
         
@@ -200,7 +200,7 @@ namespace Stacker
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, caption:"Save&DeleteOrder");
             }
         }
 
@@ -227,6 +227,7 @@ namespace Stacker
             }
         }
 
+        //метод при изменении адреса ячеек перечитывает координаты
         private void CellChanged(object sender, SelectionChangedEventArgs e)
         {
             try
@@ -249,7 +250,7 @@ namespace Stacker
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, caption: "CellChanged");
             }
         }
     }
