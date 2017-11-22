@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -45,6 +46,9 @@ namespace Stacker
         //Координаты ячеек
         CellsGrid LeftStacker;
         CellsGrid RightStacker;
+
+        //формат ввода координат в textbox'ы
+        Regex CoordinateRegex = new Regex(@"\d");
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -273,7 +277,8 @@ namespace Stacker
                 stacker = RackComboBox.SelectedIndex == 0 ? LeftStacker : RightStacker;
                 int row = RowComboBox.SelectedIndex;
                 int floor = FloorComboBox.SelectedIndex;
-
+                CoordinateXTextBox.Text = CoordinateXTextBox.Text == "" ? "0" : CoordinateXTextBox.Text;
+                CoordinateYTextBox.Text = CoordinateYTextBox.Text == "" ? "0" : CoordinateYTextBox.Text;
                 stacker[row, floor].X = Convert.ToInt32(CoordinateXTextBox.Text);
                 stacker[row, floor].Y = Convert.ToInt32(CoordinateYTextBox.Text);
                 stacker[row, floor].IsNotAvailable = (bool)IsNOTAvailableCheckBox.IsChecked;
@@ -291,5 +296,12 @@ namespace Stacker
         //методы отжимают) противоположную кнопку
         private void LeftRackManualButton_Checked(object sender, RoutedEventArgs e) => RightRackManualButton.IsChecked = false;
         private void RightRackManualButton_Checked(object sender, RoutedEventArgs e) => LeftRackManualButton.IsChecked = false;
+
+        //метод проверяет вводимы в textbox символы на соотвктствие правилам
+        private void TextBox_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
+        {
+            Match match = CoordinateRegex.Match(e.Text);
+            if ((!match.Success) || (sender as TextBox).Text.Length > 5) e.Handled = true;
+        }
     }
 }
