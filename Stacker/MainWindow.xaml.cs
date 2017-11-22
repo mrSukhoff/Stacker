@@ -117,6 +117,15 @@ namespace Stacker
             RackComboBox.Items.Add(LeftRackName);
             RackComboBox.Items.Add(RightRackName);
             RackComboBox.SelectedIndex = 0;
+            //присваеваем обработчик тут, а не в визуальной части, чтобы он не вызывался 
+            //во времы первоначальных настроек
+            RackComboBox.SelectionChanged += CellChanged;
+            RowComboBox.SelectionChanged += CellChanged;
+            FloorComboBox.SelectionChanged += CellChanged;
+            CoordinateXTextBox.TextChanged += CoordinateChanged;
+            CoordinateYTextBox.TextChanged += CoordinateChanged;
+            IsNOTAvailableCheckBox.Click += IsNOTAvailableCheckBox_Click;
+
         }
 
         //метод настройки вида списка заявок
@@ -173,7 +182,7 @@ namespace Stacker
             catch (ArgumentException ae)
             {
                 FileTimer.Dispose();
-                MessageBox.Show(messageBoxText: "Чтение заявок приостановлено!", caption: "ReadOrdersFile");
+                MessageBox.Show(messageBoxText: "Чтение заявок остановлено! " + ae.Message, caption: "ReadOrdersFile");
             }
             catch (Exception ex)
             {
@@ -232,26 +241,55 @@ namespace Stacker
         {
             try
             {
-                int selectedRack = RackComboBox.SelectedIndex;
+                CellsGrid stacker;
+                stacker = RackComboBox.SelectedIndex == 0 ? LeftStacker : RightStacker;
                 int row = RowComboBox.SelectedIndex;
                 int floor = FloorComboBox.SelectedIndex;
-                if (selectedRack == 0)
-                {
-                    CoordinateXTextBox.Text = LeftStacker[row, floor].X.ToString();
-                    CoordinateYTextBox.Text = LeftStacker[row, floor].Y.ToString();
-                    IsNOTAvailableCheckBox.IsChecked = LeftStacker[row, floor].IsNotAvailable;
-                }
-                else
-                {
-                    CoordinateXTextBox.Text = RightStacker[row, floor].X.ToString();
-                    CoordinateYTextBox.Text = RightStacker[row, floor].Y.ToString();
-                    IsNOTAvailableCheckBox.IsChecked = RightStacker[row, floor].IsNotAvailable;
-                }
+
+                CoordinateXTextBox.TextChanged -= CoordinateChanged;
+                CoordinateYTextBox.TextChanged -= CoordinateChanged;
+                IsNOTAvailableCheckBox.Click -= IsNOTAvailableCheckBox_Click;
+
+                CoordinateXTextBox.Text = stacker[row, floor].X.ToString();
+                CoordinateYTextBox.Text = stacker[row, floor].Y.ToString();
+                IsNOTAvailableCheckBox.IsChecked = stacker[row, floor].IsNotAvailable;
+
+                CoordinateXTextBox.TextChanged += CoordinateChanged;
+                CoordinateYTextBox.TextChanged += CoordinateChanged;
+                IsNOTAvailableCheckBox.Click += IsNOTAvailableCheckBox_Click;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, caption: "CellChanged");
             }
         }
+        
+        //методы перезаписывают координаты в cellgrid
+        private void CoordinateChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                CellsGrid stacker;
+                stacker = RackComboBox.SelectedIndex == 0 ? LeftStacker : RightStacker;
+                int row = RowComboBox.SelectedIndex;
+                int floor = FloorComboBox.SelectedIndex;
+
+                stacker[row, floor].X = Convert.ToInt32(CoordinateXTextBox.Text);
+                stacker[row, floor].Y = Convert.ToInt32(CoordinateYTextBox.Text);
+                stacker[row, floor].IsNotAvailable = (bool)IsNOTAvailableCheckBox.IsChecked;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, caption: "CoordinateChanged");
+            }
+        }
+        private void IsNOTAvailableCheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            CoordinateChanged(sender, null);
+        }
+
+        //методы отжимают) противоположную кнопку
+        private void LeftRackManualButton_Checked(object sender, RoutedEventArgs e) => RightRackManualButton.IsChecked = false;
+        private void RightRackManualButton_Checked(object sender, RoutedEventArgs e) => LeftRackManualButton.IsChecked = false;
     }
 }
