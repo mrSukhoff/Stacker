@@ -9,7 +9,7 @@
     <Grid Margin="1,1,1,3" Background="#FF91AAB4">
         <Grid.RowDefinitions>
             <RowDefinition/>
-            <RowDefinition Height="Auto" MinHeight="30"/>
+            <RowDefinition Height="Auto" MinHeight="23"/>
         </Grid.RowDefinitions>
         <StatusBar HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="14" Background="#FF3E606F" Grid.Row="1" Margin="0,0,0,-4"/>
         <TabControl x:Name="Tabs" Margin="1" FontSize="16" Background="#FF193441" BorderBrush="{x:Null}">
@@ -21,11 +21,11 @@
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition/>
-                        <RowDefinition Height="70"/>
+                        <RowDefinition Height="77"/>
                     </Grid.RowDefinitions>
                     <ToggleButton x:Name="BringAutoButton" Content="_Привезти" HorizontalAlignment="Right" Height="50" Width="150" Margin="0,0,121,10"         VerticalAlignment="Bottom"  FontWeight="Bold" Grid.Row="1" Click="ToggleButton_Click" FontSize="24" Background="#FF91AAB4" BorderBrush="#FFCBDBD7"  />
                     <ToggleButton x:Name="CarryAwayAutoButton" Content="_Увезти" HorizontalAlignment="Left" Margin="121,0,0,10"  FontWeight="Bold" Grid.Row="1" MinHeight="50" VerticalAlignment="Bottom" FontSize="24" Height="50" Width="150" Background="#FF91AAB4" Grid.Column="1" BorderBrush="#FFCBDBD7" />
-                    <ToggleButton x:Name="CancleAutoButton" Content="_Отменить" HorizontalAlignment="Center" Width="150" Margin="365.168,0,362.832,10"     FontWeight="Bold" Grid.Row="1" Height="50" VerticalAlignment="Bottom" FontSize="24" Background="#FF91AAB4" Grid.ColumnSpan="2" BorderBrush="#FFCBDBD7" />
+                    <ToggleButton x:Name="CancleAutoButton" Content="_Отменить" HorizontalAlignment="Center" Width="150" Margin="365,0,363,10"     FontWeight="Bold" Grid.Row="1" Height="50" VerticalAlignment="Bottom" FontSize="24" Background="#FF91AAB4" Grid.ColumnSpan="2" BorderBrush="#FFCBDBD7" />
                     <ListView x:Name="OrdersLitsView" Grid.ColumnSpan="2" FontSize="24" Background="#FF91AAB4" Foreground="#FFFCFFF5" BorderBrush="#FF3E606F">
                         <ListView.View>
                             <GridView>
@@ -33,6 +33,7 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
+                    <Button Content="STOP" Grid.Column="1" HorizontalAlignment="Left" Height="50" Margin="354,17,0,0" VerticalAlignment="Top" Width="75" BorderBrush="#FFCBDBD7" Background="#FF9E2E2E" FontSize="24" Grid.Row="1" RenderTransformOrigin="0.44,-0.04"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="ManualTabItem" Header="_Ручной режим" Background="#FFFCFFF5" BorderBrush="#FFCBDBD7">
@@ -59,7 +60,7 @@
                             </LinearGradientBrush>
                         </ToggleButton.Background>
                     </ToggleButton>
-                    <ToggleButton x:Name="RightRackManualButton" Content="Y" Height="100" Margin="119.5,30.24,73.167,0"  FontSize="36" Grid.Column="2" VerticalAlignment="Top" Checked="RightRackManualButton_Checked" BorderBrush="Gainsboro">
+                    <ToggleButton x:Name="RightRackManualButton" Content="Y" Height="100" Margin="0,30,73,0"  FontSize="36" Grid.Column="2" VerticalAlignment="Top" Checked="RightRackManualButton_Checked" BorderBrush="Gainsboro" HorizontalAlignment="Right" Width="100">
                         <ToggleButton.Background>
                             <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                                 <GradientStop Color="#FFF3F3F3" Offset="0"/>
@@ -94,6 +95,7 @@
                     <Label Content="Этаж" Grid.Column="1" HorizontalAlignment="Center" Margin="255.356,43.523,254.978,48.717" Width="75" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="2" Grid.ColumnSpan="2" FontWeight="Bold" VerticalAlignment="Top" Foreground="#FFFCFFF5"/>
                     <ToggleButton x:Name="BringManualButton" Content="Привезти " Height="50" Margin="0,0,120.667,10" Grid.Row="3" VerticalAlignment="Bottom" FontSize="24" FontWeight="Bold" Background="#FF91AAB4" HorizontalAlignment="Right" Width="150" Grid.Column="1" BorderBrush="#FFCBDBD7"/>
                     <ToggleButton x:Name="CarryAwayManualButton" Content="Увезти" Grid.Column="2" Height="50" Margin="121,0,0,10" Grid.Row="3" VerticalAlignment="Bottom" FontSize="24" FontWeight="Bold" Grid.ColumnSpan="2" Background="#FF91AAB4" HorizontalAlignment="Left" Width="150" BorderBrush="#FFCBDBD7"/>
+                    <Button Content="STOP" Grid.Column="3" HorizontalAlignment="Left" Height="50" Margin="62,10,0,0" VerticalAlignment="Top" Width="75" BorderBrush="#FFCBDBD7" Background="#FF9E2E2E" FontSize="24" Grid.Row="3"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="ErrorTabItem" Header="Ошибки" BorderBrush="#FFCBDBD7" Foreground="Black">
@@ -145,7 +147,7 @@
                 <Grid Background="#FF193441">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition/>
@@ -191,15 +193,15 @@
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            <Button x:Name="GotoButton" Content="Перейти" HorizontalAlignment="Center" VerticalAlignment="Center" Width="150" Grid.ColumnSpan="2" Margin="135,16.692,132,10" Height="46" Grid.Row="2" MinWidth="101" MinHeight="36" FontWeight="Bold" FontSize="24" Background="#FF91AAB4" BorderBrush="#FFCBDBD7"/>
-                            <TextBox x:Name="GotoXTextBox" HorizontalAlignment="Center" Height="36" TextWrapping="Wrap" Text="0" VerticalAlignment="Center" Width="100" RenderTransformOrigin="0.492,0.45" Grid.ColumnSpan="2" Margin="159,36.692,159,0" MinWidth="100" MinHeight="30" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="24" PreviewTextInput="TextBox_PreviewTextInput" Background="#FFCBDBB7"/>
-                            <TextBox x:Name="GotoYTextBox" HorizontalAlignment="Center" Height="36" TextWrapping="Wrap" Text="0" VerticalAlignment="Center" Width="100" Grid.ColumnSpan="2" Margin="159,35.696,159,0" MinWidth="100" MinHeight="30" Grid.Row="1" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="24" PreviewTextInput="TextBox_PreviewTextInput" Background="#FFCBDBB7"/>
-                            <Label Content="X" HorizontalAlignment="Center" Margin="159,0.692,159,36" VerticalAlignment="Center" Width="100" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Height="36" MinWidth="100" MinHeight="30" FontSize="24" HorizontalContentAlignment="Center" Foreground="#FFFCFFF5"/>
-                            <Label Content="Y" HorizontalAlignment="Center" Margin="159,3.848,159,37.848" VerticalAlignment="Center" Width="100" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="36" MinWidth="100" MinHeight="30" Grid.Row="1" FontSize="24" Foreground="#FFFCFFF5"/>
+                            <Button x:Name="GotoButton" Content="Перейти" HorizontalAlignment="Center" VerticalAlignment="Center" Width="153" Grid.ColumnSpan="2" Margin="62,17,57,10" Height="46" Grid.Row="2" MinWidth="101" MinHeight="36" FontWeight="Bold" FontSize="24" Background="#FF91AAB4" BorderBrush="#FFCBDBD7"/>
+                            <TextBox x:Name="GotoXTextBox" HorizontalAlignment="Center" Height="36" TextWrapping="Wrap" Text="0" VerticalAlignment="Center" Width="100" RenderTransformOrigin="0.492,0.45" Grid.ColumnSpan="2" Margin="85,37,87,0" MinWidth="100" MinHeight="30" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="24" PreviewTextInput="TextBox_PreviewTextInput" Background="#FFCBDBB7"/>
+                            <TextBox x:Name="GotoYTextBox" HorizontalAlignment="Center" Height="36" TextWrapping="Wrap" Text="0" VerticalAlignment="Center" Width="100" Grid.ColumnSpan="2" Margin="86,36,86,0" MinWidth="100" MinHeight="30" Grid.Row="1" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="24" PreviewTextInput="TextBox_PreviewTextInput" Background="#FFCBDBB7"/>
+                            <Label Content="X" HorizontalAlignment="Center" Margin="85,1,87,36" VerticalAlignment="Center" Width="100" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Height="36" MinWidth="100" MinHeight="30" FontSize="24" HorizontalContentAlignment="Center" Foreground="#FFFCFFF5"/>
+                            <Label Content="Y" HorizontalAlignment="Center" Margin="85,1,87,35" VerticalAlignment="Center" Width="100" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="36" MinWidth="100" MinHeight="30" Grid.Row="1" FontSize="24" Foreground="#FFFCFFF5"/>
                         </Grid>
                     </GroupBox>
                     <GroupBox Header="Премещение" Margin="3,0,6,3" Background="#FF193441" Grid.Column="1" Grid.Row="1" Foreground="#FFFCFFF5">
-                        <Grid Grid.Column="1" Grid.Row="1" Background="#FF193441" Margin="3">
+                        <Grid Grid.Column="1" Grid.Row="1" Background="#FF193441" Margin="0">
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
                                 <RowDefinition/>
@@ -207,15 +209,17 @@
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
+                                <ColumnDefinition Width="10*"/>
+                                <ColumnDefinition Width="10*"/>
+                                <ColumnDefinition Width="10*"/>
+                                <ColumnDefinition Width="10*"/>
+                                <ColumnDefinition Width="10*"/>
                             </Grid.ColumnDefinitions>
-                            <Button x:Name="CloserButton" Content="БЛИЖЕ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="53.168,2.77,52.832,2.77" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7"/>
-                            <Button x:Name="DownButton" Content="ВНИЗ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="53,2.72,53,2.82" Grid.ColumnSpan="2" Grid.Row="2" Grid.Column="1" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7"/>
-                            <Button x:Name="UpButton" Content="ВВЕРХ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="53.083,2.829,52.917,2.711" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7"/>
-                            <Button x:Name="FartherButton" Content="ДАЛЬШЕ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="52.998,2.603,53.002,2.937" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7"/>
+                            <Button x:Name="CloserButton" Content="БЛИЖЕ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="63,5,62,4" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7"/>
+                            <Button x:Name="DownButton" Content="ВНИЗ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="63,4,63,5" Grid.ColumnSpan="2" Grid.Row="2" Grid.Column="1" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7"/>
+                            <Button x:Name="UpButton" Content="ВВЕРХ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="63,4,63,5" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7"/>
+                            <Button x:Name="FartherButton" Content="ДАЛЬШЕ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="63,5,63,4" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7"/>
+                            <Button Content="STOP" Grid.Column="4" HorizontalAlignment="Left" Height="50" Margin="39.5,3.837,-1.634,0" Grid.Row="3" VerticalAlignment="Top" Width="75" BorderBrush="#FFCBDBD7" Background="#FF9E2E2E" FontSize="24"/>
                         </Grid>
                     </GroupBox>
                 </Grid>
