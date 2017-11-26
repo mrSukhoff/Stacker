@@ -102,6 +102,7 @@ namespace Stacker
         private void SetUpButtons()
         {
             LeftRackManualButton.Content = LeftRackName;
+            LeftRackManualButton.IsChecked = true;
             RightRackManualButton.Content = RightRackName;
 
             int[] rowItems = new int[StackerDepth];
@@ -110,7 +111,7 @@ namespace Stacker
             RowComboBox.ItemsSource = rowItems; 
             RowManualComboBox.SelectedIndex = 0;
             RowComboBox.SelectedIndex = 0;
-
+            
             int[] floorItems = new int[StackerHight];
             for (int i = 0; i < floorItems.Length; i++) { floorItems[i] = i; }
             FloorManualCombobox.ItemsSource = floorItems;
@@ -122,14 +123,18 @@ namespace Stacker
             RackComboBox.Items.Add(RightRackName);
             RackComboBox.SelectedIndex = 0;
             //присваеваем обработчик тут, а не в визуальной части, чтобы он не вызывался 
-            //во времы первоначальных настроек
+            //во время первоначальных настроек
+            LeftRackManualButton.Checked += LeftRackManualButton_Checked;
+            RightRackManualButton.Checked += RightRackManualButton_Checked;
+            RowManualComboBox.SelectionChanged += ManualComboBox_SelectionChanged;
+            FloorManualCombobox.SelectionChanged += ManualComboBox_SelectionChanged;
             RackComboBox.SelectionChanged += CellChanged;
             RowComboBox.SelectionChanged += CellChanged;
             FloorComboBox.SelectionChanged += CellChanged;
             CoordinateXTextBox.TextChanged += CoordinateChanged;
             CoordinateYTextBox.TextChanged += CoordinateChanged;
             IsNOTAvailableCheckBox.Click += IsNOTAvailableCheckBox_Click;
-
+                        
         }
 
         //метод настройки вида списка заявок
@@ -226,7 +231,8 @@ namespace Stacker
                 OrdersLitsView.Items.Refresh();
             }
         }
-
+        
+        //Метод записывает массивы ячеек в файлы
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -294,14 +300,37 @@ namespace Stacker
         }
 
         //методы отжимают) противоположную кнопку
-        private void LeftRackManualButton_Checked(object sender, RoutedEventArgs e) => RightRackManualButton.IsChecked = false;
-        private void RightRackManualButton_Checked(object sender, RoutedEventArgs e) => LeftRackManualButton.IsChecked = false;
+        private void LeftRackManualButton_Checked(object sender, RoutedEventArgs e)
+        {
+            RightRackManualButton.IsChecked = false;
+            ManualComboBox_SelectionChanged(sender, null);
+        }
+        private void RightRackManualButton_Checked(object sender, RoutedEventArgs e)
+        {
+            LeftRackManualButton.IsChecked = false;
+            ManualComboBox_SelectionChanged(sender, null);
+        }
 
         //метод проверяет вводимы в textbox символы на соотвктствие правилам
         private void TextBox_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
         {
             Match match = CoordinateRegex.Match(e.Text);
             if ((!match.Success) || (sender as TextBox).Text.Length > 5) e.Handled = true;
+        }
+
+        private void ManualComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                CellsGrid stacker = LeftRackManualButton.IsChecked == true ? LeftStacker : RightStacker;
+                bool isEnabled = !stacker[RowManualComboBox.SelectedIndex, FloorManualCombobox.SelectedIndex].IsNotAvailable;
+                BringManualButton.IsEnabled = isEnabled;
+                CarryAwayManualButton.IsEnabled = isEnabled;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, caption: "ManualComboBox_SelectionChanged");
+            }
         }
     }
 }

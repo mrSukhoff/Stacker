@@ -56,11 +56,11 @@ namespace Stacker
         {
             if (File.Exists(path))
             {
-                string[] lines = File.ReadAllLines(path);
+                string[] lines = File.ReadAllLines(path, System.Text.Encoding.Default);
                 int rowSize = Convert.ToInt32(lines[0]);
                 int floorSize = Convert.ToInt32(lines[1]);
-                rowSize = rowSize > 0 ? rowSize : 1;
-                floorSize = floorSize > 0 ? floorSize : 1;
+                this.rowSize = rowSize > 0 ? rowSize : 1;
+                this.floorSize = floorSize > 0 ? floorSize : 1;
                 this.grid = new Cell[rowSize, floorSize];
                 for (int r = 0; r < rowSize; r++)
                     for (int f = 0; f < floorSize; f++)
@@ -73,23 +73,23 @@ namespace Stacker
                     int x = Convert.ToInt32(line[2]);
                     int y = Convert.ToInt32(line[3]);
                     bool isNotAvailable = Convert.ToBoolean(line[4]);
-                    grid[r, f].X = x;
-                    grid[r, f].Y = y;
-                    grid[r, f].IsNotAvailable = isNotAvailable;
+                    this.grid[r, f].X = x;
+                    this.grid[r, f].Y = y;
+                    this.grid[r, f].IsNotAvailable = isNotAvailable;
                 }
             }
         }
 
         public void SaveCellsGrid(string path)
         {
-            string[] lines = new string[rowSize*FloorSize+2];
-            lines[0] = rowSize.ToString();
-            lines[1] = floorSize.ToString();
-            for (int r = 0; r < rowSize; r++)
+            string[] lines = new string[RowSize*FloorSize+2];
+            lines[0] = this.RowSize.ToString();
+            lines[1] = this.FloorSize.ToString();
+            for (int r = 0; r < RowSize; r++)
             {
-                for (int f = 0; f < floorSize; f++)
+                for (int f = 0; f < FloorSize; f++)
                 {
-                    lines[r+rowSize*f+2] = 
+                    lines[2+f+r*FloorSize] = 
                         r.ToString()+'~'+
                         f.ToString() + '~' +
                         grid[r, f].X.ToString() + '~'+
@@ -97,13 +97,13 @@ namespace Stacker
                         grid[r, f].IsNotAvailable.ToString();
                 }
             }
-            try
+            //try
             {
-                File.WriteAllLines(path, lines);
+                File.WriteAllLines(path, lines, System.Text.Encoding.Default);
             }
-            catch (Exception ex)
+            //catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, caption:"SaveCellGrid");
+               // MessageBox.Show(ex.Message, caption:"SaveCellGrid");
             }
         }
     }

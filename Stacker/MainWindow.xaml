@@ -13,7 +13,7 @@
         </Grid.RowDefinitions>
         <StatusBar HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="14" Background="#FF3E606F" Grid.Row="1" Margin="0,0,0,-4"/>
         <TabControl x:Name="Tabs" Margin="1" FontSize="16" Background="#FF193441" BorderBrush="{x:Null}">
-            <TabItem x:Name="AutoTabItrm" Header="_Автоматический режим " Margin="4.5,0,0,0" BorderBrush="#FFCBDBD7" Background="#FFFCFFF5" Height="30">
+            <TabItem x:Name="AutoTabItrm" Header="_Автоматический режим " Margin="5,0,-5,0" BorderBrush="#FF91AAB4" Background="#FFCBDBD7" Height="30">
                 <Grid Background="#FF193441" Margin="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -36,7 +36,7 @@
                     <Button x:Name="AutoStopButton" Content="STOP" Grid.Column="1" Margin="0,0,10,10" BorderBrush="#FFCBDBD7" Background="#FF9E2E2E" FontSize="24" Grid.Row="1" RenderTransformOrigin="0.44,-0.04" Height="50" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75"/>
                 </Grid>
             </TabItem>
-            <TabItem x:Name="ManualTabItem" Header="_Ручной режим" Background="#FFFCFFF5" BorderBrush="#FFCBDBD7" Height="30">
+            <TabItem x:Name="ManualTabItem" Header="_Ручной режим" Background="#FFCBDBD7" BorderBrush="#FF91AAB4" Height="30" Margin="4,0,-8,0">
                 <Grid Margin="0" Background="#FF193441">
                     <Grid.RowDefinitions>
                         <RowDefinition/>
@@ -50,7 +50,7 @@
                         <ColumnDefinition Width="2*"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <ToggleButton x:Name="LeftRackManualButton" Content="X" Height="100" Margin="50,30,0,0" VerticalAlignment="Top"  FontSize="36" Grid.Column="1" MinWidth="50" MinHeight="50" Checked="LeftRackManualButton_Checked" BorderBrush="#FF679EA2" HorizontalAlignment="Left" Width="100">
+                    <ToggleButton x:Name="LeftRackManualButton" Content="X" Height="100" Margin="50,30,0,0" VerticalAlignment="Top"  FontSize="36" Grid.Column="1" MinWidth="50" MinHeight="50" BorderBrush="#FF679EA2" HorizontalAlignment="Left" Width="100">
                         <ToggleButton.Background>
                             <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                                 <GradientStop Color="#FFF3F3F3" Offset="0"/>
@@ -60,7 +60,7 @@
                             </LinearGradientBrush>
                         </ToggleButton.Background>
                     </ToggleButton>
-                    <ToggleButton x:Name="RightRackManualButton" Content="Y" Height="100" Margin="0,30,73,0"  FontSize="36" Grid.Column="2" VerticalAlignment="Top" Checked="RightRackManualButton_Checked" BorderBrush="Gainsboro" HorizontalAlignment="Right" Width="100">
+                    <ToggleButton x:Name="RightRackManualButton" Content="Y" Height="100" Margin="0,30,73,0"  FontSize="36" Grid.Column="2" VerticalAlignment="Top" BorderBrush="Gainsboro" HorizontalAlignment="Right" Width="100">
                         <ToggleButton.Background>
                             <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                                 <GradientStop Color="#FFF3F3F3" Offset="0"/>
@@ -98,7 +98,7 @@
                     <Button x:Name="ManualStopButton" Content="STOP" Grid.Column="3" HorizontalAlignment="Right" Height="50" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="75" BorderBrush="#FFCBDBD7" Background="#FF9E2E2E" FontSize="24" Grid.Row="3"/>
                 </Grid>
             </TabItem>
-            <TabItem x:Name="ErrorTabItem" Header="Ошибки" BorderBrush="#FFCBDBD7" Foreground="Black" Height="30" Background="#FFFCFFF5">
+            <TabItem x:Name="ErrorTabItem" Header="Ошибки" BorderBrush="#FF91AAB4" Foreground="Black" Height="30" Background="#FFCBDBD7" Margin="7,0,-7,0">
                 <Grid Background="#FF193441">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -127,7 +127,7 @@
                     </Button>
                 </Grid>
             </TabItem>
-            <TabItem x:Name="SettingTab" Header="Настройка" BorderBrush="#FFCBDBD7" Height="30" Background="#FFFCFFF5">
+            <TabItem x:Name="SettingTab" Header="Настройка" BorderBrush="#FF91AAB4" Height="30" Background="#FFCBDBD7" Margin="6,0,-10,0">
                 <Grid Background="#FF193441">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
