@@ -13,7 +13,7 @@
         </Grid.RowDefinitions>
         <StatusBar HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="14" Background="#FF3E606F" Grid.Row="1" Margin="0,0,0,-4"/>
         <TabControl x:Name="Tabs" Margin="1" FontSize="16" Background="#FF193441" BorderBrush="{x:Null}">
-            <TabItem x:Name="AutoTabItrm" Header="_Автоматический режим " Margin="4.5,0,0,0" BorderBrush="#FFCBDBD7" Background="#FFFCFFF5">
+            <TabItem x:Name="AutoTabItrm" Header="_Автоматический режим " Margin="4.5,0,0,0" BorderBrush="#FFCBDBD7" Background="#FFFCFFF5" Height="30">
                 <Grid Background="#FF193441" Margin="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -21,22 +21,22 @@
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition/>
-                        <RowDefinition Height="77"/>
+                        <RowDefinition Height="70"/>
                     </Grid.RowDefinitions>
                     <ToggleButton x:Name="BringAutoButton" Content="_Привезти" HorizontalAlignment="Right" Height="50" Width="150" Margin="0,0,121,10"         VerticalAlignment="Bottom"  FontWeight="Bold" Grid.Row="1" Click="ToggleButton_Click" FontSize="24" Background="#FF91AAB4" BorderBrush="#FFCBDBD7"  />
                     <ToggleButton x:Name="CarryAwayAutoButton" Content="_Увезти" HorizontalAlignment="Left" Margin="121,0,0,10"  FontWeight="Bold" Grid.Row="1" MinHeight="50" VerticalAlignment="Bottom" FontSize="24" Height="50" Width="150" Background="#FF91AAB4" Grid.Column="1" BorderBrush="#FFCBDBD7" />
                     <ToggleButton x:Name="CancleAutoButton" Content="_Отменить" HorizontalAlignment="Center" Width="150" Margin="365,0,363,10"     FontWeight="Bold" Grid.Row="1" Height="50" VerticalAlignment="Bottom" FontSize="24" Background="#FF91AAB4" Grid.ColumnSpan="2" BorderBrush="#FFCBDBD7" />
-                    <ListView x:Name="OrdersLitsView" Grid.ColumnSpan="2" FontSize="24" Background="#FF91AAB4" Foreground="#FFFCFFF5" BorderBrush="#FF3E606F">
+                    <ListView x:Name="OrdersLitsView" Grid.ColumnSpan="2" FontSize="24" Background="#FF91AAB4" BorderBrush="#FF3E606F" Margin="3,0" Foreground="Black">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn/>
                             </GridView>
                         </ListView.View>
                     </ListView>
-                    <Button Content="STOP" Grid.Column="1" HorizontalAlignment="Left" Height="50" Margin="354,17,0,0" VerticalAlignment="Top" Width="75" BorderBrush="#FFCBDBD7" Background="#FF9E2E2E" FontSize="24" Grid.Row="1" RenderTransformOrigin="0.44,-0.04"/>
+                    <Button x:Name="AutoStopButton" Content="STOP" Grid.Column="1" Margin="0,0,10,10" BorderBrush="#FFCBDBD7" Background="#FF9E2E2E" FontSize="24" Grid.Row="1" RenderTransformOrigin="0.44,-0.04" Height="50" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75"/>
                 </Grid>
             </TabItem>
-            <TabItem x:Name="ManualTabItem" Header="_Ручной режим" Background="#FFFCFFF5" BorderBrush="#FFCBDBD7">
+            <TabItem x:Name="ManualTabItem" Header="_Ручной режим" Background="#FFFCFFF5" BorderBrush="#FFCBDBD7" Height="30">
                 <Grid Margin="0" Background="#FF193441">
                     <Grid.RowDefinitions>
                         <RowDefinition/>
@@ -50,7 +50,7 @@
                         <ColumnDefinition Width="2*"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <ToggleButton x:Name="LeftRackManualButton" Content="X" Height="100" Margin="50.335,32.24,0,0" VerticalAlignment="Top"  FontSize="36" Grid.Column="1" MinWidth="50" MinHeight="50" Checked="LeftRackManualButton_Checked" BorderBrush="#FF679EA2" HorizontalAlignment="Left" Width="100">
+                    <ToggleButton x:Name="LeftRackManualButton" Content="X" Height="100" Margin="50,30,0,0" VerticalAlignment="Top"  FontSize="36" Grid.Column="1" MinWidth="50" MinHeight="50" Checked="LeftRackManualButton_Checked" BorderBrush="#FF679EA2" HorizontalAlignment="Left" Width="100">
                         <ToggleButton.Background>
                             <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                                 <GradientStop Color="#FFF3F3F3" Offset="0"/>
@@ -70,7 +70,7 @@
                             </LinearGradientBrush>
                         </ToggleButton.Background>
                     </ToggleButton>
-                    <Label Content="Стеллаж" Grid.Column="1" Height="50" Margin="210.335,60.207,213.665,0" VerticalAlignment="Top" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.ColumnSpan="2" FontWeight="Bold" Background="#00FFFCF5" HorizontalAlignment="Center" Foreground="#FFFCFFF5"/>
+                    <Label Content="Стеллаж" Grid.Column="1" Height="50" Margin="236.965,57.207,237.295,0" VerticalAlignment="Top" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.ColumnSpan="2" FontWeight="Bold" Background="#00FFFCF5" HorizontalAlignment="Center" Foreground="#FFFCFFF5"/>
                     <ComboBox x:Name="RowManualComboBox" Grid.Column="1" Margin="50,32.24,0,0" Grid.Row="1" Height="100" VerticalAlignment="Top" FontSize="36" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsSynchronizedWithCurrentItem="False" BorderBrush="Gainsboro" HorizontalAlignment="Left" Width="100">
                         <ComboBox.Background>
                             <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
@@ -81,7 +81,7 @@
                             </LinearGradientBrush>
                         </ComboBox.Background>
                     </ComboBox>
-                    <Label Content="Ряд" Grid.Column="1" HorizontalAlignment="Center" Height="50" Margin="262.356,52.795,262.978,0" VerticalAlignment="Top" Width="60" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="1" FontWeight="Bold" Grid.ColumnSpan="2" Foreground="#FFFCFFF5"/>
+                    <Label Content="Ряд" Grid.Column="1" HorizontalAlignment="Center" Height="50" Margin="262.856,55.295,262.478,0" VerticalAlignment="Top" Width="60" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="1" FontWeight="Bold" Grid.ColumnSpan="2" Foreground="#FFFCFFF5"/>
                     <ComboBox x:Name="FloorManualCombobox" Grid.Column="1" Height="100" Margin="50,20.24,0,0" VerticalAlignment="Top" Grid.Row="2" FontSize="36" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" IsSynchronizedWithCurrentItem="False" BorderBrush="Gainsboro" HorizontalAlignment="Left" Width="100">
                         <ComboBox.Background>
                             <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
@@ -92,21 +92,13 @@
                             </LinearGradientBrush>
                         </ComboBox.Background>
                     </ComboBox>
-                    <Label Content="Этаж" Grid.Column="1" HorizontalAlignment="Center" Margin="255.356,43.523,254.978,48.717" Width="75" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="2" Grid.ColumnSpan="2" FontWeight="Bold" VerticalAlignment="Top" Foreground="#FFFCFFF5"/>
+                    <Label Content="Этаж" Grid.Column="1" HorizontalAlignment="Center" Margin="255.356,47.523,254.978,0" Width="75" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="2" Grid.ColumnSpan="2" FontWeight="Bold" VerticalAlignment="Top" Foreground="#FFFCFFF5"/>
                     <ToggleButton x:Name="BringManualButton" Content="Привезти " Height="50" Margin="0,0,120.667,10" Grid.Row="3" VerticalAlignment="Bottom" FontSize="24" FontWeight="Bold" Background="#FF91AAB4" HorizontalAlignment="Right" Width="150" Grid.Column="1" BorderBrush="#FFCBDBD7"/>
                     <ToggleButton x:Name="CarryAwayManualButton" Content="Увезти" Grid.Column="2" Height="50" Margin="121,0,0,10" Grid.Row="3" VerticalAlignment="Bottom" FontSize="24" FontWeight="Bold" Grid.ColumnSpan="2" Background="#FF91AAB4" HorizontalAlignment="Left" Width="150" BorderBrush="#FFCBDBD7"/>
-                    <Button Content="STOP" Grid.Column="3" HorizontalAlignment="Left" Height="50" Margin="62,10,0,0" VerticalAlignment="Top" Width="75" BorderBrush="#FFCBDBD7" Background="#FF9E2E2E" FontSize="24" Grid.Row="3"/>
+                    <Button x:Name="ManualStopButton" Content="STOP" Grid.Column="3" HorizontalAlignment="Right" Height="50" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="75" BorderBrush="#FFCBDBD7" Background="#FF9E2E2E" FontSize="24" Grid.Row="3"/>
                 </Grid>
             </TabItem>
-            <TabItem x:Name="ErrorTabItem" Header="Ошибки" BorderBrush="#FFCBDBD7" Foreground="Black">
-                <TabItem.Background>
-                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
-                        <GradientStop Color="#FFF3F3F3" Offset="0"/>
-                        <GradientStop Color="#FFEBEBEB" Offset="0.5"/>
-                        <GradientStop Color="#FFDDDDDD" Offset="0.5"/>
-                        <GradientStop Color="#FFFCFFF5" Offset="1"/>
-                    </LinearGradientBrush>
-                </TabItem.Background>
+            <TabItem x:Name="ErrorTabItem" Header="Ошибки" BorderBrush="#FFCBDBD7" Foreground="Black" Height="30" Background="#FFFCFFF5">
                 <Grid Background="#FF193441">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -135,15 +127,7 @@
                     </Button>
                 </Grid>
             </TabItem>
-            <TabItem x:Name="SettingTab" Header="Настройка" BorderBrush="#FFCBDBD7">
-                <TabItem.Background>
-                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
-                        <GradientStop Color="#FFF3F3F3" Offset="0"/>
-                        <GradientStop Color="#FFEBEBEB" Offset="0.5"/>
-                        <GradientStop Color="#FFDDDDDD" Offset="0.5"/>
-                        <GradientStop Color="#FFFCFFF5" Offset="1"/>
-                    </LinearGradientBrush>
-                </TabItem.Background>
+            <TabItem x:Name="SettingTab" Header="Настройка" BorderBrush="#FFCBDBD7" Height="30" Background="#FFFCFFF5">
                 <Grid Background="#FF193441">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -153,8 +137,8 @@
                         <RowDefinition/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <GroupBox Header="Координаты ячеек" Margin="6,0,6,3" Background="#FF193441" Grid.ColumnSpan="2" Foreground="#FFFCFFF5">
-                        <Grid Grid.ColumnSpan="2" Margin="0,0,-2,0" Background="#FF193441">
+                    <GroupBox Header="Координаты ячеек" Margin="3,0,3,3" Background="#FF193441" Grid.ColumnSpan="2" Foreground="#FFFCFFF5">
+                        <Grid Grid.ColumnSpan="2" Margin="0" Background="#FF193441">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="138*"/>
                                 <RowDefinition Height="79*"/>
@@ -182,7 +166,7 @@
                             <ComboBox x:Name="FloorComboBox" Grid.ColumnSpan="2" Grid.Column="2" Margin="63,0,0,22" VerticalContentAlignment="Center" Height="36" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="70" FontSize="24" Background="#FFCBDBB7"/>
                         </Grid>
                     </GroupBox>
-                    <GroupBox VerticalContentAlignment="Bottom" Margin="6,0,3,3" Grid.Row="1" Header="Перейти на координаты" Foreground="#FFFCFFF5">
+                    <GroupBox VerticalContentAlignment="Bottom" Margin="3,0,3,3" Grid.Row="1" Header="Перейти на координаты" Foreground="#FFFCFFF5">
                         <Grid Grid.Row="1" Background="#FF193441" Margin="0">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="73*"/>
@@ -200,7 +184,7 @@
                             <Label Content="Y" HorizontalAlignment="Center" Margin="85,1,87,35" VerticalAlignment="Center" Width="100" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="36" MinWidth="100" MinHeight="30" Grid.Row="1" FontSize="24" Foreground="#FFFCFFF5"/>
                         </Grid>
                     </GroupBox>
-                    <GroupBox Header="Премещение" Margin="3,0,6,3" Background="#FF193441" Grid.Column="1" Grid.Row="1" Foreground="#FFFCFFF5">
+                    <GroupBox Header="Премещение" Margin="3,0,3,3" Background="#FF193441" Grid.Column="1" Grid.Row="1" Foreground="#FFFCFFF5">
                         <Grid Grid.Column="1" Grid.Row="1" Background="#FF193441" Margin="0">
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
@@ -215,11 +199,11 @@
                                 <ColumnDefinition Width="10*"/>
                                 <ColumnDefinition Width="10*"/>
                             </Grid.ColumnDefinitions>
-                            <Button x:Name="CloserButton" Content="БЛИЖЕ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="63,5,62,4" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7"/>
-                            <Button x:Name="DownButton" Content="ВНИЗ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="63,4,63,5" Grid.ColumnSpan="2" Grid.Row="2" Grid.Column="1" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7"/>
-                            <Button x:Name="UpButton" Content="ВВЕРХ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="63,4,63,5" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7"/>
-                            <Button x:Name="FartherButton" Content="ДАЛЬШЕ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="63,5,63,4" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7"/>
-                            <Button Content="STOP" Grid.Column="4" HorizontalAlignment="Left" Height="50" Margin="39.5,3.837,-1.634,0" Grid.Row="3" VerticalAlignment="Top" Width="75" BorderBrush="#FFCBDBD7" Background="#FF9E2E2E" FontSize="24"/>
+                            <Button x:Name="CloserButton" Content="БЛИЖЕ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="63.467,4.555" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7"/>
+                            <Button x:Name="DownButton" Content="ВНИЗ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="63.341,4.43,63.592,4.68" Grid.ColumnSpan="2" Grid.Row="2" Grid.Column="1" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7"/>
+                            <Button x:Name="UpButton" Content="ВВЕРХ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="63.341,4.43,63.592,4.68" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7"/>
+                            <Button x:Name="FartherButton" Content="ДАЛЬШЕ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="63.467,4.555,63.466,4.555" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7"/>
+                            <Button x:Name="StopButton" Content="STOP" Grid.Column="4" Margin="0,0,1.005,1.016" Grid.Row="3" BorderBrush="#FFCBDBD7" Background="#FF9E2E2E" FontSize="24" HorizontalAlignment="Right" Width="75" Height="50" VerticalAlignment="Bottom"/>
                         </Grid>
                     </GroupBox>
                 </Grid>
