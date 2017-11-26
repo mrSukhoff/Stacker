@@ -70,7 +70,7 @@
                             </LinearGradientBrush>
                         </ToggleButton.Background>
                     </ToggleButton>
-                    <Label Content="Стеллаж" Grid.Column="1" Height="50" Margin="236.965,57.207,237.295,0" VerticalAlignment="Top" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.ColumnSpan="2" FontWeight="Bold" Background="#00FFFCF5" HorizontalAlignment="Center" Foreground="#FFFCFFF5"/>
+                    <Label Content="Стеллаж" Grid.Column="1" Height="50" Margin="235,57,233,0" VerticalAlignment="Top" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.ColumnSpan="2" FontWeight="Bold" Background="#00FFFCF5" HorizontalAlignment="Center" Foreground="#FFFCFFF5" Width="117"/>
                     <ComboBox x:Name="RowManualComboBox" Grid.Column="1" Margin="50,32.24,0,0" Grid.Row="1" Height="100" VerticalAlignment="Top" FontSize="36" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsSynchronizedWithCurrentItem="False" BorderBrush="Gainsboro" HorizontalAlignment="Left" Width="100">
                         <ComboBox.Background>
                             <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">

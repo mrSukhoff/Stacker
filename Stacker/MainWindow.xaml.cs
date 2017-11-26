@@ -54,12 +54,16 @@ namespace Stacker
         {
             //Читаем первоначальные настройки
             ReadINISettings();
+            
             //Загружаем таблицы координат ячеек
             LoadCellGrid();
+            
             //Настраиваем визуальные компоненты
             SetUpButtons();
+            
             //Настраиваем вид списка заявок
             GridSetUp();
+            
             //Запускаем таймер для проверки изменений списка заявок
             FileTimer = new Timer(ReadOrdersFile, null, 0, 10000);
             
@@ -122,7 +126,8 @@ namespace Stacker
             RackComboBox.Items.Add(LeftRackName);
             RackComboBox.Items.Add(RightRackName);
             RackComboBox.SelectedIndex = 0;
-            //присваеваем обработчик тут, а не в визуальной части, чтобы он не вызывался 
+            
+            //присваеваем обработчики тут, а не в визуальной части, чтобы они не вызывались 
             //во время первоначальных настроек
             LeftRackManualButton.Checked += LeftRackManualButton_Checked;
             RightRackManualButton.Checked += RightRackManualButton_Checked;
@@ -134,7 +139,6 @@ namespace Stacker
             CoordinateXTextBox.TextChanged += CoordinateChanged;
             CoordinateYTextBox.TextChanged += CoordinateChanged;
             IsNOTAvailableCheckBox.Click += IsNOTAvailableCheckBox_Click;
-                        
         }
 
         //метод настройки вида списка заявок
@@ -318,6 +322,7 @@ namespace Stacker
             if ((!match.Success) || (sender as TextBox).Text.Length > 5) e.Handled = true;
         }
 
+        //при изменении выбранных ячеек в ручном режиме меняет доступность кнопок в зависимости от доступности ячейки
         private void ManualComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
