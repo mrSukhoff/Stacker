@@ -129,8 +129,11 @@ namespace Stacker
             
             //присваеваем обработчики тут, а не в визуальной части, чтобы они не вызывались 
             //во время первоначальных настроек
-            LeftRackManualButton.Checked += LeftRackManualButton_Checked;
-            RightRackManualButton.Checked += RightRackManualButton_Checked;
+            LeftRackManualButton.Checked += LeftRackManualButton_Click;
+            LeftRackManualButton.Unchecked += LeftRackManualButton_Click;
+            RightRackManualButton.Checked += RightRackManualButton_Click;
+            RightRackManualButton.Unchecked += RightRackManualButton_Click;
+
             RowManualComboBox.SelectionChanged += ManualComboBox_SelectionChanged;
             FloorManualCombobox.SelectionChanged += ManualComboBox_SelectionChanged;
             RackComboBox.SelectionChanged += CellChanged;
@@ -304,14 +307,14 @@ namespace Stacker
         }
 
         //методы отжимают) противоположную кнопку
-        private void LeftRackManualButton_Checked(object sender, RoutedEventArgs e)
+        private void LeftRackManualButton_Click(object sender, RoutedEventArgs e)
         {
-            RightRackManualButton.IsChecked = false;
+            RightRackManualButton.IsChecked = !LeftRackManualButton.IsChecked;
             ManualComboBox_SelectionChanged(sender, null);
         }
-        private void RightRackManualButton_Checked(object sender, RoutedEventArgs e)
+        private void RightRackManualButton_Click(object sender, RoutedEventArgs e)
         {
-            LeftRackManualButton.IsChecked = false;
+            LeftRackManualButton.IsChecked = !RightRackManualButton.IsChecked;
             ManualComboBox_SelectionChanged(sender, null);
         }
 

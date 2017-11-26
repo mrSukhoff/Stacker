@@ -5,7 +5,219 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Stacker"
         mc:Ignorable="d"
-        Title="Штабелёр" Height="600" Width="900" MinWidth="900" MinHeight="599.9" Background="#FF91AAB4" Loaded="Window_Loaded" FontSize="20">
+        Title="Штабелёр" MinWidth="900" MinHeight="600" Background="#FF91AAB4" Loaded="Window_Loaded" FontSize="20" Height="600" Width="900">
+
+    <Window.Resources>
+        <Style x:Key="ButtonFocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Border>
+                            <Rectangle 
+            Margin="2"
+            StrokeThickness="1"
+            Stroke="#60000000"
+            StrokeDashArray="1 2"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--Шаблон кнопки-->
+        <Style TargetType="Button">
+            <Setter Property="SnapsToDevicePixels" Value="true"/>
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisual}"/>
+            <Setter Property="MinHeight" Value="23"/>
+            <Setter Property="MinWidth" Value="75"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border 
+          x:Name="Border"  
+          CornerRadius="5" 
+          BorderThickness="3"
+          Background="#FF91AAB4"
+          BorderBrush="#FFCBDBD7">
+                            <ContentPresenter 
+            Margin="2"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            RecognizesAccessKey="True"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsKeyboardFocused" Value="true">
+                                <Setter TargetName="Border" Property="BorderBrush" Value="#FFCBDBD7" />
+                            </Trigger>
+                            <Trigger Property="IsDefaulted" Value="true">
+                                <Setter TargetName="Border" Property="BorderBrush" Value="#FFCBDBD7" />
+                            </Trigger>
+                            <!--Цвет при наведении мыши -->
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter TargetName="Border" Property="Background" Value="#FF91AAB4" />
+                                <Setter TargetName="Border" Property="BorderBrush" Value="#FFCBDBD7" />
+                            </Trigger>
+                            <!--Цвет при нажатии мыши -->
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter TargetName="Border" Property="Background" Value="#3E606F" />
+                                <Setter TargetName="Border" Property="BorderBrush" Value="#FFCBDBD7" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter TargetName="Border" Property="Background" Value="#FF91AAB4" />
+                                <Setter TargetName="Border" Property="BorderBrush" Value="#FFCBDBD7" />
+                                <Setter Property="Foreground" Value="#FFFCFFF5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--Стиль для кнопок STOP-->
+        <Style x:Key="StopButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="FocusVisualStyle">
+                <Setter.Value>
+                    <Style>
+                        <Setter Property="Control.Template">
+                            <Setter.Value>
+                                <ControlTemplate>
+                                    <Border UseLayoutRounding="True" d:DesignUseLayoutRounding="True">
+                                        <Rectangle Margin="2" Stroke="#60000000" StrokeThickness="1" StrokeDashArray="1 2" UseLayoutRounding="True" d:DesignUseLayoutRounding="True"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="MinHeight" Value="25"/>
+            <Setter Property="MinWidth" Value="75"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="Border" BorderBrush="#FFCBDBD7" BorderThickness="3" Background="#FF9E2E2E" CornerRadius="3" UseLayoutRounding="True" d:DesignUseLayoutRounding="True">
+                            <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" HorizontalAlignment="Center" Margin="2" RecognizesAccessKey="True" UseLayoutRounding="True" VerticalAlignment="Center" d:DesignUseLayoutRounding="True"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter Property="BorderBrush" TargetName="Border" Value="#FFCBDBD7"/>
+                            </Trigger>
+                            <Trigger Property="IsDefaulted" Value="True">
+                                <Setter Property="BorderBrush" TargetName="Border" Value="#FFCBDBD7"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" TargetName="Border" Value="#FF9E2E2E"/>
+                                <Setter Property="BorderBrush" TargetName="Border" Value="#FFCBDBD7"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" TargetName="Border" Value="#FF5F1515"/>
+                                <Setter Property="BorderBrush" TargetName="Border" Value="#FFCBDBD7"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Background" TargetName="Border" Value="#FF91AAB4"/>
+                                <Setter Property="BorderBrush" TargetName="Border" Value="#FFCBDBD7"/>
+                                <Setter Property="Foreground" Value="#FFFCFFF5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+
+        </Style>
+
+        <!--Стиль для кнопок комманд ToggleButton -->
+        <Style x:Key="ToggleButtonStyle" TargetType="{x:Type ToggleButton}">
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Border>
+                            <Rectangle 
+                                Margin="2"
+                                StrokeThickness="1"
+                                Stroke="#60000000"
+                                StrokeDashArray="1 2"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Border x:Name="Border" BorderBrush="#FFCBDBD7" BorderThickness="3" Background="#FF91AAB4" CornerRadius="5" UseLayoutRounding="True" d:DesignUseLayoutRounding="True">
+                            <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" HorizontalAlignment="Center" Margin="2" RecognizesAccessKey="True" UseLayoutRounding="True" VerticalAlignment="Center" d:DesignUseLayoutRounding="True"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" TargetName="Border" Value="#FF3e606f"/>
+                                <Setter Property="BorderBrush" TargetName="Border" Value="#FFCBDBD7"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Background" TargetName="Border" Value="#FF91AAB4"/>
+                                <Setter Property="BorderBrush" TargetName="Border" Value="#FFCBDBD7"/>
+                                <Setter Property="Foreground" Value="#FFFCFFF5"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="Background" TargetName="Border" Value="#FF3e606f"/>
+                                <Setter Property="BorderBrush" TargetName="Border" Value="#FFCBDBD7"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--Стиль для кнопок выбора стеллажа -->
+        <Style x:Key="RackToggleButtonStyle" TargetType="{x:Type ToggleButton}">
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Border>
+                            <Rectangle 
+                                Margin="2"
+                                StrokeThickness="1"
+                                Stroke="#60000000"
+                                StrokeDashArray="1 2"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Border x:Name="Border" BorderBrush="#FFDCDCDC" BorderThickness="3" Background="#FFCBDBB7" CornerRadius="5" UseLayoutRounding="True" d:DesignUseLayoutRounding="True">
+                            <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" HorizontalAlignment="Center" Margin="2" RecognizesAccessKey="True" UseLayoutRounding="True" VerticalAlignment="Center" d:DesignUseLayoutRounding="True"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" TargetName="Border" Value="#FF3e606f"/>
+                                <Setter Property="BorderBrush" TargetName="Border" Value="#FFCBDBD7"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Background" TargetName="Border" Value="#FF91AAB4"/>
+                                <Setter Property="BorderBrush" TargetName="Border" Value="#FFCBDBD7"/>
+                                <Setter Property="Foreground" Value="#FFFCFFF5"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="Background" TargetName="Border" Value="#FF3e606f"/>
+                                <Setter Property="BorderBrush" TargetName="Border" Value="#FFCBDBD7"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Window.Resources>
+
+
     <Grid Margin="1,1,1,3" Background="#FF91AAB4">
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -23,9 +235,9 @@
                         <RowDefinition/>
                         <RowDefinition Height="70"/>
                     </Grid.RowDefinitions>
-                    <ToggleButton x:Name="BringAutoButton" Content="_Привезти" HorizontalAlignment="Right" Height="50" Width="150" Margin="0,0,121,10"         VerticalAlignment="Bottom"  FontWeight="Bold" Grid.Row="1" Click="ToggleButton_Click" FontSize="24" Background="#FF91AAB4" BorderBrush="#FFCBDBD7"  />
-                    <ToggleButton x:Name="CarryAwayAutoButton" Content="_Увезти" HorizontalAlignment="Left" Margin="121,0,0,10"  FontWeight="Bold" Grid.Row="1" MinHeight="50" VerticalAlignment="Bottom" FontSize="24" Height="50" Width="150" Background="#FF91AAB4" Grid.Column="1" BorderBrush="#FFCBDBD7" />
-                    <ToggleButton x:Name="CancleAutoButton" Content="_Отменить" HorizontalAlignment="Center" Width="150" Margin="365,0,363,10"     FontWeight="Bold" Grid.Row="1" Height="50" VerticalAlignment="Bottom" FontSize="24" Background="#FF91AAB4" Grid.ColumnSpan="2" BorderBrush="#FFCBDBD7" />
+                    <ToggleButton x:Name="BringAutoButton" Content="_Привезти" HorizontalAlignment="Right" Height="50" Width="150" Margin="0,0,121,10"         VerticalAlignment="Bottom"  FontWeight="Bold" Grid.Row="1" Click="ToggleButton_Click" FontSize="24" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" Style="{DynamicResource ToggleButtonStyle}"  />
+                    <ToggleButton x:Name="CarryAwayAutoButton" Content="_Увезти" HorizontalAlignment="Left" Margin="121,0,0,10"  FontWeight="Bold" Grid.Row="1" MinHeight="50" VerticalAlignment="Bottom" FontSize="24" Height="50" Width="150" Background="#FF91AAB4" Grid.Column="1" BorderBrush="#FFCBDBD7" Style="{DynamicResource ToggleButtonStyle}" />
+                    <ToggleButton x:Name="CancleAutoButton" Content="_Отменить" HorizontalAlignment="Center" Width="150" Margin="365,0,363,10"     FontWeight="Bold" Grid.Row="1" Height="50" VerticalAlignment="Bottom" FontSize="24" Background="#FF91AAB4" Grid.ColumnSpan="2" BorderBrush="#FFCBDBD7" Style="{DynamicResource ToggleButtonStyle}" />
                     <ListView x:Name="OrdersLitsView" Grid.ColumnSpan="2" FontSize="24" Background="#FF91AAB4" BorderBrush="#FF3E606F" Margin="3,0" Foreground="Black">
                         <ListView.View>
                             <GridView>
@@ -33,7 +245,7 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
-                    <Button x:Name="AutoStopButton" Content="STOP" Grid.Column="1" Margin="0,0,10,10" BorderBrush="#FFCBDBD7" Background="#FF9E2E2E" FontSize="24" Grid.Row="1" RenderTransformOrigin="0.44,-0.04" Height="50" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75"/>
+                    <Button x:Name="AutoStopButton" Content="STOP" Grid.Column="1" Margin="0,0,10,10" BorderBrush="#FFCBDBD7" Background="#FF9E2E2E" FontSize="24" Grid.Row="1" RenderTransformOrigin="0.44,-0.04" Height="50" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" Style="{DynamicResource StopButtonStyle}"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="ManualTabItem" Header="_Ручной режим" Background="#FFCBDBD7" BorderBrush="#FF91AAB4" Height="30" Margin="4,0,-8,0">
@@ -50,7 +262,10 @@
                         <ColumnDefinition Width="2*"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <ToggleButton x:Name="LeftRackManualButton" Content="X" Height="100" Margin="50,30,0,0" VerticalAlignment="Top"  FontSize="36" Grid.Column="1" MinWidth="50" MinHeight="50" BorderBrush="#FF679EA2" HorizontalAlignment="Left" Width="100">
+                    <ToggleButton x:Name="LeftRackManualButton" Content="X" Height="100" Margin="50,30,0,0" VerticalAlignment="Top"  FontSize="36" Grid.Column="1" MinWidth="50" MinHeight="50" BorderBrush="#FF679EA2" HorizontalAlignment="Left" Width="100" Style="{DynamicResource RackToggleButtonStyle}">
+                        <ToggleButton.Effect>
+                            <DropShadowEffect ShadowDepth="20"/>
+                        </ToggleButton.Effect>
                         <ToggleButton.Background>
                             <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                                 <GradientStop Color="#FFF3F3F3" Offset="0"/>
@@ -60,7 +275,10 @@
                             </LinearGradientBrush>
                         </ToggleButton.Background>
                     </ToggleButton>
-                    <ToggleButton x:Name="RightRackManualButton" Content="Y" Height="100" Margin="0,30,73,0"  FontSize="36" Grid.Column="2" VerticalAlignment="Top" BorderBrush="Gainsboro" HorizontalAlignment="Right" Width="100">
+                    <ToggleButton x:Name="RightRackManualButton" Content="Y" Height="100" Margin="0,30,73,0"  FontSize="36" Grid.Column="2" VerticalAlignment="Top" BorderBrush="Gainsboro" HorizontalAlignment="Right" Width="100" Style="{DynamicResource RackToggleButtonStyle}">
+                        <ToggleButton.Effect>
+                            <DropShadowEffect ShadowDepth="20"/>
+                        </ToggleButton.Effect>
                         <ToggleButton.Background>
                             <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                                 <GradientStop Color="#FFF3F3F3" Offset="0"/>
@@ -71,60 +289,40 @@
                         </ToggleButton.Background>
                     </ToggleButton>
                     <Label Content="Стеллаж" Grid.Column="1" Height="50" Margin="235,57,233,0" VerticalAlignment="Top" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.ColumnSpan="2" FontWeight="Bold" Background="#00FFFCF5" HorizontalAlignment="Center" Foreground="#FFFCFFF5" Width="117"/>
-                    <ComboBox x:Name="RowManualComboBox" Grid.Column="1" Margin="50,32.24,0,0" Grid.Row="1" Height="100" VerticalAlignment="Top" FontSize="36" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsSynchronizedWithCurrentItem="False" BorderBrush="Gainsboro" HorizontalAlignment="Left" Width="100">
-                        <ComboBox.Background>
-                            <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
-                                <GradientStop Color="#FFF3F3F3" Offset="0"/>
-                                <GradientStop Color="#FFEBEBEB" Offset="0.5"/>
-                                <GradientStop Color="#FFDDDDDD" Offset="0.5"/>
-                                <GradientStop Color="#FFCBDBB7" Offset="1"/>
-                            </LinearGradientBrush>
-                        </ComboBox.Background>
+                    <ComboBox x:Name="RowManualComboBox" Grid.Column="1" Margin="50,32.24,0,0" Grid.Row="1" Height="100" VerticalAlignment="Top" FontSize="36" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsSynchronizedWithCurrentItem="False" BorderBrush="#FFFCFFF5" HorizontalAlignment="Left" Width="100" Background="#FFCBDBB7" BorderThickness="3" SnapsToDevicePixels="True">
+                        <ComboBox.Effect>
+                            <DropShadowEffect ShadowDepth="20"/>
+                        </ComboBox.Effect>
                     </ComboBox>
                     <Label Content="Ряд" Grid.Column="1" HorizontalAlignment="Center" Height="50" Margin="262.856,55.295,262.478,0" VerticalAlignment="Top" Width="60" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="1" FontWeight="Bold" Grid.ColumnSpan="2" Foreground="#FFFCFFF5"/>
-                    <ComboBox x:Name="FloorManualCombobox" Grid.Column="1" Height="100" Margin="50,20.24,0,0" VerticalAlignment="Top" Grid.Row="2" FontSize="36" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" IsSynchronizedWithCurrentItem="False" BorderBrush="Gainsboro" HorizontalAlignment="Left" Width="100">
-                        <ComboBox.Background>
-                            <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
-                                <GradientStop Color="#FFF3F3F3" Offset="0"/>
-                                <GradientStop Color="#FFEBEBEB" Offset="0.5"/>
-                                <GradientStop Color="#FFDDDDDD" Offset="0.5"/>
-                                <GradientStop Color="#FFCBDBB7" Offset="1"/>
-                            </LinearGradientBrush>
-                        </ComboBox.Background>
+                    <ComboBox x:Name="FloorManualCombobox" Grid.Column="1" Height="100" Margin="50,20.24,0,0" VerticalAlignment="Top" Grid.Row="2" FontSize="36" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" IsSynchronizedWithCurrentItem="False" BorderBrush="#FFFCFFF5" HorizontalAlignment="Left" Width="100" Background="#FFCBDBB7">
+                        <ComboBox.Effect>
+                            <DropShadowEffect ShadowDepth="20"/>
+                        </ComboBox.Effect>
                     </ComboBox>
                     <Label Content="Этаж" Grid.Column="1" HorizontalAlignment="Center" Margin="255.356,47.523,254.978,0" Width="75" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="2" Grid.ColumnSpan="2" FontWeight="Bold" VerticalAlignment="Top" Foreground="#FFFCFFF5"/>
-                    <ToggleButton x:Name="BringManualButton" Content="Привезти " Height="50" Margin="0,0,120.667,10" Grid.Row="3" VerticalAlignment="Bottom" FontSize="24" FontWeight="Bold" Background="#FF91AAB4" HorizontalAlignment="Right" Width="150" Grid.Column="1" BorderBrush="#FFCBDBD7"/>
-                    <ToggleButton x:Name="CarryAwayManualButton" Content="Увезти" Grid.Column="2" Height="50" Margin="121,0,0,10" Grid.Row="3" VerticalAlignment="Bottom" FontSize="24" FontWeight="Bold" Grid.ColumnSpan="2" Background="#FF91AAB4" HorizontalAlignment="Left" Width="150" BorderBrush="#FFCBDBD7"/>
-                    <Button x:Name="ManualStopButton" Content="STOP" Grid.Column="3" HorizontalAlignment="Right" Height="50" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="75" BorderBrush="#FFCBDBD7" Background="#FF9E2E2E" FontSize="24" Grid.Row="3"/>
+                    <ToggleButton x:Name="BringManualButton" Content="Привезти " Height="50" Margin="0,0,120.667,10" Grid.Row="3" VerticalAlignment="Bottom" FontSize="24" FontWeight="Bold" Background="#FF91AAB4" HorizontalAlignment="Right" Width="150" Grid.Column="1" BorderBrush="#FFCBDBD7" Style="{DynamicResource ToggleButtonStyle}"/>
+                    <ToggleButton x:Name="CarryAwayManualButton" Content="Увезти" Grid.Column="2" Height="50" Margin="121,0,0,10" Grid.Row="3" VerticalAlignment="Bottom" FontSize="24" FontWeight="Bold" Grid.ColumnSpan="2" Background="#FF91AAB4" HorizontalAlignment="Left" Width="150" BorderBrush="#FFCBDBD7" Style="{DynamicResource ToggleButtonStyle}"/>
+                    <Button x:Name="ManualStopButton" Content="STOP" Grid.Column="3" HorizontalAlignment="Right" Height="50" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="75" BorderBrush="#FFCBDBD7" Background="#FF9E2E2E" FontSize="24" Grid.Row="3" Style="{DynamicResource StopButtonStyle}"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="ErrorTabItem" Header="Ошибки" BorderBrush="#FF91AAB4" Foreground="Black" Height="30" Background="#FFCBDBD7" Margin="7,0,-7,0">
-                <Grid Background="#FF193441">
+                <Grid Background="#FF193441" Style="{DynamicResource ButtonFocusVisual}">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition Height="70"/>
                     </Grid.RowDefinitions>
-                    <ListView x:Name="testListView" Margin="3" Grid.ColumnSpan="2" Background="#FF91AAB4">
+                    <ListView x:Name="testListView" Margin="3" Background="#FF91AAB4">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn/>
                             </GridView>
                         </ListView.View>
                     </ListView>
-                    <Button x:Name="SubmitErrorButton" Content="Подтвердить" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="368,0,337,10" Grid.Row="1" Grid.ColumnSpan="2" FontSize="24" Width="175" Height="50" FontWeight="Bold" BorderBrush="#FFCBDBD7">
-                        <Button.Background>
-                            <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
-                                <GradientStop Color="#FFF3F3F3" Offset="0"/>
-                                <GradientStop Color="#FFEBEBEB" Offset="0.5"/>
-                                <GradientStop Color="#FFDDDDDD" Offset="0.5"/>
-                                <GradientStop Color="#FF91AAB4" Offset="1"/>
-                            </LinearGradientBrush>
-                        </Button.Background>
-                    </Button>
+                    <Button x:Name="SubmitErrorButton" Content="Подтвердить" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="286,0,285,10" Grid.Row="1" FontSize="24" FontWeight="Bold" BorderBrush="#FFCBDBD7" Background="#FF91AAB4" UseLayoutRounding="False" BorderThickness="3,0" MinWidth="175" MinHeight="50" MaxWidth="175" MaxHeight="50"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="SettingTab" Header="Настройка" BorderBrush="#FF91AAB4" Height="30" Background="#FFCBDBD7" Margin="6,0,-10,0">
@@ -199,11 +397,11 @@
                                 <ColumnDefinition Width="10*"/>
                                 <ColumnDefinition Width="10*"/>
                             </Grid.ColumnDefinitions>
-                            <Button x:Name="CloserButton" Content="БЛИЖЕ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="63.467,4.555" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7"/>
-                            <Button x:Name="DownButton" Content="ВНИЗ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="63.341,4.43,63.592,4.68" Grid.ColumnSpan="2" Grid.Row="2" Grid.Column="1" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7"/>
-                            <Button x:Name="UpButton" Content="ВВЕРХ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="63.341,4.43,63.592,4.68" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7"/>
-                            <Button x:Name="FartherButton" Content="ДАЛЬШЕ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="63.467,4.555,63.466,4.555" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7"/>
-                            <Button x:Name="StopButton" Content="STOP" Grid.Column="4" Margin="0,0,1.005,1.016" Grid.Row="3" BorderBrush="#FFCBDBD7" Background="#FF9E2E2E" FontSize="24" HorizontalAlignment="Right" Width="75" Height="50" VerticalAlignment="Bottom"/>
+                            <Button x:Name="CloserButton" Content="БЛИЖЕ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="63.467,4.555" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" ClickMode="Press"/>
+                            <Button x:Name="DownButton" Content="ВНИЗ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="63.341,4.43,63.592,4.68" Grid.ColumnSpan="2" Grid.Row="2" Grid.Column="1" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" ClickMode="Press"/>
+                            <Button x:Name="UpButton" Content="ВВЕРХ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="63.341,4.43,63.592,4.68" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" ClickMode="Press" />
+                            <Button x:Name="FartherButton" Content="ДАЛЬШЕ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="63.467,4.555,63.466,4.555" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" ClickMode="Press"/>
+                            <Button x:Name="StopButton" Content="STOP" Grid.Column="4" Margin="0,0,1.005,1.016" Grid.Row="3" BorderBrush="#FFCBDBD7" Background="#FF9E2E2E" FontSize="24" HorizontalAlignment="Right" Width="75" Height="50" VerticalAlignment="Bottom" Foreground="Black" Style="{DynamicResource StopButtonStyle}" ClickMode="Press"/>
                         </Grid>
                     </GroupBox>
                 </Grid>
