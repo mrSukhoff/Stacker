@@ -290,6 +290,7 @@
                     <ToggleButton x:Name="BringManualButton" Content="Привезти " Height="50" Margin="0,0,120.667,10" Grid.Row="3" VerticalAlignment="Bottom" FontSize="24" FontWeight="Bold" Background="#FF91AAB4" HorizontalAlignment="Right" Width="150" Grid.Column="1" BorderBrush="#FFCBDBD7" Style="{DynamicResource ToggleButtonStyle}"/>
                     <ToggleButton x:Name="CarryAwayManualButton" Content="Увезти" Grid.Column="2" Height="50" Margin="121,0,0,10" Grid.Row="3" VerticalAlignment="Bottom" FontSize="24" FontWeight="Bold" Grid.ColumnSpan="2" Background="#FF91AAB4" HorizontalAlignment="Left" Width="150" BorderBrush="#FFCBDBD7" Style="{DynamicResource ToggleButtonStyle}"/>
                     <Button x:Name="ManualStopButton" Content="STOP" Grid.Column="3" HorizontalAlignment="Right" Height="50" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="75" BorderBrush="#FFCBDBD7" Background="#FF9E2E2E" FontSize="24" Grid.Row="3" Style="{DynamicResource StopButtonStyle}" Click="StopButton_Click"/>
+                    <Label x:Name="ManualAddressLabel" Content="X-0-0" Grid.Column="1" HorizontalAlignment="Center" Margin="227,14,226,0" Width="132" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="3" Grid.ColumnSpan="2" FontWeight="Bold" VerticalAlignment="Top" Foreground="#FFFCFFF5"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="ErrorTabItem" Header="Ошибки" BorderBrush="#FF91AAB4" Foreground="Black" Height="30" Background="#FFCBDBD7" Margin="7,0,-7,0">

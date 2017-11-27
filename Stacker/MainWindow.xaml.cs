@@ -9,7 +9,6 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Media;
 
 namespace Stacker
 {
@@ -54,6 +53,7 @@ namespace Stacker
         private SerialPort ComPort = null;
         private IModbusMaster PLC;
 
+        //Основная точка входа ----------------------------------------------------------------------------------------------------!
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             //Читаем первоначальные настройки
@@ -222,8 +222,7 @@ namespace Stacker
             }
         }
 
-        //метод сохранения отработанной заявки в архиве и удаления из исходного файла 
-        //и коллекции заявок
+        //метод сохранения отработанной заявки в архиве и удаления из исходного файла и коллекции заявок
         private void SaveAndDeleteOrder(Order order, string res)
         {
             try
@@ -347,9 +346,14 @@ namespace Stacker
             try
             {
                 CellsGrid stacker = LeftRackManualButton.IsChecked == true ? LeftStacker : RightStacker;
-                bool isEnabled = !stacker[RowManualComboBox.SelectedIndex, FloorManualCombobox.SelectedIndex].IsNotAvailable;
+                int r = RowManualComboBox.SelectedIndex;
+                int f = FloorManualCombobox.SelectedIndex;
+                bool isEnabled = !stacker[r,f].IsNotAvailable;
                 BringManualButton.IsEnabled = isEnabled;
                 CarryAwayManualButton.IsEnabled = isEnabled;
+                ManualAddressLabel.IsEnabled = isEnabled;
+                char rack = LeftRackManualButton.IsChecked == true ? LeftRackName : RightRackName;
+                ManualAddressLabel.Content = rack + " - " + r.ToString() + " - " + f.ToString();
             }
             catch (Exception ex)
             {
@@ -438,10 +442,10 @@ namespace Stacker
             }
         }
 
-        //Обработчик нажатия кнопки подтверждения события
+        //Обработчик нажатия кнопки подтверждения ошибки
         private void SubmitErrorButton_Click(object sender, RoutedEventArgs e)
         {
-            SetMerker(PLC, 101, true);
+            if (PLC !=null) SetMerker(PLC, 101, true);
         }
 
         //Обработчик нажатия кнопки "ближе"

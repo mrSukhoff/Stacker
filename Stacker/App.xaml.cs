@@ -7,5 +7,6 @@ namespace Stacker
     /// </summary>
     public partial class App : Application
     {
+     
     }
 }
