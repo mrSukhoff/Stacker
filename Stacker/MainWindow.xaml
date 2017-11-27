@@ -245,7 +245,7 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
-                    <Button x:Name="AutoStopButton" Content="STOP" Grid.Column="1" Margin="0,0,10,10" BorderBrush="#FFCBDBD7" Background="#FF9E2E2E" FontSize="24" Grid.Row="1" RenderTransformOrigin="0.44,-0.04" Height="50" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" Style="{DynamicResource StopButtonStyle}"/>
+                    <Button x:Name="AutoStopButton" Content="STOP" Grid.Column="1" Margin="0,0,10,10" BorderBrush="#FFCBDBD7" Background="#FF9E2E2E" FontSize="24" Grid.Row="1" RenderTransformOrigin="0.44,-0.04" Height="50" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" Style="{DynamicResource StopButtonStyle}" Click="StopButton_Click"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="ManualTabItem" Header="_Ручной режим" Background="#FFCBDBD7" BorderBrush="#FF91AAB4" Height="30" Margin="4,0,-8,0">
@@ -289,7 +289,7 @@
                     <Label Content="Этаж" Grid.Column="1" HorizontalAlignment="Center" Margin="255.356,47.523,254.978,0" Width="75" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="2" Grid.ColumnSpan="2" FontWeight="Bold" VerticalAlignment="Top" Foreground="#FFFCFFF5"/>
                     <ToggleButton x:Name="BringManualButton" Content="Привезти " Height="50" Margin="0,0,120.667,10" Grid.Row="3" VerticalAlignment="Bottom" FontSize="24" FontWeight="Bold" Background="#FF91AAB4" HorizontalAlignment="Right" Width="150" Grid.Column="1" BorderBrush="#FFCBDBD7" Style="{DynamicResource ToggleButtonStyle}"/>
                     <ToggleButton x:Name="CarryAwayManualButton" Content="Увезти" Grid.Column="2" Height="50" Margin="121,0,0,10" Grid.Row="3" VerticalAlignment="Bottom" FontSize="24" FontWeight="Bold" Grid.ColumnSpan="2" Background="#FF91AAB4" HorizontalAlignment="Left" Width="150" BorderBrush="#FFCBDBD7" Style="{DynamicResource ToggleButtonStyle}"/>
-                    <Button x:Name="ManualStopButton" Content="STOP" Grid.Column="3" HorizontalAlignment="Right" Height="50" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="75" BorderBrush="#FFCBDBD7" Background="#FF9E2E2E" FontSize="24" Grid.Row="3" Style="{DynamicResource StopButtonStyle}"/>
+                    <Button x:Name="ManualStopButton" Content="STOP" Grid.Column="3" HorizontalAlignment="Right" Height="50" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="75" BorderBrush="#FFCBDBD7" Background="#FF9E2E2E" FontSize="24" Grid.Row="3" Style="{DynamicResource StopButtonStyle}" Click="StopButton_Click"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="ErrorTabItem" Header="Ошибки" BorderBrush="#FF91AAB4" Foreground="Black" Height="30" Background="#FFCBDBD7" Margin="7,0,-7,0">
@@ -308,7 +308,7 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
-                    <Button x:Name="SubmitErrorButton" Content="Подтвердить" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="286,0,285,10" Grid.Row="1" FontSize="24" FontWeight="Bold" BorderBrush="#FFCBDBD7" Background="#FF91AAB4" UseLayoutRounding="False" BorderThickness="3,0" MinWidth="175" MinHeight="50" MaxWidth="175" MaxHeight="50"/>
+                    <Button x:Name="SubmitErrorButton" Content="Подтвердить" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="286,0,285,10" Grid.Row="1" FontSize="24" FontWeight="Bold" BorderBrush="#FFCBDBD7" Background="#FF91AAB4" UseLayoutRounding="False" BorderThickness="3,0" MinWidth="175" MinHeight="50" MaxWidth="175" MaxHeight="50" Click="SubmitErrorButton_Click"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="SettingTab" Header="Настройка" BorderBrush="#FF91AAB4" Height="30" Background="#FFCBDBD7" Margin="6,0,-10,0">
@@ -361,7 +361,7 @@
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            <Button x:Name="GotoButton" Content="Перейти" HorizontalAlignment="Center" VerticalAlignment="Center" Width="153" Grid.ColumnSpan="2" Margin="62,17,57,10" Height="46" Grid.Row="2" MinWidth="101" MinHeight="36" FontWeight="Bold" FontSize="24" Background="#FF91AAB4" BorderBrush="#FFCBDBD7"/>
+                            <Button x:Name="GotoButton" Content="Перейти" HorizontalAlignment="Center" VerticalAlignment="Center" Width="153" Grid.ColumnSpan="2" Margin="62,17,57,10" Height="46" Grid.Row="2" MinWidth="101" MinHeight="36" FontWeight="Bold" FontSize="24" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" Click="GotoButton_Click"/>
                             <TextBox x:Name="GotoXTextBox" HorizontalAlignment="Center" Height="36" TextWrapping="Wrap" Text="0" VerticalAlignment="Center" Width="100" RenderTransformOrigin="0.492,0.45" Grid.ColumnSpan="2" Margin="85,37,87,0" MinWidth="100" MinHeight="30" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="24" PreviewTextInput="TextBox_PreviewTextInput" Background="#FFCBDBB7"/>
                             <TextBox x:Name="GotoYTextBox" HorizontalAlignment="Center" Height="36" TextWrapping="Wrap" Text="0" VerticalAlignment="Center" Width="100" Grid.ColumnSpan="2" Margin="86,36,86,0" MinWidth="100" MinHeight="30" Grid.Row="1" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="24" PreviewTextInput="TextBox_PreviewTextInput" Background="#FFCBDBB7"/>
                             <Label Content="X" HorizontalAlignment="Center" Margin="85,1,87,36" VerticalAlignment="Center" Width="100" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Height="36" MinWidth="100" MinHeight="30" FontSize="24" HorizontalContentAlignment="Center" Foreground="#FFFCFFF5"/>
@@ -383,11 +383,11 @@
                                 <ColumnDefinition Width="10*"/>
                                 <ColumnDefinition Width="10*"/>
                             </Grid.ColumnDefinitions>
-                            <Button x:Name="CloserButton" Content="БЛИЖЕ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="63.467,4.555" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" ClickMode="Press"/>
-                            <Button x:Name="DownButton" Content="ВНИЗ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="63.341,4.43,63.592,4.68" Grid.ColumnSpan="2" Grid.Row="2" Grid.Column="1" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" ClickMode="Press"/>
-                            <Button x:Name="UpButton" Content="ВВЕРХ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="63.341,4.43,63.592,4.68" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" ClickMode="Press" />
-                            <Button x:Name="FartherButton" Content="ДАЛЬШЕ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="63.467,4.555,63.466,4.555" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" ClickMode="Press"/>
-                            <Button x:Name="StopButton" Content="STOP" Grid.Column="4" Margin="0,0,1.005,1.016" Grid.Row="3" BorderBrush="#FFCBDBD7" Background="#FF9E2E2E" FontSize="24" HorizontalAlignment="Right" Width="75" Height="50" VerticalAlignment="Bottom" Foreground="Black" Style="{DynamicResource StopButtonStyle}" ClickMode="Press"/>
+                            <Button x:Name="CloserButton" Content="БЛИЖЕ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="63.467,4.555" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" ClickMode="Press" PreviewMouseLeftButtonDown="CloserButton_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="CloserButton_PreviewMouseLeftButtonUp"/>
+                            <Button x:Name="DownButton" Content="ВНИЗ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="63.341,4.43,63.592,4.68" Grid.ColumnSpan="2" Grid.Row="2" Grid.Column="1" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" ClickMode="Press" PreviewMouseLeftButtonDown="DownButton_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="DownButton_PreviewMouseLeftButtonUp"/>
+                            <Button x:Name="UpButton" Content="ВВЕРХ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="63.341,4.43,63.592,4.68" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" PreviewMouseLeftButtonDown="UpButton_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="UpButton_PreviewMouseLeftButtonUp" ClickMode="Press" />
+                            <Button x:Name="FartherButton" Content="ДАЛЬШЕ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="63.467,4.555,63.466,4.555" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" ClickMode="Press" PreviewMouseLeftButtonDown="FartherButton_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="FartherButton_PreviewMouseLeftButtonUp"/>
+                            <Button x:Name="StopButton" Content="STOP" Grid.Column="4" Margin="0,0,1.005,1.016" Grid.Row="3" BorderBrush="#FFCBDBD7" Background="#FF9E2E2E" FontSize="24" HorizontalAlignment="Right" Width="75" Height="50" VerticalAlignment="Bottom" Foreground="Black" Style="{DynamicResource StopButtonStyle}" ClickMode="Press" IsCancel="True" Click="StopButton_Click"/>
                         </Grid>
                     </GroupBox>
                 </Grid>

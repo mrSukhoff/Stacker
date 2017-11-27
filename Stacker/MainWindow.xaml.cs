@@ -9,6 +9,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Media;
 
 namespace Stacker
 {
@@ -80,8 +81,7 @@ namespace Stacker
             {
                 MessageBox.Show(ex.Message, caption: "Ошибка открытия порта");
             }
-
-
+                        
         }
 
         //Читаем первоначальные настройки
@@ -366,7 +366,7 @@ namespace Stacker
         }
 
         //метод записывает 32-битное число в контроллер
-        public bool WriteDwordToPLC(IModbusMaster plc, ushort address, uint d)
+        public bool WriteDword(IModbusMaster plc, ushort address, uint d)
         {
             try
             {
@@ -385,7 +385,7 @@ namespace Stacker
         }
 
         //метод читает 32-битное число из контроллера
-        public bool ReadDwordFromPLC(IModbusMaster plc, ushort address, out int d)
+        public bool ReadDword(IModbusMaster plc, ushort address, out int d)
         {
             try
             {
@@ -427,9 +427,8 @@ namespace Stacker
         {
             try
             {
-                bool[] m;
                 address += 0x800;
-                m = plc.WriteSingleCoil(1, address, m);
+                plc.WriteSingleCoil(1, address, m);
                 return true;
             }
             catch (Exception ex)
@@ -438,5 +437,73 @@ namespace Stacker
                 return false;
             }
         }
+
+        //Обработчик нажатия кнопки подтверждения события
+        private void SubmitErrorButton_Click(object sender, RoutedEventArgs e)
+        {
+            SetMerker(PLC, 101, true);
+        }
+
+        //Обработчик нажатия кнопки "ближе"
+        private void CloserButton_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (PLC != null) SetMerker(PLC, 11, true);
+        }
+        private void CloserButton_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if(PLC != null) SetMerker(PLC, 11, false);
+        }
+
+        //Обработчик нажатия кнопки "дальше"
+        private void FartherButton_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if(PLC != null) SetMerker(PLC, 10, false);
+        }
+        private void FartherButton_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if(PLC != null) SetMerker(PLC, 10, false);
+        }
+
+        //Обработчик нажатия кнопки "вверх"
+        private void UpButton_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (PLC != null) SetMerker(PLC, 12, true);
+        }
+        private void UpButton_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (PLC != null) SetMerker(PLC, 12, false);
+        }
+
+        //Обработчик нажатия кнопки "вниз"
+        private void DownButton_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (PLC != null) SetMerker(PLC, 13, true);
+        }
+        private void DownButton_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (PLC != null) SetMerker(PLC, 13, false);
+        }
+
+        //Обработчик нажатия кнопки STOP
+        private void StopButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (PLC != null) SetMerker(PLC, 0, true);
+        }
+
+        //Обработчик нажатия кнопки "Перейти на координаты"
+        private void GotoButton_Click(object sender, RoutedEventArgs e)
+        {
+            uint x = Convert.ToUInt32(GotoXTextBox.Text);
+            uint y = Convert.ToUInt32(GotoYTextBox.Text);
+            WriteDword(PLC, 0, x);
+            WriteDword(PLC, 2, y);
+            SetMerker(PLC,1,true);
+        }
     }
+
+
+
+
+
+
 }
