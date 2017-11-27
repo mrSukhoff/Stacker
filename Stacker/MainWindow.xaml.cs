@@ -27,8 +27,8 @@ namespace Stacker
         private string ArchiveFile;
 
         //размеры, имена и номера штабелеров
-        int StackerDepth=0;
-        int StackerHight=0;
+        int StackerDepth = 0;
+        int StackerHight = 0;
         char LeftRackName;
         int LeftRackNumber;
         char RightRackName;
@@ -41,7 +41,7 @@ namespace Stacker
         delegate void RefreshList();
 
         //коллекция заявок
-        List<Order> Orders= new List<Order>();
+        List<Order> Orders = new List<Order>();
         //Координаты ячеек
         CellsGrid LeftStacker;
         CellsGrid RightStacker;
@@ -50,30 +50,36 @@ namespace Stacker
         Regex CoordinateRegex = new Regex(@"\d");
 
         //Com-порт к которому подсоединен контроллер
-        private SerialPort ComPort=null;
+        private SerialPort ComPort = null;
         private IModbusMaster PLC;
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             //Читаем первоначальные настройки
             ReadINISettings();
-            
+
             //Загружаем таблицы координат ячеек
             LoadCellGrid();
-            
+
             //Настраиваем визуальные компоненты
             SetUpButtons();
-            
+
             //Настраиваем вид списка заявок
             GridSetUp();
-            
+
             //Запускаем таймер для проверки изменений списка заявок
             FileTimer = new Timer(ReadOrdersFile, null, 0, 10000);
 
             //Открываем порт и создаем контроллер
-            ComPort.Open();
-            PLC = ModbusSerialMaster.CreateAscii(ComPort);
-
+            try
+            {
+                ComPort.Open();
+                PLC = ModbusSerialMaster.CreateAscii(ComPort);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, caption: "Ошибка открытия порта");
+            }
 
 
         }
@@ -106,8 +112,8 @@ namespace Stacker
         private void LoadCellGrid()
         {
             string path = Environment.CurrentDirectory;
-            LeftStacker = File.Exists(path + "\\LeftStack.cell") ? 
-                    new CellsGrid(path + "\\LeftStack.cell") : new CellsGrid(StackerDepth,StackerHight);
+            LeftStacker = File.Exists(path + "\\LeftStack.cell") ?
+                    new CellsGrid(path + "\\LeftStack.cell") : new CellsGrid(StackerDepth, StackerHight);
             RightStacker = File.Exists(path + "\\RightStack.cell") ?
                     new CellsGrid(path + "\\RightStack.cell") : new CellsGrid(StackerDepth, StackerHight);
         }
@@ -120,12 +126,12 @@ namespace Stacker
             RightRackManualButton.Content = RightRackName;
 
             int[] rowItems = new int[StackerDepth];
-            for (int i=0; i<rowItems.Length;i++) { rowItems[i] = i; }
+            for (int i = 0; i < rowItems.Length; i++) { rowItems[i] = i; }
             RowManualComboBox.ItemsSource = rowItems;
-            RowComboBox.ItemsSource = rowItems; 
+            RowComboBox.ItemsSource = rowItems;
             RowManualComboBox.SelectedIndex = 0;
             RowComboBox.SelectedIndex = 0;
-            
+
             int[] floorItems = new int[StackerHight];
             for (int i = 0; i < floorItems.Length; i++) { floorItems[i] = i; }
             FloorManualCombobox.ItemsSource = floorItems;
@@ -136,7 +142,7 @@ namespace Stacker
             RackComboBox.Items.Add(LeftRackName);
             RackComboBox.Items.Add(RightRackName);
             RackComboBox.SelectedIndex = 0;
-            
+
             //присваеваем обработчики тут, а не в визуальной части, чтобы они не вызывались 
             //во время первоначальных настроек
             LeftRackManualButton.Checked += LeftRackManualButton_Click;
@@ -198,11 +204,11 @@ namespace Stacker
                     string[] lines = File.ReadAllLines(OrdersFile, System.Text.Encoding.Default);
                     foreach (string str in lines)
                     {
-                        Order o = new Order(str,LeftRackName,LeftRackNumber,RightRackName,RightRackNumber);
+                        Order o = new Order(str, LeftRackName, LeftRackNumber, RightRackName, RightRackNumber);
                         if ((!Orders.Contains(o)) && (o.StackerName != '?')) Orders.Add(o);
                     }
                     LastOrdersFileAccessTime = File.GetLastWriteTime(OrdersFile);
-                    Dispatcher.Invoke(new RefreshList( () =>  OrdersLitsView.Items.Refresh()));
+                    Dispatcher.Invoke(new RefreshList(() => OrdersLitsView.Items.Refresh()));
                 }
             }
             catch (ArgumentException ae)
@@ -215,10 +221,10 @@ namespace Stacker
                 MessageBox.Show(ex.Message, caption: "ReadOrdersFile");
             }
         }
-        
+
         //метод сохранения отработанной заявки в архиве и удаления из исходного файла 
         //и коллекции заявок
-        private void SaveAndDeleteOrder(Order order,string res)
+        private void SaveAndDeleteOrder(Order order, string res)
         {
             try
             {
@@ -235,7 +241,7 @@ namespace Stacker
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, caption:"Save&DeleteOrder");
+                MessageBox.Show(ex.Message, caption: "Save&DeleteOrder");
             }
         }
 
@@ -248,7 +254,7 @@ namespace Stacker
                 OrdersLitsView.Items.Refresh();
             }
         }
-        
+
         //Метод записывает массивы ячеек в файлы
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
@@ -257,7 +263,7 @@ namespace Stacker
                 LeftStacker.SaveCellsGrid("LeftStack.cell");
                 RightStacker.SaveCellsGrid("RightStack.cell");
             }
-           catch (Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
@@ -290,7 +296,7 @@ namespace Stacker
                 MessageBox.Show(ex.Message, caption: "CellChanged");
             }
         }
-        
+
         //методы перезаписывают координаты в cellgrid
         private void CoordinateChanged(object sender, TextChangedEventArgs e)
         {
@@ -354,9 +360,83 @@ namespace Stacker
         //завершение работы программы
         private void Stacker_Closed(object sender, EventArgs e)
         {
-            if (FileTimer!=null) FileTimer.Dispose();
+            if (FileTimer != null) FileTimer.Dispose();
             if (PLC != null) PLC.Dispose();
             if (ComPort != null) ComPort.Dispose();
+        }
+
+        //метод записывает 32-битное число в контроллер
+        public bool WriteDwordToPLC(IModbusMaster plc, ushort address, uint d)
+        {
+            try
+            {
+                ushort dlo = (ushort)(d % 0x10000);
+                ushort dhi = (ushort)(d / 0x10000);
+                address += 0x1000;
+                plc.WriteSingleRegister(1, address, dlo);
+                plc.WriteSingleRegister(1, address++, dhi);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, caption: "WriteDwordToPLC");
+                return false;
+            }
+        }
+
+        //метод читает 32-битное число из контроллера
+        public bool ReadDwordFromPLC(IModbusMaster plc, ushort address, out int d)
+        {
+            try
+            {
+                d = 0;
+                address += 0x1000;
+                ushort[] x = plc.ReadHoldingRegisters(1,address,2);
+                d = x[0] + x[1]*0x10000;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, caption: "ReadDwordFromPLC");
+                d = 0;
+                return false;
+            }
+        }
+
+        //метод читает меркер из ПЛК
+        public bool ReadMerker(IModbusMaster plc, ushort address, out bool m)
+        {
+            try
+            { 
+                bool[] ms;
+                address += 0x800;
+                ms = plc.ReadCoils(1,address,1);
+                m= ms[0];
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, caption: "ReadMerker");
+                m = false;            
+                return false;
+            }
+        }
+    
+        //метод устанавливает меркер в ПЛК
+        public bool SetMerker(IModbusMaster plc, ushort address, bool m)
+        {
+            try
+            {
+                bool[] m;
+                address += 0x800;
+                m = plc.WriteSingleCoil(1, address, m);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, caption: "SetMerker");
+                return false;
+            }
         }
     }
 }
