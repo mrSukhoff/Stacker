@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Modbus.Device;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Ports;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -32,9 +34,6 @@ namespace Stacker
         char RightRackName;
         int RightRackNumber;
 
-        //порт к которому подключен контроллер
-        string ComPort;
-
         // переменная для контроля изменения файла заявок
         DateTime LastOrdersFileAccessTime = DateTime.Now;
         // таймер для контроля изменения файла заявок
@@ -49,6 +48,10 @@ namespace Stacker
 
         //формат ввода координат в textbox'ы
         Regex CoordinateRegex = new Regex(@"\d");
+
+        //Com-порт к которому подсоединен контроллер
+        private SerialPort ComPort=null;
+        private IModbusMaster PLC;
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -66,7 +69,13 @@ namespace Stacker
             
             //Запускаем таймер для проверки изменений списка заявок
             FileTimer = new Timer(ReadOrdersFile, null, 0, 10000);
-            
+
+            //Открываем порт и создаем контроллер
+            ComPort.Open();
+            PLC = ModbusSerialMaster.CreateAscii(ComPort);
+
+
+
         }
 
         //Читаем первоначальные настройки
@@ -84,7 +93,8 @@ namespace Stacker
                 LeftRackNumber = Convert.ToInt16(manager.GetPrivateString("Stacker", "LeftRackNumber"));
                 RightRackName = Convert.ToChar(manager.GetPrivateString("Stacker", "RightRackName"));
                 RightRackNumber = Convert.ToInt16(manager.GetPrivateString("Stacker", "RightRackNumber"));
-                ComPort = manager.GetPrivateString("PLC", "ComPort");
+                string port = manager.GetPrivateString("PLC", "ComPort");
+                ComPort = new SerialPort(port, 9600, Parity.Even, 7, StopBits.One);
             }
             catch (Exception ex)
             {
@@ -339,6 +349,14 @@ namespace Stacker
             {
                 MessageBox.Show(ex.Message, caption: "ManualComboBox_SelectionChanged");
             }
+        }
+
+        //завершение работы программы
+        private void Stacker_Closed(object sender, EventArgs e)
+        {
+            if (FileTimer!=null) FileTimer.Dispose();
+            if (PLC != null) PLC.Dispose();
+            if (ComPort != null) ComPort.Dispose();
         }
     }
 }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Stacker"
         mc:Ignorable="d"
-        Title="Штабелёр" MinWidth="900" MinHeight="600" Background="#FF91AAB4" Loaded="Window_Loaded" FontSize="20" Height="600" Width="900">
+        Title="Штабелёр" MinWidth="900" MinHeight="600" Background="#FF91AAB4" Loaded="Window_Loaded" FontSize="20" Height="600" Width="900" Closed="Stacker_Closed">
 
     <Window.Resources>
         <Style x:Key="ButtonFocusVisual">
@@ -263,9 +263,6 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <ToggleButton x:Name="LeftRackManualButton" Content="X" Height="100" Margin="50,30,0,0" VerticalAlignment="Top"  FontSize="36" Grid.Column="1" MinWidth="50" MinHeight="50" BorderBrush="#FF679EA2" HorizontalAlignment="Left" Width="100" Style="{DynamicResource RackToggleButtonStyle}">
-                        <ToggleButton.Effect>
-                            <DropShadowEffect ShadowDepth="20"/>
-                        </ToggleButton.Effect>
                         <ToggleButton.Background>
                             <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                                 <GradientStop Color="#FFF3F3F3" Offset="0"/>
@@ -276,9 +273,6 @@
                         </ToggleButton.Background>
                     </ToggleButton>
                     <ToggleButton x:Name="RightRackManualButton" Content="Y" Height="100" Margin="0,30,73,0"  FontSize="36" Grid.Column="2" VerticalAlignment="Top" BorderBrush="Gainsboro" HorizontalAlignment="Right" Width="100" Style="{DynamicResource RackToggleButtonStyle}">
-                        <ToggleButton.Effect>
-                            <DropShadowEffect ShadowDepth="20"/>
-                        </ToggleButton.Effect>
                         <ToggleButton.Background>
                             <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                                 <GradientStop Color="#FFF3F3F3" Offset="0"/>
@@ -289,17 +283,9 @@
                         </ToggleButton.Background>
                     </ToggleButton>
                     <Label Content="Стеллаж" Grid.Column="1" Height="50" Margin="235,57,233,0" VerticalAlignment="Top" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.ColumnSpan="2" FontWeight="Bold" Background="#00FFFCF5" HorizontalAlignment="Center" Foreground="#FFFCFFF5" Width="117"/>
-                    <ComboBox x:Name="RowManualComboBox" Grid.Column="1" Margin="50,32.24,0,0" Grid.Row="1" Height="100" VerticalAlignment="Top" FontSize="36" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsSynchronizedWithCurrentItem="False" BorderBrush="#FFFCFFF5" HorizontalAlignment="Left" Width="100" Background="#FFCBDBB7" BorderThickness="3" SnapsToDevicePixels="True">
-                        <ComboBox.Effect>
-                            <DropShadowEffect ShadowDepth="20"/>
-                        </ComboBox.Effect>
-                    </ComboBox>
+                    <ComboBox x:Name="RowManualComboBox" Grid.Column="1" Margin="50,32.24,0,0" Grid.Row="1" Height="100" VerticalAlignment="Top" FontSize="36" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsSynchronizedWithCurrentItem="False" BorderBrush="#FFFCFFF5" HorizontalAlignment="Left" Width="100" Background="#FFCBDBB7" BorderThickness="3" SnapsToDevicePixels="True"/>
                     <Label Content="Ряд" Grid.Column="1" HorizontalAlignment="Center" Height="50" Margin="262.856,55.295,262.478,0" VerticalAlignment="Top" Width="60" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="1" FontWeight="Bold" Grid.ColumnSpan="2" Foreground="#FFFCFFF5"/>
-                    <ComboBox x:Name="FloorManualCombobox" Grid.Column="1" Height="100" Margin="50,20.24,0,0" VerticalAlignment="Top" Grid.Row="2" FontSize="36" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" IsSynchronizedWithCurrentItem="False" BorderBrush="#FFFCFFF5" HorizontalAlignment="Left" Width="100" Background="#FFCBDBB7">
-                        <ComboBox.Effect>
-                            <DropShadowEffect ShadowDepth="20"/>
-                        </ComboBox.Effect>
-                    </ComboBox>
+                    <ComboBox x:Name="FloorManualCombobox" Grid.Column="1" Height="100" Margin="50,20.24,0,0" VerticalAlignment="Top" Grid.Row="2" FontSize="36" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" IsSynchronizedWithCurrentItem="False" BorderBrush="#FFFCFFF5" HorizontalAlignment="Left" Width="100" Background="#FFCBDBB7"/>
                     <Label Content="Этаж" Grid.Column="1" HorizontalAlignment="Center" Margin="255.356,47.523,254.978,0" Width="75" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="2" Grid.ColumnSpan="2" FontWeight="Bold" VerticalAlignment="Top" Foreground="#FFFCFFF5"/>
                     <ToggleButton x:Name="BringManualButton" Content="Привезти " Height="50" Margin="0,0,120.667,10" Grid.Row="3" VerticalAlignment="Bottom" FontSize="24" FontWeight="Bold" Background="#FF91AAB4" HorizontalAlignment="Right" Width="150" Grid.Column="1" BorderBrush="#FFCBDBD7" Style="{DynamicResource ToggleButtonStyle}"/>
                     <ToggleButton x:Name="CarryAwayManualButton" Content="Увезти" Grid.Column="2" Height="50" Margin="121,0,0,10" Grid.Row="3" VerticalAlignment="Bottom" FontSize="24" FontWeight="Bold" Grid.ColumnSpan="2" Background="#FF91AAB4" HorizontalAlignment="Left" Width="150" BorderBrush="#FFCBDBD7" Style="{DynamicResource ToggleButtonStyle}"/>
