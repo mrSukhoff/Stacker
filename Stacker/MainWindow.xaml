@@ -235,9 +235,9 @@
                         <RowDefinition/>
                         <RowDefinition Height="70"/>
                     </Grid.RowDefinitions>
-                    <ToggleButton x:Name="BringAutoButton" Content="_Привезти" HorizontalAlignment="Right" Height="50" Width="150" Margin="0,0,121,10"         VerticalAlignment="Bottom"  FontWeight="Bold" Grid.Row="1" Click="ToggleButton_Click" FontSize="24" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" Style="{DynamicResource ToggleButtonStyle}"  />
-                    <ToggleButton x:Name="CarryAwayAutoButton" Content="_Увезти" HorizontalAlignment="Left" Margin="121,0,0,10"  FontWeight="Bold" Grid.Row="1" MinHeight="50" VerticalAlignment="Bottom" FontSize="24" Height="50" Width="150" Background="#FF91AAB4" Grid.Column="1" BorderBrush="#FFCBDBD7" Style="{DynamicResource ToggleButtonStyle}" />
-                    <ToggleButton x:Name="CancleAutoButton" Content="_Отменить" HorizontalAlignment="Center" Width="150" Margin="365,0,363,10"     FontWeight="Bold" Grid.Row="1" Height="50" VerticalAlignment="Bottom" FontSize="24" Background="#FF91AAB4" Grid.ColumnSpan="2" BorderBrush="#FFCBDBD7" Style="{DynamicResource ToggleButtonStyle}" />
+                    <ToggleButton x:Name="BringAutoButton" Content="_Привезти" HorizontalAlignment="Right" Height="50" Width="150" Margin="0,0,120,10"         VerticalAlignment="Bottom" Grid.Row="1" Click="ToggleButton_Click" FontSize="24" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" Style="{DynamicResource ToggleButtonStyle}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Bold"  />
+                    <ToggleButton x:Name="CarryAwayAutoButton" Content="_Увезти" HorizontalAlignment="Left" Margin="121,0,0,10"  FontWeight="Bold" Grid.Row="1" MinHeight="50" VerticalAlignment="Bottom" FontSize="24" Height="50" Width="150" Background="#FF91AAB4" Grid.Column="1" BorderBrush="#FFCBDBD7" Style="{DynamicResource ToggleButtonStyle}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
+                    <ToggleButton x:Name="CancleAutoButton" Content="_Отменить" HorizontalAlignment="Center" Width="150" Margin="365,0,363,10"     FontWeight="Bold" Grid.Row="1" Height="50" VerticalAlignment="Bottom" FontSize="24" Background="#FF91AAB4" Grid.ColumnSpan="2" BorderBrush="#FFCBDBD7" Style="{DynamicResource ToggleButtonStyle}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
                     <ListView x:Name="OrdersLitsView" Grid.ColumnSpan="2" FontSize="24" Background="#FF91AAB4" BorderBrush="#FF3E606F" Margin="3,0" Foreground="Black">
                         <ListView.View>
                             <GridView>
@@ -264,7 +264,7 @@
                     </Grid.ColumnDefinitions>
                     <ToggleButton x:Name="LeftRackManualButton" Content="X" Height="100" Margin="50,30,0,0" VerticalAlignment="Top"  FontSize="36" Grid.Column="1" MinWidth="50" MinHeight="50" BorderBrush="#FF679EA2" HorizontalAlignment="Left" Width="100" Style="{DynamicResource RackToggleButtonStyle}">
                         <ToggleButton.Effect>
-                            <DropShadowEffect Opacity="0.5" ShadowDepth="25"/>
+                            <DropShadowEffect Opacity="0.5" ShadowDepth="20"/>
                         </ToggleButton.Effect>
                         <ToggleButton.Background>
                             <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
@@ -277,7 +277,7 @@
                     </ToggleButton>
                     <ToggleButton x:Name="RightRackManualButton" Content="Y" Height="100" Margin="0,30,73,0"  FontSize="36" Grid.Column="2" VerticalAlignment="Top" BorderBrush="Gainsboro" HorizontalAlignment="Right" Width="100" Style="{DynamicResource RackToggleButtonStyle}">
                         <ToggleButton.Effect>
-                            <DropShadowEffect Opacity="0.5" ShadowDepth="25"/>
+                            <DropShadowEffect Opacity="0.5" ShadowDepth="20"/>
                         </ToggleButton.Effect>
                         <ToggleButton.Background>
                             <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
@@ -290,47 +290,47 @@
                     </ToggleButton>
                     <Label Content="Стеллаж" Grid.Column="1" Height="50" Margin="235,57,233,0" VerticalAlignment="Top" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.ColumnSpan="2" FontWeight="Bold" Background="#00FFFCF5" HorizontalAlignment="Center" Foreground="#FFFCFFF5" Width="117">
                         <Label.Effect>
-                            <DropShadowEffect Opacity="0.5" ShadowDepth="25"/>
+                            <DropShadowEffect Opacity="0.5" ShadowDepth="20"/>
                         </Label.Effect>
                     </Label>
                     <ComboBox x:Name="RowManualComboBox" Grid.Column="1" Margin="50,32.24,0,0" Grid.Row="1" Height="100" VerticalAlignment="Top" FontSize="36" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsSynchronizedWithCurrentItem="False" BorderBrush="#FFFCFFF5" HorizontalAlignment="Left" Width="100" Background="#FFCBDBB7" BorderThickness="3" SnapsToDevicePixels="True">
                         <ComboBox.Effect>
-                            <DropShadowEffect Opacity="0.5" ShadowDepth="25"/>
+                            <DropShadowEffect Opacity="0.5" ShadowDepth="20"/>
                         </ComboBox.Effect>
                     </ComboBox>
                     <Label Content="Ряд" Grid.Column="1" HorizontalAlignment="Center" Height="50" Margin="262.856,55.295,262.478,0" VerticalAlignment="Top" Width="60" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="1" FontWeight="Bold" Grid.ColumnSpan="2" Foreground="#FFFCFFF5">
                         <Label.Effect>
-                            <DropShadowEffect Opacity="0.5" ShadowDepth="25"/>
+                            <DropShadowEffect Opacity="0.5" ShadowDepth="20"/>
                         </Label.Effect>
                     </Label>
-                    <ComboBox x:Name="FloorManualCombobox" Grid.Column="1" Height="100" Margin="50,20.24,0,0" VerticalAlignment="Top" Grid.Row="2" FontSize="36" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" IsSynchronizedWithCurrentItem="False" BorderBrush="#FFFCFFF5" HorizontalAlignment="Left" Width="100" Background="#FFCBDBB7">
+                    <ComboBox x:Name="FloorManualCombobox" Grid.Column="1" Height="100" Margin="50,20,0,0" VerticalAlignment="Top" Grid.Row="2" FontSize="36" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" IsSynchronizedWithCurrentItem="False" BorderBrush="#FFFCFFF5" Background="#FFCBDBB7" HorizontalAlignment="Left" Width="100">
                         <ComboBox.Effect>
-                            <DropShadowEffect Opacity="0.5" ShadowDepth="25"/>
+                            <DropShadowEffect Opacity="0.5" ShadowDepth="20"/>
                         </ComboBox.Effect>
                     </ComboBox>
                     <Label Content="Этаж" Grid.Column="1" HorizontalAlignment="Center" Margin="255.356,47.523,254.978,0" Width="75" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="2" Grid.ColumnSpan="2" FontWeight="Bold" VerticalAlignment="Top" Foreground="#FFFCFFF5">
                         <Label.Effect>
-                            <DropShadowEffect Opacity="0.5" ShadowDepth="25"/>
+                            <DropShadowEffect Opacity="0.5" ShadowDepth="20"/>
                         </Label.Effect>
                     </Label>
-                    <ToggleButton x:Name="BringManualButton" Content="Привезти " Height="50" Margin="0,0,120.667,10" Grid.Row="3" VerticalAlignment="Bottom" FontSize="24" FontWeight="Bold" Background="#FF91AAB4" HorizontalAlignment="Right" Width="150" Grid.Column="1" BorderBrush="#FFCBDBD7" Style="{DynamicResource ToggleButtonStyle}">
+                    <ToggleButton x:Name="BringManualButton" Content="_Привезти" Height="50" Margin="0,0,120,10" Grid.Row="3" VerticalAlignment="Bottom" FontSize="24" FontWeight="Bold" Background="#FF91AAB4" HorizontalAlignment="Right" Width="150" Grid.Column="1" BorderBrush="#FFCBDBD7" Style="{DynamicResource ToggleButtonStyle}" Checked="BringManualButton_Checked" Unchecked="BringManualButton_Unchecked" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
                         <ToggleButton.Effect>
-                            <DropShadowEffect Opacity="0.5" ShadowDepth="25"/>
+                            <DropShadowEffect Opacity="0.5" ShadowDepth="20"/>
                         </ToggleButton.Effect>
                     </ToggleButton>
-                    <ToggleButton x:Name="CarryAwayManualButton" Content="Увезти" Grid.Column="2" Height="50" Margin="121,0,0,10" Grid.Row="3" VerticalAlignment="Bottom" FontSize="24" FontWeight="Bold" Grid.ColumnSpan="2" Background="#FF91AAB4" HorizontalAlignment="Left" Width="150" BorderBrush="#FFCBDBD7" Style="{DynamicResource ToggleButtonStyle}">
+                    <ToggleButton x:Name="CarryAwayManualButton" Content="Увезти" Grid.Column="2" Height="50" Margin="121,0,0,10" Grid.Row="3" VerticalAlignment="Bottom" FontSize="24" FontWeight="Bold" Grid.ColumnSpan="2" Background="#FF91AAB4" HorizontalAlignment="Left" Width="150" BorderBrush="#FFCBDBD7" Style="{DynamicResource ToggleButtonStyle}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
                         <ToggleButton.Effect>
-                            <DropShadowEffect Opacity="0.5" ShadowDepth="25"/>
+                            <DropShadowEffect Opacity="0.5" ShadowDepth="20"/>
                         </ToggleButton.Effect>
                     </ToggleButton>
                     <Button x:Name="ManualStopButton" Content="STOP" Grid.Column="3" HorizontalAlignment="Right" Height="50" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="75" BorderBrush="#FFCBDBD7" Background="#FF9E2E2E" FontSize="24" Grid.Row="3" Style="{DynamicResource StopButtonStyle}" Click="StopButton_Click">
                         <Button.Effect>
-                            <DropShadowEffect Opacity="0.5" ShadowDepth="25"/>
+                            <DropShadowEffect Opacity="0.5" ShadowDepth="20"/>
                         </Button.Effect>
                     </Button>
                     <Label x:Name="ManualAddressLabel" Content="X-0-0" Grid.Column="1" HorizontalAlignment="Center" Margin="227,14,226,0" Width="132" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="3" Grid.ColumnSpan="2" FontWeight="Bold" VerticalAlignment="Top" Foreground="#FFFCFFF5">
                         <Label.Effect>
-                            <DropShadowEffect Opacity="0.5" ShadowDepth="25"/>
+                            <DropShadowEffect Opacity="0.5" ShadowDepth="20"/>
                         </Label.Effect>
                     </Label>
                 </Grid>

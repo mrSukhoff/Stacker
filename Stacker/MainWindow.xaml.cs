@@ -137,9 +137,9 @@ namespace Stacker
             };
             myDropShadowEffect.Color = myShadowColor;
             myDropShadowEffect.Direction = 315;
-            myDropShadowEffect.ShadowDepth = 25;
+            myDropShadowEffect.ShadowDepth = 20;
             myDropShadowEffect.Opacity = 0.5;
-
+            
             LeftRackManualButton.Content = LeftRackName;
             RightRackManualButton.Content = RightRackName;
 
@@ -545,6 +545,16 @@ namespace Stacker
             WriteDword(PLC, 0, x);
             WriteDword(PLC, 2, y);
             SetMerker(PLC,1,true);
+        }
+
+        private void BringManualButton_Checked(object sender, RoutedEventArgs e)
+        {
+            BringManualButton.Effect = null;
+        }
+
+        private void BringManualButton_Unchecked(object sender, RoutedEventArgs e)
+        {
+            BringManualButton.Effect = myDropShadowEffect;
         }
     }
 
