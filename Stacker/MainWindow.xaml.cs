@@ -9,6 +9,8 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Media;
+using System.Windows.Media.Effects;
 
 namespace Stacker
 {
@@ -52,6 +54,9 @@ namespace Stacker
         //Com-порт к которому подсоединен контроллер
         private SerialPort ComPort = null;
         private IModbusMaster PLC;
+
+        //эффект для теней
+        DropShadowEffect myDropShadowEffect;
 
         //Основная точка входа ----------------------------------------------------------------------------------------------------!
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -121,8 +126,21 @@ namespace Stacker
         //Настраиваем визуальные компоненты
         private void SetUpButtons()
         {
+            //эффект теней для кнопок
+            myDropShadowEffect = new DropShadowEffect();
+            Color myShadowColor = new Color
+            {
+                ScA = 1,
+                ScB = 0,
+                ScG = 0,
+                ScR = 0
+            };
+            myDropShadowEffect.Color = myShadowColor;
+            myDropShadowEffect.Direction = 315;
+            myDropShadowEffect.ShadowDepth = 25;
+            myDropShadowEffect.Opacity = 0.5;
+
             LeftRackManualButton.Content = LeftRackName;
-            LeftRackManualButton.IsChecked = true;
             RightRackManualButton.Content = RightRackName;
 
             int[] rowItems = new int[StackerDepth];
@@ -147,8 +165,8 @@ namespace Stacker
             //во время первоначальных настроек
             LeftRackManualButton.Checked += LeftRackManualButton_Click;
             LeftRackManualButton.Unchecked += LeftRackManualButton_Click;
+            RightRackManualButton.Unchecked  += RightRackManualButton_Click;
             RightRackManualButton.Checked += RightRackManualButton_Click;
-            RightRackManualButton.Unchecked += RightRackManualButton_Click;
 
             RowManualComboBox.SelectionChanged += ManualComboBox_SelectionChanged;
             FloorManualCombobox.SelectionChanged += ManualComboBox_SelectionChanged;
@@ -158,6 +176,9 @@ namespace Stacker
             CoordinateXTextBox.TextChanged += CoordinateChanged;
             CoordinateYTextBox.TextChanged += CoordinateChanged;
             IsNOTAvailableCheckBox.Click += IsNOTAvailableCheckBox_Click;
+            //нажимаем левую кнопку
+            LeftRackManualButton.IsChecked = true;
+            LeftRackManualButton_Click(null, null);
         }
 
         //метод настройки вида списка заявок
@@ -322,14 +343,36 @@ namespace Stacker
         }
 
         //методы отжимают) противоположную кнопку
-        private void LeftRackManualButton_Click(object sender, RoutedEventArgs e)
-        {
-            RightRackManualButton.IsChecked = !LeftRackManualButton.IsChecked;
-            ManualComboBox_SelectionChanged(sender, null);
-        }
         private void RightRackManualButton_Click(object sender, RoutedEventArgs e)
         {
-            LeftRackManualButton.IsChecked = !RightRackManualButton.IsChecked;
+            if (RightRackManualButton.IsChecked == true)
+            {
+                RightRackManualButton.Effect = null;
+                LeftRackManualButton.IsChecked = false;
+                LeftRackManualButton.Effect = myDropShadowEffect;
+            }
+            else
+            {
+                RightRackManualButton.Effect = myDropShadowEffect;
+                LeftRackManualButton.IsChecked = true;
+                LeftRackManualButton.Effect = null;
+            }
+            ManualComboBox_SelectionChanged(sender, null);
+        }
+        private void LeftRackManualButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (LeftRackManualButton.IsChecked == true)
+            {
+                LeftRackManualButton.Effect = null;
+                RightRackManualButton.IsChecked = false;
+                RightRackManualButton.Effect = myDropShadowEffect;
+            }
+            else
+            {
+                LeftRackManualButton.Effect = myDropShadowEffect;
+                RightRackManualButton.IsChecked = true;
+                RightRackManualButton.Effect = null;
+            }
             ManualComboBox_SelectionChanged(sender, null);
         }
 
