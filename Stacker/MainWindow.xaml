@@ -223,7 +223,20 @@
             <RowDefinition/>
             <RowDefinition Height="Auto" MinHeight="23"/>
         </Grid.RowDefinitions>
-        <StatusBar HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="14" Background="#FF3E606F" Grid.Row="1" Margin="0,0,0,-4"/>
+        <StatusBar HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="14" Background="#FF3E606F" Grid.Row="1" Margin="0,0,0,-4">
+            <Label Content="Label" Foreground="#FFFCFFF5"/>
+            <Label Content="Label"/>
+            <Label Content="Label" FontWeight="Bold"/>
+            <Label Content="Label" Foreground="#FF193441"/>
+            <ProgressBar Height="21" Width="201" Background="#FF193441" Foreground="#FFFCFFF5" VerticalAlignment="Center" SnapsToDevicePixels="True" Value="33">
+                <ProgressBar.BorderBrush>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFB2B2B2" Offset="0"/>
+                        <GradientStop Color="#FFD5DFE5" Offset="1"/>
+                    </LinearGradientBrush>
+                </ProgressBar.BorderBrush>
+            </ProgressBar> >
+        </StatusBar>
         <TabControl x:Name="Tabs" Margin="1" FontSize="16" Background="#FF193441" BorderBrush="{x:Null}">
             <TabItem x:Name="AutoTabItrm" Header="_Автоматический режим " Margin="5,0,-5,0" BorderBrush="#FF91AAB4" Background="#FFCBDBD7" Height="30">
                 <Grid Background="#FF193441" Margin="0">
