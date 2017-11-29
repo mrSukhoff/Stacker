@@ -55,9 +55,6 @@ namespace Stacker
         private SerialPort ComPort = null;
         private IModbusMaster PLC;
 
-        //эффект для теней
-        DropShadowEffect myDropShadowEffect;
-
         //Основная точка входа ----------------------------------------------------------------------------------------------------!
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -126,20 +123,6 @@ namespace Stacker
         //Настраиваем визуальные компоненты
         private void SetUpButtons()
         {
-            //эффект теней для кнопок
-            myDropShadowEffect = new DropShadowEffect();
-            Color myShadowColor = new Color
-            {
-                ScA = 1,
-                ScB = 0,
-                ScG = 0,
-                ScR = 0
-            };
-            myDropShadowEffect.Color = myShadowColor;
-            myDropShadowEffect.Direction = 315;
-            myDropShadowEffect.ShadowDepth = 20;
-            myDropShadowEffect.Opacity = 0.5;
-            
             LeftRackManualButton.Content = LeftRackName;
             RightRackManualButton.Content = RightRackName;
 
@@ -239,6 +222,7 @@ namespace Stacker
             }
             catch (Exception ex)
             {
+                FileTimer.Dispose();
                 MessageBox.Show(ex.Message, caption: "ReadOrdersFile");
             }
         }
@@ -349,12 +333,10 @@ namespace Stacker
             {
                 RightRackManualButton.Effect = null;
                 LeftRackManualButton.IsChecked = false;
-                LeftRackManualButton.Effect = myDropShadowEffect;
-            }
+             }
             else
             {
-                RightRackManualButton.Effect = myDropShadowEffect;
-                LeftRackManualButton.IsChecked = true;
+                 LeftRackManualButton.IsChecked = true;
                 LeftRackManualButton.Effect = null;
             }
             ManualComboBox_SelectionChanged(sender, null);
@@ -365,11 +347,9 @@ namespace Stacker
             {
                 LeftRackManualButton.Effect = null;
                 RightRackManualButton.IsChecked = false;
-                RightRackManualButton.Effect = myDropShadowEffect;
             }
             else
             {
-                LeftRackManualButton.Effect = myDropShadowEffect;
                 RightRackManualButton.IsChecked = true;
                 RightRackManualButton.Effect = null;
             }
@@ -554,7 +534,7 @@ namespace Stacker
 
         private void BringManualButton_Unchecked(object sender, RoutedEventArgs e)
         {
-            BringManualButton.Effect = myDropShadowEffect;
+            
         }
     }
 
