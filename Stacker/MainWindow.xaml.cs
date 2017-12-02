@@ -401,7 +401,7 @@ namespace Stacker
                 ushort dhi = (ushort)(d / 0x10000);
                 address += 0x1000;
                 plc.WriteSingleRegister(1, address, dlo);
-                plc.WriteSingleRegister(1, address++, dhi);
+                plc.WriteSingleRegister(1, ++address, dhi);
                 return true;
             }
             catch (Exception ex)

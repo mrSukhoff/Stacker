@@ -62,8 +62,8 @@ namespace Stacker.Properties {
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на [General]
-        ///OrderFile=D:\\WORK\Stacker\Orders\instr_exp.txt
-        ///ArchiveFile=D:\\WORK\Stacker\Orders\instr_imp.txt
+        ///OrderFile=D:\\БЕРТА\БЕРТА Сухарев\Projects\Stacker\Orders\instr_exp.txt
+        ///ArchiveFile=D:\\БЕРТА\БЕРТА Сухарев\Projects\Stacker\Orders\instr_imp.txt
         ///
         ///[Stacker]
         ///Depth=30
