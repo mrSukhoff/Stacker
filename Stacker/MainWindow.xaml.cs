@@ -41,6 +41,10 @@ namespace Stacker
         // таймер для контроля изменения файла заявок
         Timer FileTimer;
         delegate void RefreshList();
+        //Таймер для чтения слова состояния контроллера
+        Timer PlcTimer;
+        delegate void WriteStateWord();
+        
 
         //коллекция заявок
         List<Order> Orders = new List<Order>();
@@ -54,6 +58,9 @@ namespace Stacker
         //Com-порт к которому подсоединен контроллер
         private SerialPort ComPort = null;
         private IModbusMaster PLC;
+
+        //Слово состояния контроллера
+        ushort StateWord;
 
         //Основная точка входа ----------------------------------------------------------------------------------------------------!
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -78,6 +85,15 @@ namespace Stacker
             {
                 ComPort.Open();
                 PLC = ModbusSerialMaster.CreateAscii(ComPort);
+                //временно включаем ручной режим
+                WriteDword(PLC, 8, 1);
+                //Записываем максимальные значения координат
+                WriteDword(PLC, 10, 200000);
+                WriteDword(PLC, 12, 200000);
+                //и максимальные значения ячеек
+                WriteDword(PLC, 14, 29);
+                WriteDword(PLC, 16, 16);
+                PlcTimer = new Timer(ReadStateWord, null, 0, 500);
             }
             catch (Exception ex)
             {
@@ -511,6 +527,28 @@ namespace Stacker
             if (PLC != null) SetMerker(PLC, 13, false);
         }
 
+        //Обработчик нажатия кнопки влево
+        private void ManPlatformToLeftButton_Checked(object sender, RoutedEventArgs e)
+        {
+            if (PLC != null)
+            {
+                //включаем ручной режим
+                WriteDword(PLC, 8, 1);
+                SetMerker(PLC, 14, true);
+            }
+        }
+
+        //Обработчик нажатия кнопки вправо
+        private void ManPlatformToRightButton_Checked(object sender, RoutedEventArgs e)
+        {
+            if (PLC != null)
+            {
+                //включаем ручной режим
+                WriteDword(PLC, 8, 1);
+                SetMerker(PLC, 14, true);
+            }
+        }
+        
         //Обработчик нажатия кнопки STOP
         private void StopButton_Click(object sender, RoutedEventArgs e)
         {
@@ -520,21 +558,37 @@ namespace Stacker
         //Обработчик нажатия кнопки "Перейти на координаты"
         private void GotoButton_Click(object sender, RoutedEventArgs e)
         {
-            uint x = Convert.ToUInt32(GotoXTextBox.Text);
-            uint y = Convert.ToUInt32(GotoYTextBox.Text);
-            WriteDword(PLC, 0, x);
-            WriteDword(PLC, 2, y);
-            SetMerker(PLC,1,true);
+            ReadMerker(PLC, 20, out bool m);
+            if (m != true)
+            {
+                uint x = Convert.ToUInt32(GotoXTextBox.Text);
+                uint y = Convert.ToUInt32(GotoYTextBox.Text);
+                //Включаем режим перемещения по координатам
+                WriteDword(PLC, 8, 2);
+                WriteDword(PLC, 0, x);
+                WriteDword(PLC, 2, y);
+                SetMerker(PLC, 20, true);
+            }
         }
 
-        private void BringManualButton_Checked(object sender, RoutedEventArgs e)
+        private void ReadStateWord(object ob)
         {
-            BringManualButton.Effect = null;
-        }
+            if (PLC != null)
+            {
+                try
+                {
+                    ReadDword(PLC, 100, out int word);
+                    StateWord = Convert.ToUInt16(word);
+                    string lbltxt = "State Word: " + Convert.ToString(word, 2)+ " ";
+                    Dispatcher.Invoke(new WriteStateWord(() => StateWordLabel.Content= lbltxt));
 
-        private void BringManualButton_Unchecked(object sender, RoutedEventArgs e)
-        {
-            
+                }
+                catch (Exception ex)
+                {
+                    PlcTimer.Dispose();
+                    MessageBox.Show(ex.Message, caption: "ReadStateWord");
+                }
+            }
         }
     }
 
