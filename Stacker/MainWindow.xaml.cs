@@ -500,7 +500,7 @@ namespace Stacker
         //Обработчик нажатия кнопки "дальше"
         private void FartherButton_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if(PLC != null) SetMerker(PLC, 10, false);
+            if(PLC != null) SetMerker(PLC, 10, true);
         }
         private void FartherButton_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
@@ -571,6 +571,7 @@ namespace Stacker
             }
         }
 
+        //по таймеру читаем слово состояния контроллера
         private void ReadStateWord(object ob)
         {
             if (PLC != null)
@@ -579,8 +580,10 @@ namespace Stacker
                 {
                     ReadDword(PLC, 100, out int word);
                     StateWord = Convert.ToUInt16(word);
-                    string lbltxt = "State Word: " + Convert.ToString(word, 2)+ " ";
-                    Dispatcher.Invoke(new WriteStateWord(() => StateWordLabel.Content= lbltxt));
+                    string lbltxt = Convert.ToString(word, 2)+ " ";
+                    while (lbltxt.Length < 15) { lbltxt = "0" + lbltxt; }
+                    lbltxt.Trim();
+                    Dispatcher.Invoke(new WriteStateWord(() => StateWordLabel.Content= "State Word: "+lbltxt));
 
                 }
                 catch (Exception ex)
