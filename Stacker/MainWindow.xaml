@@ -365,14 +365,16 @@
                                 <RowDefinition Height="73*"/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
+                                <ColumnDefinition Width="12*"/>
+                                <ColumnDefinition Width="43*"/>
                             </Grid.ColumnDefinitions>
-                            <Button x:Name="GotoButton" Content="Перейти" HorizontalAlignment="Center" VerticalAlignment="Center" Width="153" Grid.ColumnSpan="2" Margin="62,17,57,10" Height="46" Grid.Row="2" MinWidth="101" MinHeight="36" FontWeight="Bold" FontSize="24" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" Click="GotoButton_Click"/>
-                            <TextBox x:Name="GotoXTextBox" HorizontalAlignment="Center" Height="36" TextWrapping="Wrap" Text="0" VerticalAlignment="Center" Width="100" RenderTransformOrigin="0.492,0.45" Grid.ColumnSpan="2" Margin="85,37,87,0" MinWidth="100" MinHeight="30" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="24" PreviewTextInput="TextBox_PreviewTextInput" Background="#FFCBDBB7"/>
-                            <TextBox x:Name="GotoYTextBox" HorizontalAlignment="Center" Height="36" TextWrapping="Wrap" Text="0" VerticalAlignment="Center" Width="100" Grid.ColumnSpan="2" Margin="86,36,86,0" MinWidth="100" MinHeight="30" Grid.Row="1" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="24" PreviewTextInput="TextBox_PreviewTextInput" Background="#FFCBDBB7"/>
-                            <Label Content="X" HorizontalAlignment="Center" Margin="85,1,87,36" VerticalAlignment="Center" Width="100" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Height="36" MinWidth="100" MinHeight="30" FontSize="24" HorizontalContentAlignment="Center" Foreground="#FFFCFFF5"/>
-                            <Label Content="Y" HorizontalAlignment="Center" Margin="85,1,87,35" VerticalAlignment="Center" Width="100" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="36" MinWidth="100" MinHeight="30" Grid.Row="1" FontSize="24" Foreground="#FFFCFFF5"/>
+                            <Button x:Name="GotoButton" Content="Перейти" HorizontalAlignment="Left" Width="153" Margin="3,17,0,8" Grid.Row="2" MinWidth="101" MinHeight="36" FontWeight="Bold" FontSize="24" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" Click="GotoButton_Click" Grid.Column="1"/>
+                            <TextBox x:Name="GotoXTextBox" HorizontalAlignment="Left" Height="36" TextWrapping="Wrap" Text="0" VerticalAlignment="Bottom" Width="100" RenderTransformOrigin="0.492,0.45" Margin="3,0,0,0" MinWidth="100" MinHeight="30" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="24" PreviewTextInput="TextBox_PreviewTextInput" Background="#FFCBDBB7" Grid.Column="1"/>
+                            <TextBox x:Name="GotoYTextBox" HorizontalAlignment="Left" Height="36" TextWrapping="Wrap" Text="0" VerticalAlignment="Bottom" Width="100" Margin="3,0,0,1" MinWidth="100" MinHeight="30" Grid.Row="1" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="24" PreviewTextInput="TextBox_PreviewTextInput" Background="#FFCBDBB7" Grid.Column="1"/>
+                            <Label Content="X" HorizontalAlignment="Left" Margin="26,0,0,36" VerticalAlignment="Bottom" Width="100" VerticalContentAlignment="Center" Height="36" MinWidth="100" MinHeight="30" FontSize="24" HorizontalContentAlignment="Center" Foreground="#FFFCFFF5" Grid.Column="1"/>
+                            <Label Content="Y" HorizontalAlignment="Left" Margin="26,0,0,35" VerticalAlignment="Bottom" Width="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="36" MinWidth="100" MinHeight="30" Grid.Row="1" FontSize="24" Foreground="#FFFCFFF5" Grid.Column="1"/>
+                            <Button x:Name="XResButton" Content="R" Grid.Column="1" HorizontalAlignment="Left" Height="36" Margin="120,0,0,0" VerticalAlignment="Bottom" Width="36" MinWidth="25" Click="XResButton_Click"/>
+                            <Button x:Name="YResButton" Content="R" Grid.Column="1" HorizontalAlignment="Left" Margin="120,0,0,1" Width="36" MinWidth="25" Grid.Row="1" Click="YResButton_Click" Height="36" VerticalAlignment="Bottom"/>
                         </Grid>
                     </GroupBox>
                     <GroupBox Header="Премещение" Margin="3,0,3,3" Background="#FF193441" Grid.Column="1" Grid.Row="1" Foreground="#FFFCFFF5">

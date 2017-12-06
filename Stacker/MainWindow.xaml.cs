@@ -38,9 +38,11 @@ namespace Stacker
 
         // переменная для контроля изменения файла заявок
         DateTime LastOrdersFileAccessTime = DateTime.Now;
+        
         // таймер для контроля изменения файла заявок
         Timer FileTimer;
         delegate void RefreshList();
+        
         //Таймер для чтения слова состояния контроллера
         Timer PlcTimer;
         delegate void WriteStateWord();
@@ -48,10 +50,14 @@ namespace Stacker
 
         //коллекция заявок
         List<Order> Orders = new List<Order>();
+        
         //Координаты ячеек
         CellsGrid LeftStacker;
         CellsGrid RightStacker;
 
+        //Максимальные значения координат
+        const int MaxX = 110000;
+        const int MaxY = 20000;
         //формат ввода координат в textbox'ы
         Regex CoordinateRegex = new Regex(@"\d");
 
@@ -88,8 +94,8 @@ namespace Stacker
                 //временно включаем ручной режим
                 WriteDword(PLC, 8, 1);
                 //Записываем максимальные значения координат
-                WriteDword(PLC, 10, 219000);
-                WriteDword(PLC, 12, 29000);
+                WriteDword(PLC, 10, MaxX);
+                WriteDword(PLC, 12, MaxY);
                 //и максимальные значения ячеек
                 WriteDword(PLC, 14, 29);
                 WriteDword(PLC, 16, 16);
@@ -563,6 +569,8 @@ namespace Stacker
             {
                 uint x = Convert.ToUInt32(GotoXTextBox.Text);
                 uint y = Convert.ToUInt32(GotoYTextBox.Text);
+                x = x > MaxX ? MaxX : x;
+                y = y > MaxY ? MaxY : y;
                 //Включаем режим перемещения по координатам
                 WriteDword(PLC, 8, 2);
                 WriteDword(PLC, 0, x);
@@ -612,6 +620,16 @@ namespace Stacker
                     MessageBox.Show(ex.Message, caption: "ReadStateWord");
                 }
             }
+        }
+
+        private void XResButton_Click(object sender, RoutedEventArgs e)
+        {
+            GotoXTextBox.Text = "0";
+        }
+
+        private void YResButton_Click(object sender, RoutedEventArgs e)
+        {
+            GotoYTextBox.Text = "0";
         }
     }
 
