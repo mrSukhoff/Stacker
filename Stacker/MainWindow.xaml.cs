@@ -334,8 +334,20 @@ namespace Stacker
                 int floor = FloorComboBox.SelectedIndex;
                 CoordinateXTextBox.Text = CoordinateXTextBox.Text == "" ? "0" : CoordinateXTextBox.Text;
                 CoordinateYTextBox.Text = CoordinateYTextBox.Text == "" ? "0" : CoordinateYTextBox.Text;
-                stacker[row, floor].X = Convert.ToInt32(CoordinateXTextBox.Text);
-                stacker[row, floor].Y = Convert.ToInt32(CoordinateYTextBox.Text);
+                int x = Convert.ToInt32(CoordinateXTextBox.Text);
+                int y = Convert.ToInt32(CoordinateYTextBox.Text);
+                if (x > MaxX)
+                {
+                    x = MaxX;
+                    CoordinateXTextBox.Text = MaxX.ToString();
+                }
+                if (y > MaxY)
+                {
+                    y = MaxY;
+                    CoordinateYTextBox.Text = MaxY.ToString();
+                }
+                stacker[row, floor].X = x;
+                stacker[row, floor].Y = y;
                 stacker[row, floor].IsNotAvailable = (bool)IsNOTAvailableCheckBox.IsChecked;
             }
             catch (Exception ex)
