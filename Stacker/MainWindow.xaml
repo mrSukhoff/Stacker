@@ -224,7 +224,11 @@
             <RowDefinition Height="Auto" MinHeight="23"/>
         </Grid.RowDefinitions>
         <StatusBar HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="14" Background="#FF3E606F" Grid.Row="1" Margin="0,0,0,-4">
-            <Label x:Name="StateWordLabel" Content="State Word: 000000000000000" Foreground="#FFFCFFF5" Width="200"/> >
+            <Label x:Name="StateWordLabel" Content="State Word: 000000000000000" Foreground="#FFFCFFF5"/>
+            <Label x:Name="XLabel" Content="X:0000000"/>
+            <Label x:Name="YLabel" Content="Y:0000000"/>
+            <Label x:Name="RowLabel" Content="R:00"/>
+            <Label x:Name="FloorLabel" Content="F:00"/>
         </StatusBar>
         <TabControl x:Name="Tabs" Margin="1" FontSize="16" Background="#FF193441" BorderBrush="{x:Null}">
             <TabItem x:Name="AutoTabItrm" Header="_Автоматический режим " Margin="5,0,-5,0" BorderBrush="#FF91AAB4" Background="#FFCBDBD7" Height="30">

@@ -44,7 +44,7 @@ namespace Stacker
         //Таймер для чтения слова состояния контроллера
         Timer PlcTimer;
         delegate void WriteStateWord();
-        
+        delegate void WriteLabel();
 
         //коллекция заявок
         List<Order> Orders = new List<Order>();
@@ -88,8 +88,8 @@ namespace Stacker
                 //временно включаем ручной режим
                 WriteDword(PLC, 8, 1);
                 //Записываем максимальные значения координат
-                WriteDword(PLC, 10, 200000);
-                WriteDword(PLC, 12, 200000);
+                WriteDword(PLC, 10, 219000);
+                WriteDword(PLC, 12, 29000);
                 //и максимальные значения ячеек
                 WriteDword(PLC, 14, 29);
                 WriteDword(PLC, 16, 16);
@@ -580,10 +580,30 @@ namespace Stacker
                 {
                     ReadDword(PLC, 100, out int word);
                     StateWord = Convert.ToUInt16(word);
-                    string lbltxt = Convert.ToString(word, 2)+ " ";
-                    while (lbltxt.Length < 15) { lbltxt = "0" + lbltxt; }
-                    lbltxt.Trim();
-                    Dispatcher.Invoke(new WriteStateWord(() => StateWordLabel.Content= "State Word: "+lbltxt));
+                    string lbltxt =Convert.ToString(word, 2) + " ";
+                    while (lbltxt.Length < 16) { lbltxt = "0" + lbltxt; }
+                    Dispatcher.Invoke(new WriteStateWord(() => StateWordLabel.Content = "State Word: " + lbltxt));
+
+                    //ushort[] d = PLC.ReadHoldingRegisters(1, 0x1408, 2);
+                    ReadDword(PLC, 408, out word);
+                    string t = Convert.ToString(word);
+                    while (t.Length < 7) { t = "0" + t; }
+                    Dispatcher.Invoke(new WriteLabel(() => XLabel.Content = "X: " + t));
+
+                    ReadDword(PLC, 410, out word);
+                    t = Convert.ToString(word);
+                    while (t.Length < 7) { t = "0" + t; }
+                    Dispatcher.Invoke(new WriteLabel(() => YLabel.Content = "Y: " + t));
+
+                    ReadDword(PLC, 412, out word);
+                    t = Convert.ToString(word);
+                    while (t.Length < 2) { t = "0" + t; }
+                    Dispatcher.Invoke(new WriteLabel(() => RowLabel.Content = "R: " + t));
+
+                    ReadDword(PLC, 414, out word);
+                    t = Convert.ToString(word);
+                    while (t.Length < 2) { t = "0" + t; }
+                    Dispatcher.Invoke(new WriteLabel(() => FloorLabel.Content = "F: " + t));
 
                 }
                 catch (Exception ex)
