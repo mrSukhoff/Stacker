@@ -508,7 +508,11 @@ namespace Stacker
         //Обработчик нажатия кнопки "ближе"
         private void CloserButton_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if (PLC != null) SetMerker(PLC, 11, true);
+            if (PLC != null)
+            {
+                WriteDword(PLC, 8, 1);
+                SetMerker(PLC, 11, true);
+            }
         }
         private void CloserButton_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
@@ -518,7 +522,11 @@ namespace Stacker
         //Обработчик нажатия кнопки "дальше"
         private void FartherButton_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if(PLC != null) SetMerker(PLC, 10, true);
+            if(PLC != null)
+            {
+                WriteDword(PLC, 8, 1);
+                SetMerker(PLC, 10, true);
+            }
         }
         private void FartherButton_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
@@ -528,7 +536,11 @@ namespace Stacker
         //Обработчик нажатия кнопки "вверх"
         private void UpButton_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if (PLC != null) SetMerker(PLC, 12, true);
+            if (PLC != null)
+            {
+                WriteDword(PLC, 8, 1);
+                SetMerker(PLC, 12, true);
+            }
         }
         private void UpButton_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
@@ -538,7 +550,11 @@ namespace Stacker
         //Обработчик нажатия кнопки "вниз"
         private void DownButton_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if (PLC != null) SetMerker(PLC, 13, true);
+            if (PLC != null)
+            {
+                WriteDword(PLC, 8, 1);
+                SetMerker(PLC, 13, true);
+            }
         }
         private void DownButton_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
@@ -634,14 +650,48 @@ namespace Stacker
             }
         }
 
+        //кнопки сброса значений в TextBox на ноль
         private void XResButton_Click(object sender, RoutedEventArgs e)
         {
             GotoXTextBox.Text = "0";
         }
-
         private void YResButton_Click(object sender, RoutedEventArgs e)
         {
             GotoYTextBox.Text = "0";
+        }
+
+        //При даблклике по кнопке движение до следующего ряда
+        private void CloserButton_PreviewMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (PLC != null)
+            {
+                WriteDword(PLC, 8, 4);
+                SetMerker(PLC, 11, true);
+            }
+        }
+        private void UpButton_PreviewMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (PLC != null)
+            {
+                WriteDword(PLC, 8, 4);
+                SetMerker(PLC, 12, true);
+            }
+        }
+        private void DownButton_PreviewMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (PLC != null)
+            {
+                WriteDword(PLC, 8, 4);
+                SetMerker(PLC, 13, true);
+            }
+        }
+        private void FartherButton_PreviewMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (PLC != null)
+            {
+                WriteDword(PLC, 8, 4);
+                SetMerker(PLC, 10, true);
+            }
         }
     }
 
