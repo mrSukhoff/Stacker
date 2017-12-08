@@ -56,8 +56,8 @@ namespace Stacker
         CellsGrid RightStacker;
 
         //Максимальные значения координат
-        const int MaxX = 110000;
-        const int MaxY = 20000;
+        const int MaxX = 105000;
+        const int MaxY = 29000;
         //формат ввода координат в textbox'ы
         Regex CoordinateRegex = new Regex(@"\d");
 
@@ -592,15 +592,15 @@ namespace Stacker
         //Обработчик нажатия кнопки "Перейти на координаты"
         private void GotoButton_Click(object sender, RoutedEventArgs e)
         {
-            ReadMerker(PLC, 20, out bool m);
-            if (m != true)
+            //ReadMerker(PLC, 20, out bool m);
+            if ( true)
             {
                 uint x = Convert.ToUInt32(GotoXTextBox.Text);
                 uint y = Convert.ToUInt32(GotoYTextBox.Text);
                 x = x > MaxX ? MaxX : x;
                 y = y > MaxY ? MaxY : y;
                 //Включаем режим перемещения по координатам
-                WriteDword(PLC, 8, 2);
+                WriteDword(PLC, 8, 3);
                 WriteDword(PLC, 0, x);
                 WriteDword(PLC, 2, y);
                 SetMerker(PLC, 20, true);
