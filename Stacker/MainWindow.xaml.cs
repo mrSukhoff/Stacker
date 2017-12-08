@@ -181,7 +181,18 @@ namespace Stacker
             CoordinateXTextBox.TextChanged += CoordinateChanged;
             CoordinateYTextBox.TextChanged += CoordinateChanged;
             IsNOTAvailableCheckBox.Click += IsNOTAvailableCheckBox_Click;
-            //нажимаем левую кнопку
+
+            //дефолтные методы обработки нажатия кнопок перемещения манипулятора в ручном режиме
+            FartherButton.PreviewMouseLeftButtonUp += FartherButton_PreviewMouseLeftButtonUp;
+            FartherButton.PreviewMouseLeftButtonDown += FartherButton_PreviewMouseLeftButtonDown;
+            CloserButton.PreviewMouseLeftButtonUp += CloserButton_PreviewMouseLeftButtonUp;
+            CloserButton.PreviewMouseLeftButtonDown += CloserButton_PreviewMouseLeftButtonDown;
+            UpButton.PreviewMouseLeftButtonUp += UpButton_PreviewMouseLeftButtonUp;
+            UpButton.PreviewMouseLeftButtonDown += UpButton_PreviewMouseLeftButtonDown;
+            DownButton.PreviewMouseLeftButtonUp += DownButton_PreviewMouseLeftButtonUp;
+            DownButton.PreviewMouseLeftButtonDown += DownButton_PreviewMouseLeftButtonDown;
+
+            //включаем кнопку левого ряда
             LeftRackManualButton.IsChecked = true;
             LeftRackManualButton_Click(null, null);
         }
@@ -660,7 +671,7 @@ namespace Stacker
             GotoYTextBox.Text = "0";
         }
 
-        //При даблклике по кнопке движение до следующего ряда
+        //При клике по кнопке движение до следующего ряда
         private void CloserButton_PreviewMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (PLC != null)
@@ -692,6 +703,48 @@ namespace Stacker
                 WriteDword(PLC, 8, 4);
                 SetMerker(PLC, 10, true);
             }
+        }
+
+        //В зависимости от состояния чекбокса выбираем действия кнопок
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            FartherButton.PreviewMouseLeftButtonUp -= FartherButton_PreviewMouseLeftButtonUp;
+            FartherButton.PreviewMouseLeftButtonDown -= FartherButton_PreviewMouseLeftButtonDown;
+
+            CloserButton.PreviewMouseLeftButtonUp -= CloserButton_PreviewMouseLeftButtonUp;
+            CloserButton.PreviewMouseLeftButtonDown -= CloserButton_PreviewMouseLeftButtonDown;
+
+            UpButton.PreviewMouseLeftButtonUp -= UpButton_PreviewMouseLeftButtonUp;
+            UpButton.PreviewMouseLeftButtonDown -= UpButton_PreviewMouseLeftButtonDown;
+
+            DownButton.PreviewMouseLeftButtonUp -= DownButton_PreviewMouseLeftButtonUp;
+            DownButton.PreviewMouseLeftButtonDown -= DownButton_PreviewMouseLeftButtonDown;
+
+            FartherButton.PreviewMouseLeftButtonDown += FartherButton_PreviewMouseDoubleClick;
+            CloserButton.PreviewMouseLeftButtonDown += CloserButton_PreviewMouseDoubleClick;
+            UpButton.PreviewMouseLeftButtonDown += UpButton_PreviewMouseDoubleClick;
+            DownButton.PreviewMouseLeftButtonDown += DownButton_PreviewMouseDoubleClick;
+        }
+        private void LineMotionCheckbox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            FartherButton.PreviewMouseLeftButtonDown -= FartherButton_PreviewMouseDoubleClick;
+            CloserButton.PreviewMouseLeftButtonDown -= CloserButton_PreviewMouseDoubleClick;
+            UpButton.PreviewMouseLeftButtonDown -= UpButton_PreviewMouseDoubleClick;
+            DownButton.PreviewMouseLeftButtonDown -= DownButton_PreviewMouseDoubleClick;
+
+            FartherButton.PreviewMouseLeftButtonUp += FartherButton_PreviewMouseLeftButtonUp;
+            FartherButton.PreviewMouseLeftButtonDown += FartherButton_PreviewMouseLeftButtonDown;
+            
+            CloserButton.PreviewMouseLeftButtonUp += CloserButton_PreviewMouseLeftButtonUp;
+            CloserButton.PreviewMouseLeftButtonDown += CloserButton_PreviewMouseLeftButtonDown;
+
+            UpButton.PreviewMouseLeftButtonUp += UpButton_PreviewMouseLeftButtonUp;
+            UpButton.PreviewMouseLeftButtonDown += UpButton_PreviewMouseLeftButtonDown;
+
+            DownButton.PreviewMouseLeftButtonUp += DownButton_PreviewMouseLeftButtonUp;
+            DownButton.PreviewMouseLeftButtonDown += DownButton_PreviewMouseLeftButtonDown;
+            
+            
         }
     }
 
