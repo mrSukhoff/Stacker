@@ -56,8 +56,8 @@ namespace Stacker
         CellsGrid RightStacker;
 
         //Максимальные значения координат
-        const int MaxX = 105000;
-        const int MaxY = 29000;
+        const int MaxX = 54000;
+        const int MaxY = 14000;
         //формат ввода координат в textbox'ы
         Regex CoordinateRegex = new Regex(@"\d");
 
@@ -124,7 +124,7 @@ namespace Stacker
                 RightRackName = Convert.ToChar(manager.GetPrivateString("Stacker", "RightRackName"));
                 RightRackNumber = Convert.ToInt16(manager.GetPrivateString("Stacker", "RightRackNumber"));
                 string port = manager.GetPrivateString("PLC", "ComPort");
-                ComPort = new SerialPort(port, 9600, Parity.Even, 7, StopBits.One);
+                ComPort = new SerialPort(port, 115200, Parity.Even, 7, StopBits.One);
             }
             catch (Exception ex)
             {
@@ -572,7 +572,7 @@ namespace Stacker
             if (PLC != null) SetMerker(PLC, 13, false);
         }
 
-        //Обработчик нажатия кнопки влево
+        //Обработчик нажатия кнопки "платформа влево"
         private void ManPlatformToLeftButton_Checked(object sender, RoutedEventArgs e)
         {
             if (PLC != null)
@@ -583,14 +583,14 @@ namespace Stacker
             }
         }
 
-        //Обработчик нажатия кнопки вправо
+        //Обработчик нажатия кнопкиплатформа "вправо вправо"
         private void ManPlatformToRightButton_Checked(object sender, RoutedEventArgs e)
         {
             if (PLC != null)
             {
                 //включаем ручной режим
                 WriteDword(PLC, 8, 1);
-                SetMerker(PLC, 14, true);
+                SetMerker(PLC, 15, true);
             }
         }
         
@@ -672,6 +672,14 @@ namespace Stacker
         }
 
         //При клике по кнопке движение до следующего ряда
+        private void FartherButton_PreviewMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (PLC != null)
+            {
+                WriteDword(PLC, 8, 4);
+                SetMerker(PLC, 10, true);
+            }
+        }
         private void CloserButton_PreviewMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (PLC != null)
@@ -696,14 +704,7 @@ namespace Stacker
                 SetMerker(PLC, 13, true);
             }
         }
-        private void FartherButton_PreviewMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            if (PLC != null)
-            {
-                WriteDword(PLC, 8, 4);
-                SetMerker(PLC, 10, true);
-            }
-        }
+        
 
         //В зависимости от состояния чекбокса выбираем действия кнопок
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
