@@ -67,7 +67,8 @@ namespace Stacker
 
         //Слово состояния контроллера
         ushort StateWord;
-
+        
+        //##########################################################################################################################
         //Основная точка входа ----------------------------------------------------------------------------------------------------!
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -436,12 +437,13 @@ namespace Stacker
         }
 
         //метод записывает 32-битное число в контроллер
-        public bool WriteDword(IModbusMaster plc, ushort address, uint d)
+        public bool WriteDword(IModbusMaster plc, int adr, int d)
         {
             try
             {
                 ushort dlo = (ushort)(d % 0x10000);
                 ushort dhi = (ushort)(d / 0x10000);
+                UInt16 address = Convert.ToUInt16(adr);
                 address += 0x1000;
                 plc.WriteSingleRegister(1, address, dlo);
                 plc.WriteSingleRegister(1, ++address, dhi);
@@ -604,8 +606,8 @@ namespace Stacker
             //ReadMerker(PLC, 20, out bool m);
             if ( true)
             {
-                uint x = Convert.ToUInt32(GotoXTextBox.Text);
-                uint y = Convert.ToUInt32(GotoYTextBox.Text);
+                int x = Convert.ToUInt16(GotoXTextBox.Text);
+                int y = Convert.ToUInt16(GotoYTextBox.Text);
                 x = x > MaxX ? MaxX : x;
                 y = y > MaxY ? MaxY : y;
                 //Включаем режим перемещения по координатам
@@ -750,7 +752,19 @@ namespace Stacker
         {
             if (PLC !=null)
             {
-
+                CellsGrid stacker = LeftRackManualButton.IsChecked == true ? LeftStacker : RightStacker;
+                int r = RowManualComboBox.SelectedIndex;
+                int f = FloorManualCombobox.SelectedIndex;
+                int x = stacker[r, f].X;
+                int y = stacker[r, f].Y;
+                
+                //Включаем режим перемещения по координатам
+                WriteDword(PLC, 8, 2);
+                WriteDword(PLC, 0, x);
+                WriteDword(PLC, 2, y);
+                WriteDword(PLC, 4, r);
+                WriteDword(PLC, 6, f);
+                SetMerker(PLC, 1, true);
             }
         }
 
