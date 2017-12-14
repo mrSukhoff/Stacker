@@ -29,8 +29,8 @@ namespace Stacker
         private string ArchiveFile;
 
         //размеры, имена и номера штабелеров
-        int StackerDepth = 0;
-        int StackerHight = 0;
+        int StackerDepth = 30;
+        int StackerHight = 17;
         char LeftRackName;
         int LeftRackNumber;
         char RightRackName;
@@ -56,7 +56,7 @@ namespace Stacker
         CellsGrid RightStacker;
 
         //Максимальные значения координат
-        const int MaxX = 54000;
+        const int MaxX = 55000;
         const int MaxY = 14000;
         //формат ввода координат в textbox'ы
         Regex CoordinateRegex = new Regex(@"\d");
@@ -117,8 +117,6 @@ namespace Stacker
                 INIManager manager = new INIManager(path);
                 OrdersFile = manager.GetPrivateString("General", "OrderFile");
                 ArchiveFile = manager.GetPrivateString("General", "ArchiveFile");
-                StackerDepth = Convert.ToInt16(manager.GetPrivateString("Stacker", "Depth").TrimEnd());
-                StackerHight = Convert.ToInt16(manager.GetPrivateString("Stacker", "Hight"));
                 LeftRackName = Convert.ToChar(manager.GetPrivateString("Stacker", "LeftRackName"));
                 LeftRackNumber = Convert.ToInt16(manager.GetPrivateString("Stacker", "LeftRackNumber"));
                 RightRackName = Convert.ToChar(manager.GetPrivateString("Stacker", "RightRackName"));
@@ -672,7 +670,7 @@ namespace Stacker
         }
 
         //При клике по кнопке движение до следующего ряда
-        private void FartherButton_PreviewMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void FartherButton_NextLine(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (PLC != null)
             {
@@ -680,7 +678,7 @@ namespace Stacker
                 SetMerker(PLC, 10, true);
             }
         }
-        private void CloserButton_PreviewMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void CloserButton_NextLine(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (PLC != null)
             {
@@ -688,7 +686,7 @@ namespace Stacker
                 SetMerker(PLC, 11, true);
             }
         }
-        private void UpButton_PreviewMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void UpButton_NextLine(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (PLC != null)
             {
@@ -696,7 +694,7 @@ namespace Stacker
                 SetMerker(PLC, 12, true);
             }
         }
-        private void DownButton_PreviewMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void DownButton_NextLine(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (PLC != null)
             {
@@ -721,17 +719,17 @@ namespace Stacker
             DownButton.PreviewMouseLeftButtonUp -= DownButton_PreviewMouseLeftButtonUp;
             DownButton.PreviewMouseLeftButtonDown -= DownButton_PreviewMouseLeftButtonDown;
 
-            FartherButton.PreviewMouseLeftButtonDown += FartherButton_PreviewMouseDoubleClick;
-            CloserButton.PreviewMouseLeftButtonDown += CloserButton_PreviewMouseDoubleClick;
-            UpButton.PreviewMouseLeftButtonDown += UpButton_PreviewMouseDoubleClick;
-            DownButton.PreviewMouseLeftButtonDown += DownButton_PreviewMouseDoubleClick;
+            FartherButton.PreviewMouseLeftButtonDown += FartherButton_NextLine;
+            CloserButton.PreviewMouseLeftButtonDown += CloserButton_NextLine;
+            UpButton.PreviewMouseLeftButtonDown += UpButton_NextLine;
+            DownButton.PreviewMouseLeftButtonDown += DownButton_NextLine;
         }
         private void LineMotionCheckbox_Unchecked(object sender, RoutedEventArgs e)
         {
-            FartherButton.PreviewMouseLeftButtonDown -= FartherButton_PreviewMouseDoubleClick;
-            CloserButton.PreviewMouseLeftButtonDown -= CloserButton_PreviewMouseDoubleClick;
-            UpButton.PreviewMouseLeftButtonDown -= UpButton_PreviewMouseDoubleClick;
-            DownButton.PreviewMouseLeftButtonDown -= DownButton_PreviewMouseDoubleClick;
+            FartherButton.PreviewMouseLeftButtonDown -= FartherButton_NextLine;
+            CloserButton.PreviewMouseLeftButtonDown -= CloserButton_NextLine;
+            UpButton.PreviewMouseLeftButtonDown -= UpButton_NextLine;
+            DownButton.PreviewMouseLeftButtonDown -= DownButton_NextLine;
 
             FartherButton.PreviewMouseLeftButtonUp += FartherButton_PreviewMouseLeftButtonUp;
             FartherButton.PreviewMouseLeftButtonDown += FartherButton_PreviewMouseLeftButtonDown;
