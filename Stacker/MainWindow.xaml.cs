@@ -416,7 +416,7 @@ namespace Stacker
                 int f = FloorManualCombobox.SelectedIndex;
                 bool isEnabled = !stacker[r,f].IsNotAvailable;
                 BringManualButton.IsEnabled = isEnabled;
-                CarryAwayManualButton.IsEnabled = isEnabled;
+                TakeAwayManualButton.IsEnabled = false;
                 ManualAddressLabel.IsEnabled = isEnabled;
                 char rack = LeftRackManualButton.IsChecked == true ? LeftRackName : RightRackName;
                 ManualAddressLabel.Content = rack + " - " + r.ToString() + " - " + f.ToString();
@@ -748,7 +748,10 @@ namespace Stacker
 
         private void BringManualButton_Click(object sender, RoutedEventArgs e)
         {
+            if (PLC !=null)
+            {
 
+            }
         }
 
         private void TakeAwayManualButton_Click(object sender, RoutedEventArgs e)
