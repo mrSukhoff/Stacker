@@ -745,6 +745,16 @@ namespace Stacker
             
             
         }
+
+        private void BringManualButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void TakeAwayManualButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 
 
