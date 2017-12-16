@@ -72,6 +72,7 @@ namespace Stacker
 
         //Кнопка, выдавшая задание)
         object bt = null;
+        delegate void ChangeButtonState();
 
         //##########################################################################################################################
         //Основная точка входа ----------------------------------------------------------------------------------------------------!
@@ -149,9 +150,11 @@ namespace Stacker
         //Настраиваем визуальные компоненты
         private void SetUpButtons()
         {
+            //Подписываем кнопки рядов
             LeftRackManualButton.Content = LeftRackName;
             RightRackManualButton.Content = RightRackName;
 
+            //Заполняем combobox'ы номерами рядов
             int[] rowItems = new int[StackerDepth - 1];
             for (int i = 0; i < rowItems.Length; i++) { rowItems[i] = i + 1; }
             RowManualComboBox.ItemsSource = rowItems;
@@ -159,6 +162,7 @@ namespace Stacker
             RowManualComboBox.SelectedIndex = 0;
             RowComboBox.SelectedIndex = 0;
 
+            // .. и этажей
             int[] floorItems = new int[StackerHight];
             for (int i = 0; i < floorItems.Length; i++) { floorItems[i] = i + 1; }
             FloorManualCombobox.ItemsSource = floorItems;
@@ -422,9 +426,10 @@ namespace Stacker
                 int f = FloorManualCombobox.SelectedIndex;
                 bool isEnabled = !stacker[r, f].IsNotAvailable;
                 BringManualButton.IsEnabled = isEnabled;
-                TakeAwayManualButton.IsEnabled = false;
+                TakeAwayManualButton.IsEnabled = isEnabled;
                 ManualAddressLabel.IsEnabled = isEnabled;
                 char rack = LeftRackManualButton.IsChecked == true ? LeftRackName : RightRackName;
+                r++;f++;
                 ManualAddressLabel.Content = rack + " - " + r.ToString() + " - " + f.ToString();
             }
             catch (Exception ex)
@@ -646,12 +651,14 @@ namespace Stacker
                     ReadDword(PLC, 408, out word);
                     string t = Convert.ToString(word);
                     while (t.Length < 7) { t = "0" + t; }
-                    Dispatcher.Invoke(new WriteLabel(() => XLabel.Content = "X: " + t));
+                    //Dispatcher.Invoke(new WriteLabel(() => XLabel.Content = "X: " + t));
+                    Dispatcher.Invoke(new WriteLabel(() => CoordinateXTextBox.Text = t));
 
                     ReadDword(PLC, 410, out word);
                     t = Convert.ToString(word);
                     while (t.Length < 7) { t = "0" + t; }
-                    Dispatcher.Invoke(new WriteLabel(() => YLabel.Content = "Y: " + t));
+                    //Dispatcher.Invoke(new WriteLabel(() => YLabel.Content = "Y: " + t));
+                    Dispatcher.Invoke(new WriteLabel(() => CoordinateYTextBox.Text = t));
 
                     ReadDword(PLC, 412, out word);
                     t = Convert.ToString(word);
@@ -662,7 +669,11 @@ namespace Stacker
                     t = Convert.ToString(word);
                     while (t.Length < 2) { t = "0" + t; }
                     Dispatcher.Invoke(new WriteLabel(() => FloorLabel.Content = "F: " + t));
-                    if ((word & 0x80) ==(StateWord&0x80)) supervisor();
+                    if ((bt != null) && ((word & 0x80) == 0x80))
+                    {
+                        Dispatcher.Invoke(new ChangeButtonState(()=> (bt as ButtonBase).IsEnabled = true));
+                        bt = null;
+                    }
                     StateWord = word;
                 }
                 catch (Exception ex)
@@ -770,6 +781,7 @@ namespace Stacker
                 int f = FloorManualCombobox.SelectedIndex;
                 int x = stacker[r, f].X;
                 int y = stacker[r, f].Y;
+                r++;f++;
                 bool side = RightRackManualButton.IsChecked == true;
 
                 //Включаем режим перемещения по координатам
@@ -799,6 +811,7 @@ namespace Stacker
             int f = FloorManualCombobox.SelectedIndex;
             int x = stacker[r, f].X;
             int y = stacker[r, f].Y;
+            r++; f++;
             bool side = RightRackManualButton.IsChecked == true;
 
             //Включаем режим перемещения по координатам
@@ -817,8 +830,6 @@ namespace Stacker
             SetMerker(PLC, 1, true);
             bt = sender;
             (bt as Button).IsEnabled = false;
-            bt = sender;
-            (bt as ButtonBase).IsEnabled = false;
         }
 
         //метод вызываеся при появлении в слове состояния контроллера  флага об окончании операции

@@ -152,16 +152,16 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Background" TargetName="Border" Value="#FF3e606f"/>
+                                <Setter Property="Background" TargetName="Border" Value="#FF91AAB4"/>
                                 <Setter Property="BorderBrush" TargetName="Border" Value="#FFCBDBD7"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Background" TargetName="Border" Value="#FF91AAB4"/>
+                                <Setter Property="Background" TargetName="Border" Value="#FF3e606f"/>
                                 <Setter Property="BorderBrush" TargetName="Border" Value="#FFCBDBD7"/>
                                 <Setter Property="Foreground" Value="#FF7598A6"/>
                             </Trigger>
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter Property="Background" TargetName="Border" Value="#FF3e606f"/>
+                                <Setter Property="Background" TargetName="Border" Value="#FF91AAB4"/>
                                 <Setter Property="BorderBrush" TargetName="Border" Value="#FFCBDBD7"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
@@ -190,12 +190,12 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ToggleButton}">
-                        <Border x:Name="Border" BorderBrush="#FFDCDCDC" BorderThickness="3" Background="#FFCBDBB7" CornerRadius="5" UseLayoutRounding="True" d:DesignUseLayoutRounding="True">
+                        <Border x:Name="Border" BorderBrush="#FFDCDCDC" BorderThickness="3" Background="#FF3e606f" CornerRadius="5" UseLayoutRounding="True" d:DesignUseLayoutRounding="True">
                             <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" HorizontalAlignment="Center" Margin="2" RecognizesAccessKey="True" UseLayoutRounding="True" VerticalAlignment="Center" d:DesignUseLayoutRounding="True"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Background" TargetName="Border" Value="#FF3e606f"/>
+                                <Setter Property="Background" TargetName="Border" Value="#FFCBDBB7"/>
                                 <Setter Property="BorderBrush" TargetName="Border" Value="#FFCBDBD7"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
@@ -204,7 +204,7 @@
                                 <Setter Property="Foreground" Value="#FF699BB0"/>
                             </Trigger>
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter Property="Background" TargetName="Border" Value="#FF3e606f"/>
+                                <Setter Property="Background" TargetName="Border" Value="#FFCBDBB7"/>
                                 <Setter Property="BorderBrush" TargetName="Border" Value="#FFCBDBD7"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
@@ -223,8 +223,6 @@
         </Grid.RowDefinitions>
         <StatusBar HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="14" Background="#FF3E606F" Grid.Row="1" Margin="0,0,0,-4">
             <Label x:Name="StateWordLabel" Content="State Word: 000000000000000" Foreground="#FFFCFFF5"/>
-            <Label x:Name="XLabel" Content="X:0000000"/>
-            <Label x:Name="YLabel" Content="Y:0000000"/>
             <Label x:Name="RowLabel" Content="R:00"/>
             <Label x:Name="FloorLabel" Content="F:00"/>
         </StatusBar>
