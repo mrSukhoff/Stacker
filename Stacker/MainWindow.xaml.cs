@@ -618,7 +618,7 @@ namespace Stacker
         private void GotoButton_Click(object sender, RoutedEventArgs e)
         {
             //ReadMerker(PLC, 20, out bool m);
-            if (true)
+            if (PLC!=null)
             {
                 int x = Convert.ToUInt16(GotoXTextBox.Text);
                 int y = Convert.ToUInt16(GotoYTextBox.Text);
@@ -806,30 +806,33 @@ namespace Stacker
         //метод обрабатывает нажатие кнопки увезти
         private void TakeAwayManualButton_Click(object sender, RoutedEventArgs e)
         {
-            CellsGrid stacker = LeftRackManualButton.IsChecked == true ? LeftStacker : RightStacker;
-            int r = RowManualComboBox.SelectedIndex;
-            int f = FloorManualCombobox.SelectedIndex;
-            int x = stacker[r, f].X;
-            int y = stacker[r, f].Y;
-            r++; f++;
-            bool side = RightRackManualButton.IsChecked == true;
+            if (PLC != null)
+            {
+                CellsGrid stacker = LeftRackManualButton.IsChecked == true ? LeftStacker : RightStacker;
+                int r = RowManualComboBox.SelectedIndex;
+                int f = FloorManualCombobox.SelectedIndex;
+                int x = stacker[r, f].X;
+                int y = stacker[r, f].Y;
+                r++; f++;
+                bool side = RightRackManualButton.IsChecked == true;
 
-            //Включаем режим перемещения по координатам
-            WriteDword(PLC, 8, 2);
-            //Пишем координаты
-            WriteDword(PLC, 0, x);
-            WriteDword(PLC, 2, y);
-            //Пишем ряд и этаж
-            WriteDword(PLC, 4, r);
-            WriteDword(PLC, 6, f);
-            //Устанваливаем сторону
-            SetMerker(PLC, 2, side);
-            //Устанавливаем флаг в "увезти"
-            SetMerker(PLC, 3, false);
-            //Даем команду на старт
-            SetMerker(PLC, 1, true);
-            bt = sender;
-            (bt as Button).IsEnabled = false;
+                //Включаем режим перемещения по координатам
+                WriteDword(PLC, 8, 2);
+                //Пишем координаты
+                WriteDword(PLC, 0, x);
+                WriteDword(PLC, 2, y);
+                //Пишем ряд и этаж
+                WriteDword(PLC, 4, r);
+                WriteDword(PLC, 6, f);
+                //Устанваливаем сторону
+                SetMerker(PLC, 2, side);
+                //Устанавливаем флаг в "увезти"
+                SetMerker(PLC, 3, false);
+                //Даем команду на старт
+                SetMerker(PLC, 1, true);
+                bt = sender;
+                (bt as Button).IsEnabled = false;
+            }
         }
 
         //метод вызываеся при появлении в слове состояния контроллера  флага об окончании операции
