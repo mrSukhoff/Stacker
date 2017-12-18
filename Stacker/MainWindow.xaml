@@ -225,6 +225,8 @@
             <Label x:Name="StateWordLabel" Content="State Word: 000000000000000" Foreground="#FFFCFFF5"/>
             <Label x:Name="RowLabel" Content="R:00"/>
             <Label x:Name="FloorLabel" Content="F:00"/>
+            <Label x:Name="XLabel" Content="X:000000"/>
+            <Label x:Name="YLabel" Content="Y:000000"/>
         </StatusBar>
         <TabControl x:Name="Tabs" Margin="1" FontSize="16" Background="#FF193441" BorderBrush="{x:Null}">
             <TabItem x:Name="AutoTabItrm" Header="_Автоматический режим " Margin="5,0,-5,0" BorderBrush="#FF91AAB4" Background="#FFCBDBD7" Height="30">

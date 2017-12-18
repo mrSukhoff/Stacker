@@ -591,7 +591,7 @@ namespace Stacker
                 WriteDword(PLC, 8, 1);
                 SetMerker(PLC, 14, true);
                 bt = sender;
-                (bt as ButtonBase).IsEnabled = false;
+                (bt as ButtonBase).IsEnabled = true;
             }
         }
 
@@ -604,7 +604,7 @@ namespace Stacker
                 WriteDword(PLC, 8, 1);
                 SetMerker(PLC, 15, true);
                 bt = sender;
-                (bt as ButtonBase).IsEnabled = false;
+                (bt as ButtonBase).IsEnabled = true;
             }
         }
 
@@ -630,7 +630,7 @@ namespace Stacker
                 WriteDword(PLC, 2, y);
                 SetMerker(PLC, 20, true);
                 bt = sender;
-                (bt as ButtonBase).IsEnabled = false;
+                (bt as ButtonBase).IsEnabled = true;
             }
         }
 
@@ -651,14 +651,14 @@ namespace Stacker
                     ReadDword(PLC, 408, out word);
                     string t = Convert.ToString(word);
                     while (t.Length < 7) { t = "0" + t; }
-                    //Dispatcher.Invoke(new WriteLabel(() => XLabel.Content = "X: " + t));
-                    Dispatcher.Invoke(new WriteLabel(() => CoordinateXTextBox.Text = t));
+                    Dispatcher.Invoke(new WriteLabel(() => XLabel.Content = "X: " + t));
+                    //Dispatcher.Invoke(new WriteLabel(() => CoordinateXTextBox.Text = t));
 
                     ReadDword(PLC, 410, out word);
                     t = Convert.ToString(word);
                     while (t.Length < 7) { t = "0" + t; }
-                    //Dispatcher.Invoke(new WriteLabel(() => YLabel.Content = "Y: " + t));
-                    Dispatcher.Invoke(new WriteLabel(() => CoordinateYTextBox.Text = t));
+                    Dispatcher.Invoke(new WriteLabel(() => YLabel.Content = "Y: " + t));
+                    //Dispatcher.Invoke(new WriteLabel(() => CoordinateYTextBox.Text = t));
 
                     ReadDword(PLC, 412, out word);
                     t = Convert.ToString(word);
@@ -669,11 +669,11 @@ namespace Stacker
                     t = Convert.ToString(word);
                     while (t.Length < 2) { t = "0" + t; }
                     Dispatcher.Invoke(new WriteLabel(() => FloorLabel.Content = "F: " + t));
-                    if ((bt != null) && ((word & 0x80) == 0x80))
+                    /*if ((bt != null) && ((word & 0x80) == 0x80))
                     {
                         Dispatcher.Invoke(new ChangeButtonState(()=> (bt as ButtonBase).IsEnabled = true));
                         bt = null;
-                    }
+                    }*/
                     StateWord = word;
                 }
                 catch (Exception ex)
@@ -771,7 +771,7 @@ namespace Stacker
 
         }
 
-        //метод обрабатывает нажатие кнопки привезти
+        //метод обрабатывает нажатие кнопки "привезти"
         private void BringManualButton_Click(object sender, RoutedEventArgs e)
         {
             if (PLC != null)
@@ -799,11 +799,11 @@ namespace Stacker
                 //Даем команду на старт
                 SetMerker(PLC, 1, true);
                 bt = sender;
-                (bt as ButtonBase).IsEnabled = false;
+                (bt as ButtonBase).IsEnabled = true;
             }
         }
 
-        //метод обрабатывает нажатие кнопки увезти
+        //метод обрабатывает нажатие кнопки "увезти"
         private void TakeAwayManualButton_Click(object sender, RoutedEventArgs e)
         {
             if (PLC != null)
@@ -831,7 +831,7 @@ namespace Stacker
                 //Даем команду на старт
                 SetMerker(PLC, 1, true);
                 bt = sender;
-                (bt as Button).IsEnabled = false;
+                (bt as Button).IsEnabled = true;
             }
         }
 
