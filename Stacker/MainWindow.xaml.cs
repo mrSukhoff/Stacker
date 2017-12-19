@@ -10,8 +10,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
-using System.Windows.Media;
-using System.Windows.Media.Effects;
 
 namespace Stacker
 {
@@ -71,7 +69,7 @@ namespace Stacker
         int StateWord;
 
         //Кнопка, выдавшая задание)
-        object bt = null;
+        Button bt = null;
         delegate void ChangeButtonState();
 
         //##########################################################################################################################
@@ -287,16 +285,6 @@ namespace Stacker
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, caption: "Save&DeleteOrder");
-            }
-        }
-
-        private void ToggleButton_Click(object sender, RoutedEventArgs e)
-        {
-            int i = OrdersLitsView.SelectedIndex;
-            if (i != -1)
-            {
-                SaveAndDeleteOrder(Orders[i], "done");
-                OrdersLitsView.Items.Refresh();
             }
         }
 
@@ -590,8 +578,8 @@ namespace Stacker
                 //включаем ручной режим
                 WriteDword(PLC, 8, 1);
                 SetMerker(PLC, 14, true);
-                bt = sender;
-                (bt as ButtonBase).IsEnabled = false;
+                bt = sender as Button;
+                bt.IsEnabled = false;
             }
         }
 
@@ -603,8 +591,8 @@ namespace Stacker
                 //включаем ручной режим
                 WriteDword(PLC, 8, 1);
                 SetMerker(PLC, 15, true);
-                bt = sender;
-                (bt as ButtonBase).IsEnabled = false;
+                bt = sender as Button;
+                bt.IsEnabled = false;
             }
         }
 
@@ -629,8 +617,8 @@ namespace Stacker
                 WriteDword(PLC, 0, x);
                 WriteDword(PLC, 2, y);
                 SetMerker(PLC, 20, true);
-                bt = sender;
-                (bt as ButtonBase).IsEnabled = false;
+                bt = sender as Button;
+                bt.IsEnabled = false;
             }
         }
 
@@ -669,12 +657,14 @@ namespace Stacker
                     t = Convert.ToString(word);
                     while (t.Length < 2) { t = "0" + t; }
                     Dispatcher.Invoke(new WriteLabel(() => FloorLabel.Content = "F: " + t));
-                    if ((bt != null) && ((word & 0x80) == 0x80))
+                    if ((bt != null) && ((word & 0x8000) == 0x8000) && ((StateWord & 0x8000) != 0x8000))
                     {
-                        Dispatcher.Invoke(new ChangeButtonState(()=> (bt as ButtonBase).IsEnabled = true));
+                        Dispatcher.Invoke(new ChangeButtonState(()=> bt.IsEnabled = true));
                         bt = null;
                     }
-                    StateWord = word;
+                    if (((word & 0x2000) == 0x2000) && ((StateWord & 0x2000) != 0x2000)) ErrorHandler();
+                        StateWord = word;
+                    
                 }
                 catch (Exception ex)
                 {
@@ -682,6 +672,12 @@ namespace Stacker
                     MessageBox.Show(ex.Message, caption: "ReadStateWord");
                 }
             }
+        }
+
+        private void ErrorHandler()
+        {
+            uint ErrorWord;
+            ReadDword()
         }
 
         //кнопки сброса значений в TextBox на ноль
@@ -701,6 +697,8 @@ namespace Stacker
             {
                 WriteDword(PLC, 8, 4);
                 SetMerker(PLC, 10, true);
+                bt = sender as Button;
+                bt.IsEnabled = false;
             }
         }
         private void CloserButton_NextLine(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -709,6 +707,8 @@ namespace Stacker
             {
                 WriteDword(PLC, 8, 4);
                 SetMerker(PLC, 11, true);
+                bt = sender as Button;
+                bt.IsEnabled = false;
             }
         }
         private void UpButton_NextLine(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -717,6 +717,8 @@ namespace Stacker
             {
                 WriteDword(PLC, 8, 4);
                 SetMerker(PLC, 12, true);
+                bt = sender as Button;
+                bt.IsEnabled = false;
             }
         }
         private void DownButton_NextLine(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -725,6 +727,8 @@ namespace Stacker
             {
                 WriteDword(PLC, 8, 4);
                 SetMerker(PLC, 13, true);
+                bt = sender as Button;
+                bt.IsEnabled = false;
             }
         }
 
@@ -798,8 +802,8 @@ namespace Stacker
                 SetMerker(PLC, 3, true);
                 //Даем команду на старт
                 SetMerker(PLC, 1, true);
-                bt = sender;
-                (bt as ButtonBase).IsEnabled = false;
+                bt = sender as Button;
+                bt.IsEnabled = false;
             }
         }
 
@@ -830,27 +834,10 @@ namespace Stacker
                 SetMerker(PLC, 3, false);
                 //Даем команду на старт
                 SetMerker(PLC, 1, true);
-                bt = sender;
-                (bt as Button).IsEnabled = false;
+                bt = sender as Button;
+                bt.IsEnabled = false;
             }
         }
-
-        //метод вызываеся при появлении в слове состояния контроллера  флага об окончании операции
-        //возвращает в исходное состояние кнопки
-        private void supervisor()
-        {
-            if (bt != null)
-            {
-                (bt as ButtonBase).IsEnabled = true;
-                bt = null;
-            }
-        }
-
+        
     }
-
-
-
-
-
-
 }
