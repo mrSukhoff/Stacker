@@ -669,11 +669,12 @@ namespace Stacker
                     t = Convert.ToString(word);
                     while (t.Length < 2) { t = "0" + t; }
                     Dispatcher.Invoke(new WriteLabel(() => FloorLabel.Content = "F: " + t));
-                    /*if ((bt != null) && ((word & 0x80) == 0x80))
+                    if ((bt != null) && ((word & 0x80) == 0x80))
                     {
-                        Dispatcher.Invoke(new ChangeButtonState(()=> (bt as ButtonBase).IsEnabled = true));
+                        //Dispatcher.Invoke(new ChangeButtonState(()=> (bt as ButtonBase).IsEnabled = true));
+                        MessageBox.Show(bt.ToString());
                         bt = null;
-                    }*/
+                    }
                     StateWord = word;
                 }
                 catch (Exception ex)
@@ -835,16 +836,7 @@ namespace Stacker
             }
         }
 
-        //метод вызываеся при появлении в слове состояния контроллера  флага об окончании операции
-        //возвращает в исходное состояние кнопки
-        private void supervisor()
-        {
-            if (bt != null)
-            {
-                (bt as ButtonBase).IsEnabled = true;
-                bt = null;
-            }
-        }
+
 
     }
 
