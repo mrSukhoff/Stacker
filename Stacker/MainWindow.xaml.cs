@@ -72,6 +72,9 @@ namespace Stacker
         Button bt = null;
         delegate void ChangeButtonState();
 
+        //список ошибок контроллера
+        private List<string> ErrorList = new List<string>();
+
         //##########################################################################################################################
         //Основная точка входа ----------------------------------------------------------------------------------------------------!
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -104,6 +107,7 @@ namespace Stacker
                 //и максимальные значения ячеек
                 WriteDword(PLC, 14, 29);
                 WriteDword(PLC, 16, 16);
+                //запускаем таймер на чтение сосотояния контроллера
                 PlcTimer = new Timer(ReadStateWord, null, 0, 500);
             }
             catch (Exception ex)
@@ -201,6 +205,8 @@ namespace Stacker
             //включаем кнопку левого ряда
             LeftRackManualButton.IsChecked = true;
             LeftRackManualButton_Click(null, null);
+
+            ErrorListView.ItemsSource = ErrorList; 
         }
 
         //метод настройки вида списка заявок
@@ -512,6 +518,8 @@ namespace Stacker
         private void SubmitErrorButton_Click(object sender, RoutedEventArgs e)
         {
             if (PLC != null) SetMerker(PLC, 101, true);
+            ErrorList.Clear();
+            ErrorListView.Items.Refresh();
         }
 
         //Обработчик нажатия кнопки "ближе"
@@ -676,8 +684,11 @@ namespace Stacker
 
         private void ErrorHandler()
         {
-            uint ErrorWord;
-            ReadDword()
+            ReadDword(PLC, 100,out int ErrorWord);
+            if ((ErrorWord & 1) == 1) ErrorList.Add("Нажата кнопка аварийной остановки");
+            if ((ErrorWord & 2) == 2) ErrorList.Add("Одновременное включение контакторов");
+            if ((ErrorWord & 4) == 4) ErrorList.Add("Ошибка блока перемещения");
+            Dispatcher.Invoke(new RefreshList(()=>ErrorListView.Items.Refresh()));
         }
 
         //кнопки сброса значений в TextBox на ноль
