@@ -586,8 +586,8 @@ namespace Stacker
                 //включаем ручной режим
                 WriteDword(PLC, 8, 1);
                 SetMerker(PLC, 14, true);
-                bt = sender;
-                (bt as ButtonBase).IsEnabled = true;
+                bt = sender as Button;
+                bt.IsEnabled = true;
             }
         }
 
@@ -599,8 +599,8 @@ namespace Stacker
                 //включаем ручной режим
                 WriteDword(PLC, 8, 1);
                 SetMerker(PLC, 15, true);
-                bt = sender;
-                (bt as ButtonBase).IsEnabled = true;
+                bt = sender as Button;
+                bt.IsEnabled = true;
             }
         }
 
@@ -625,8 +625,8 @@ namespace Stacker
                 WriteDword(PLC, 0, x);
                 WriteDword(PLC, 2, y);
                 SetMerker(PLC, 20, true);
-                bt = sender;
-                (bt as ButtonBase).IsEnabled = true;
+                bt = sender as Button;
+                bt.IsEnabled = true;
             }
         }
 
@@ -667,8 +667,7 @@ namespace Stacker
                     Dispatcher.Invoke(new WriteLabel(() => FloorLabel.Content = "F: " + t));
                     if ((bt != null) && ((word & 0x8000) == 0x8000) && ((StateWord & 0x8000) != 0x8000))
                     {
-                        //Dispatcher.Invoke(new ChangeButtonState(()=> (bt as ButtonBase).IsEnabled = true));
-                        MessageBox.Show(bt.ToString());
+                        Dispatcher.Invoke(new ChangeButtonState(()=> bt.IsEnabled = true));
                         bt = null;
                     }
                     if (((word & 0x2000) == 0x2000) && ((StateWord & 0x2000) != 0x2000)) ErrorHandler();
