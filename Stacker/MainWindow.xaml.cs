@@ -643,7 +643,6 @@ namespace Stacker
                     while (lbltxt.Length < 16) { lbltxt = "0" + lbltxt; }
                     Dispatcher.Invoke(new WriteStateWord(() => StateWordLabel.Content = "State Word: " + lbltxt));
 
-                    //ushort[] d = PLC.ReadHoldingRegisters(1, 0x1408, 2);
                     ReadDword(PLC, 408, out word);
                     string t = Convert.ToString(word);
                     while (t.Length < 7) { t = "0" + t; }
@@ -665,6 +664,7 @@ namespace Stacker
                     t = Convert.ToString(word);
                     while (t.Length < 2) { t = "0" + t; }
                     Dispatcher.Invoke(new WriteLabel(() => FloorLabel.Content = "F: " + t));
+
                     if ((bt != null) && ((word & 0x8000) == 0x8000) && ((StateWord & 0x8000) != 0x8000))
                     {
                         Dispatcher.Invoke(new ChangeButtonState(()=> bt.IsEnabled = true));
@@ -709,7 +709,7 @@ namespace Stacker
                 WriteDword(PLC, 8, 4);
                 SetMerker(PLC, 10, true);
                 bt = sender as Button;
-                bt.IsEnabled = false;
+                bt.IsEnabled = true;
             }
         }
         private void CloserButton_NextLine(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -719,7 +719,7 @@ namespace Stacker
                 WriteDword(PLC, 8, 4);
                 SetMerker(PLC, 11, true);
                 bt = sender as Button;
-                bt.IsEnabled = false;
+                bt.IsEnabled = true;
             }
         }
         private void UpButton_NextLine(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -729,7 +729,7 @@ namespace Stacker
                 WriteDword(PLC, 8, 4);
                 SetMerker(PLC, 12, true);
                 bt = sender as Button;
-                bt.IsEnabled = false;
+                bt.IsEnabled = true;
             }
         }
         private void DownButton_NextLine(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -739,13 +739,13 @@ namespace Stacker
                 WriteDword(PLC, 8, 4);
                 SetMerker(PLC, 13, true);
                 bt = sender as Button;
-                bt.IsEnabled = false;
+                bt.IsEnabled = true;
             }
         }
 
 
         //В зависимости от состояния чекбокса выбираем действия кнопок
-        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        private void LineMotionCheckbox_Checked(object sender, RoutedEventArgs e)
         {
             FartherButton.PreviewMouseLeftButtonUp -= FartherButton_PreviewMouseLeftButtonUp;
             FartherButton.PreviewMouseLeftButtonDown -= FartherButton_PreviewMouseLeftButtonDown;
@@ -783,6 +783,11 @@ namespace Stacker
             DownButton.PreviewMouseLeftButtonUp += DownButton_PreviewMouseLeftButtonUp;
             DownButton.PreviewMouseLeftButtonDown += DownButton_PreviewMouseLeftButtonDown;
 
+            FartherButton.IsEnabled = true;
+            CloserButton.IsEnabled = true;
+            UpButton.IsEnabled = true;
+            DownButton.IsEnabled = true;
+
 
         }
 
@@ -797,7 +802,8 @@ namespace Stacker
                 int x = stacker[r, f].X;
                 int y = stacker[r, f].Y;
                 r++;f++;
-                bool side = RightRackManualButton.IsChecked == true;
+                //side = true если нам нужен правый стеллаж
+                bool side = LeftRackManualButton.IsChecked == true;
 
                 //Включаем режим перемещения по координатам
                 WriteDword(PLC, 8, 2);
@@ -814,7 +820,7 @@ namespace Stacker
                 //Даем команду на старт
                 SetMerker(PLC, 1, true);
                 bt = sender as Button;
-                bt.IsEnabled = false;
+                bt.IsEnabled = true;
             }
         }
 
@@ -829,8 +835,7 @@ namespace Stacker
                 int x = stacker[r, f].X;
                 int y = stacker[r, f].Y;
                 r++; f++;
-                bool side = RightRackManualButton.IsChecked == true;
-
+                bool side = LeftRackManualButton.IsChecked == true;
                 //Включаем режим перемещения по координатам
                 WriteDword(PLC, 8, 2);
                 //Пишем координаты
@@ -846,9 +851,8 @@ namespace Stacker
                 //Даем команду на старт
                 SetMerker(PLC, 1, true);
                 bt = sender as Button;
-                bt.IsEnabled = false;
+                bt.IsEnabled = true;
             }
         }
-        
     }
 }
