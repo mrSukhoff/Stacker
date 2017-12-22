@@ -667,14 +667,17 @@ namespace Stacker
                     while (lbltxt.Length < 17) { lbltxt = "0" + lbltxt; }
                     Dispatcher.Invoke(new WriteStateWord(() => StateWordLabel.Content = "State Word: " + lbltxt));
 
-                    if ((bt != null) && ((word>>14 != 0) && (StateWord>>14 == 0)))
+                    //если появился флаг завершения выполнения
+                    if ((bt != null) && ((word >> 14 != 0) && (StateWord >> 14 == 0)))
                     {
-                        Dispatcher.Invoke(new ChangeButtonState(()=> bt.IsEnabled = true));
+                        Dispatcher.Invoke(new ChangeButtonState(() => bt.IsEnabled = true));
                         bt = null;
                     }
-                    if (((word & 0x2000) == 0x2000) && ((StateWord & 0x2000) != 0x2000)) ErrorHandler();
-                        StateWord = word;
                     
+                    //если появился флаг ошибки
+                    if (GetBitState(word,13) && !GetBitState(StateWord,13)) ErrorHandler();
+
+                    StateWord = word;
                 }
                 catch (Exception ex)
                 {
@@ -684,12 +687,14 @@ namespace Stacker
             }
         }
 
+        //вызывается при возникновении ошибки
         private void ErrorHandler()
         {
-            ReadDword(PLC, 100,out int ErrorWord);
-            if ((ErrorWord & 1) == 1) ErrorList.Add("Нажата кнопка аварийной остановки");
-            if ((ErrorWord & 2) == 2) ErrorList.Add("Одновременное включение контакторов");
-            if ((ErrorWord & 4) == 4) ErrorList.Add("Ошибка блока перемещения");
+            ReadDword(PLC, 110,out int ErrorWord);
+            if (GetBitState(ErrorWord, 0)) ErrorList.Add(DateTime.Now.ToString() +  " : Нажата кнопка аварийной остановки");
+            if (GetBitState(ErrorWord, 1)) ErrorList.Add(DateTime.Now.ToString() + " : Одновременное включение контакторов");
+            if (GetBitState(ErrorWord, 2)) ErrorList.Add(DateTime.Now.ToString() + " : Ошибка блока перемещения");
+            if (GetBitState(ErrorWord, 3)) ErrorList.Add(DateTime.Now.ToString() + " : Ячейка для установки ящика занята");
             Dispatcher.Invoke(new RefreshList(()=>ErrorListView.Items.Refresh()));
         }
 
@@ -855,6 +860,19 @@ namespace Stacker
                 bt = sender as Button;
                 bt.IsEnabled = false;
             }
+        }
+
+        //метод возвращает состояния указанного бита
+        private bool GetBitState(int b, int num)
+        {
+            bool[] bits = new bool[16];
+            int z = 1;
+            for (int i = 0; i < 16; i++)
+            {
+                bits[i] = ((b & z) == z);
+                z *= 2;
+            }
+            return bits[num];
         }
     }
 }
