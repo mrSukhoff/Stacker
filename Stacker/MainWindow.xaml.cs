@@ -153,23 +153,23 @@ namespace Stacker
         private void SetUpButtons()
         {
             //Подписываем кнопки рядов
-            LeftRackManualButton.Content = LeftRackName;
-            RightRackManualButton.Content = RightRackName;
+            LeftRackSemiAutoButton.Content = LeftRackName;
+            RightRackSemiAutoButton.Content = RightRackName;
 
             //Заполняем combobox'ы номерами рядов
             int[] rowItems = new int[StackerDepth - 1];
             for (int i = 0; i < rowItems.Length; i++) { rowItems[i] = i + 1; }
-            RowManualComboBox.ItemsSource = rowItems;
+            RowSemiAutoComboBox.ItemsSource = rowItems;
             RowComboBox.ItemsSource = rowItems;
-            RowManualComboBox.SelectedIndex = 0;
+            RowSemiAutoComboBox.SelectedIndex = 0;
             RowComboBox.SelectedIndex = 0;
 
             // .. и этажей
             int[] floorItems = new int[StackerHight];
             for (int i = 0; i < floorItems.Length; i++) { floorItems[i] = i + 1; }
-            FloorManualCombobox.ItemsSource = floorItems;
+            FloorSemiAutoCombobox.ItemsSource = floorItems;
             FloorComboBox.ItemsSource = floorItems;
-            FloorManualCombobox.SelectedIndex = 0;
+            FloorSemiAutoCombobox.SelectedIndex = 0;
             FloorComboBox.SelectedIndex = 0;
 
             RackComboBox.Items.Add(LeftRackName);
@@ -178,13 +178,13 @@ namespace Stacker
 
             //присваеваем обработчики тут, а не в визуальной части, чтобы они не вызывались 
             //во время первоначальных настроек
-            LeftRackManualButton.Checked += LeftRackManualButton_Click;
-            LeftRackManualButton.Unchecked += LeftRackManualButton_Click;
-            RightRackManualButton.Unchecked += RightRackManualButton_Click;
-            RightRackManualButton.Checked += RightRackManualButton_Click;
+            LeftRackSemiAutoButton.Checked += LeftRackManualButton_Click;
+            LeftRackSemiAutoButton.Unchecked += LeftRackManualButton_Click;
+            RightRackSemiAutoButton.Unchecked += RightRackManualButton_Click;
+            RightRackSemiAutoButton.Checked += RightRackManualButton_Click;
 
-            RowManualComboBox.SelectionChanged += ManualComboBox_SelectionChanged;
-            FloorManualCombobox.SelectionChanged += ManualComboBox_SelectionChanged;
+            RowSemiAutoComboBox.SelectionChanged += ManualComboBox_SelectionChanged;
+            FloorSemiAutoCombobox.SelectionChanged += ManualComboBox_SelectionChanged;
             RackComboBox.SelectionChanged += CellChanged;
             RowComboBox.SelectionChanged += CellChanged;
             FloorComboBox.SelectionChanged += CellChanged;
@@ -203,7 +203,7 @@ namespace Stacker
             DownButton.PreviewMouseLeftButtonDown += DownButton_PreviewMouseLeftButtonDown;
 
             //включаем кнопку левого ряда
-            LeftRackManualButton.IsChecked = true;
+            LeftRackSemiAutoButton.IsChecked = true;
             LeftRackManualButton_Click(null, null);
 
             ErrorListView.ItemsSource = ErrorList; 
@@ -376,29 +376,29 @@ namespace Stacker
         //методы отжимают) противоположную кнопку
         private void RightRackManualButton_Click(object sender, RoutedEventArgs e)
         {
-            if (RightRackManualButton.IsChecked == true)
+            if (RightRackSemiAutoButton.IsChecked == true)
             {
-                RightRackManualButton.Effect = null;
-                LeftRackManualButton.IsChecked = false;
+                RightRackSemiAutoButton.Effect = null;
+                LeftRackSemiAutoButton.IsChecked = false;
             }
             else
             {
-                LeftRackManualButton.IsChecked = true;
-                LeftRackManualButton.Effect = null;
+                LeftRackSemiAutoButton.IsChecked = true;
+                LeftRackSemiAutoButton.Effect = null;
             }
             ManualComboBox_SelectionChanged(sender, null);
         }
         private void LeftRackManualButton_Click(object sender, RoutedEventArgs e)
         {
-            if (LeftRackManualButton.IsChecked == true)
+            if (LeftRackSemiAutoButton.IsChecked == true)
             {
-                LeftRackManualButton.Effect = null;
-                RightRackManualButton.IsChecked = false;
+                LeftRackSemiAutoButton.Effect = null;
+                RightRackSemiAutoButton.IsChecked = false;
             }
             else
             {
-                RightRackManualButton.IsChecked = true;
-                RightRackManualButton.Effect = null;
+                RightRackSemiAutoButton.IsChecked = true;
+                RightRackSemiAutoButton.Effect = null;
             }
             ManualComboBox_SelectionChanged(sender, null);
         }
@@ -415,14 +415,14 @@ namespace Stacker
         {
             try
             {
-                CellsGrid stacker = LeftRackManualButton.IsChecked == true ? LeftStacker : RightStacker;
-                int r = RowManualComboBox.SelectedIndex;
-                int f = FloorManualCombobox.SelectedIndex;
+                CellsGrid stacker = LeftRackSemiAutoButton.IsChecked == true ? LeftStacker : RightStacker;
+                int r = RowSemiAutoComboBox.SelectedIndex;
+                int f = FloorSemiAutoCombobox.SelectedIndex;
                 bool isEnabled = !stacker[r, f].IsNotAvailable;
-                BringManualButton.IsEnabled = isEnabled;
-                TakeAwayManualButton.IsEnabled = isEnabled;
+                BringSemiAutoButton.IsEnabled = isEnabled;
+                TakeAwaySemiAutoButton.IsEnabled = isEnabled;
                 ManualAddressLabel.IsEnabled = isEnabled;
-                char rack = LeftRackManualButton.IsChecked == true ? LeftRackName : RightRackName;
+                char rack = LeftRackSemiAutoButton.IsChecked == true ? LeftRackName : RightRackName;
                 r++;f++;
                 ManualAddressLabel.Content = rack + " - " + r.ToString() + " - " + f.ToString();
             }
@@ -520,6 +520,9 @@ namespace Stacker
             if (PLC != null) SetMerker(PLC, 101, true);
             ErrorList.Clear();
             ErrorListView.Items.Refresh();
+            ManPlatformToLeftButton.IsEnabled = true;
+            ManPlatformToRightButton.IsEnabled = true;
+            GotoButton.IsEnabled = true;
         }
 
         //Обработчик нажатия кнопки "ближе"
@@ -587,7 +590,7 @@ namespace Stacker
                 WriteDword(PLC, 8, 1);
                 SetMerker(PLC, 14, true);
                 bt = sender as Button;
-                bt.IsEnabled = true;
+                bt.IsEnabled = false;
             }
         }
 
@@ -600,7 +603,7 @@ namespace Stacker
                 WriteDword(PLC, 8, 1);
                 SetMerker(PLC, 15, true);
                 bt = sender as Button;
-                bt.IsEnabled = true;
+                bt.IsEnabled = false;
             }
         }
 
@@ -626,7 +629,7 @@ namespace Stacker
                 WriteDword(PLC, 2, y);
                 SetMerker(PLC, 20, true);
                 bt = sender as Button;
-                bt.IsEnabled = true;
+                bt.IsEnabled = false;
             }
         }
 
@@ -637,21 +640,15 @@ namespace Stacker
             {
                 try
                 {
-                    ReadDword(PLC, 100, out int word);
-                    //word = Convert.ToUInt16(word);
-                    string lbltxt = Convert.ToString(word, 2) + " ";
-                    while (lbltxt.Length < 16) { lbltxt = "0" + lbltxt; }
-                    Dispatcher.Invoke(new WriteStateWord(() => StateWordLabel.Content = "State Word: " + lbltxt));
-
-                    ReadDword(PLC, 408, out word);
+                    ReadDword(PLC, 408, out int word);
                     string t = Convert.ToString(word);
-                    while (t.Length < 7) { t = "0" + t; }
+                    while (t.Length < 6) { t = "0" + t; }
                     Dispatcher.Invoke(new WriteLabel(() => XLabel.Content = "X: " + t));
                     //Dispatcher.Invoke(new WriteLabel(() => CoordinateXTextBox.Text = t));
 
                     ReadDword(PLC, 410, out word);
                     t = Convert.ToString(word);
-                    while (t.Length < 7) { t = "0" + t; }
+                    while (t.Length < 6) { t = "0" + t; }
                     Dispatcher.Invoke(new WriteLabel(() => YLabel.Content = "Y: " + t));
                     //Dispatcher.Invoke(new WriteLabel(() => CoordinateYTextBox.Text = t));
 
@@ -665,7 +662,12 @@ namespace Stacker
                     while (t.Length < 2) { t = "0" + t; }
                     Dispatcher.Invoke(new WriteLabel(() => FloorLabel.Content = "F: " + t));
 
-                    if ((bt != null) && ((word & 0x8000) == 0x8000) && ((StateWord & 0x8000) != 0x8000))
+                    ReadDword(PLC, 100, out word);
+                    string lbltxt = Convert.ToString(word, 2) + " ";
+                    while (lbltxt.Length < 17) { lbltxt = "0" + lbltxt; }
+                    Dispatcher.Invoke(new WriteStateWord(() => StateWordLabel.Content = "State Word: " + lbltxt));
+
+                    if ((bt != null) && ((word>>14 != 0) && (StateWord>>14 == 0)))
                     {
                         Dispatcher.Invoke(new ChangeButtonState(()=> bt.IsEnabled = true));
                         bt = null;
@@ -709,7 +711,7 @@ namespace Stacker
                 WriteDword(PLC, 8, 4);
                 SetMerker(PLC, 10, true);
                 bt = sender as Button;
-                bt.IsEnabled = true;
+                bt.IsEnabled = false;
             }
         }
         private void CloserButton_NextLine(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -719,7 +721,7 @@ namespace Stacker
                 WriteDword(PLC, 8, 4);
                 SetMerker(PLC, 11, true);
                 bt = sender as Button;
-                bt.IsEnabled = true;
+                bt.IsEnabled = false;
             }
         }
         private void UpButton_NextLine(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -729,7 +731,7 @@ namespace Stacker
                 WriteDword(PLC, 8, 4);
                 SetMerker(PLC, 12, true);
                 bt = sender as Button;
-                bt.IsEnabled = true;
+                bt.IsEnabled = false;
             }
         }
         private void DownButton_NextLine(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -739,7 +741,7 @@ namespace Stacker
                 WriteDword(PLC, 8, 4);
                 SetMerker(PLC, 13, true);
                 bt = sender as Button;
-                bt.IsEnabled = true;
+                bt.IsEnabled = false;
             }
         }
 
@@ -796,14 +798,14 @@ namespace Stacker
         {
             if (PLC != null)
             {
-                CellsGrid stacker = LeftRackManualButton.IsChecked == true ? LeftStacker : RightStacker;
-                int r = RowManualComboBox.SelectedIndex;
-                int f = FloorManualCombobox.SelectedIndex;
+                CellsGrid stacker = LeftRackSemiAutoButton.IsChecked == true ? LeftStacker : RightStacker;
+                int r = RowSemiAutoComboBox.SelectedIndex;
+                int f = FloorSemiAutoCombobox.SelectedIndex;
                 int x = stacker[r, f].X;
                 int y = stacker[r, f].Y;
                 r++;f++;
                 //side = true если нам нужен правый стеллаж
-                bool side = LeftRackManualButton.IsChecked == true;
+                bool side = LeftRackSemiAutoButton.IsChecked == true;
 
                 //Включаем режим перемещения по координатам
                 WriteDword(PLC, 8, 2);
@@ -820,7 +822,7 @@ namespace Stacker
                 //Даем команду на старт
                 SetMerker(PLC, 1, true);
                 bt = sender as Button;
-                bt.IsEnabled = true;
+                bt.IsEnabled = false;
             }
         }
 
@@ -829,13 +831,13 @@ namespace Stacker
         {
             if (PLC != null)
             {
-                CellsGrid stacker = LeftRackManualButton.IsChecked == true ? LeftStacker : RightStacker;
-                int r = RowManualComboBox.SelectedIndex;
-                int f = FloorManualCombobox.SelectedIndex;
+                CellsGrid stacker = LeftRackSemiAutoButton.IsChecked == true ? LeftStacker : RightStacker;
+                int r = RowSemiAutoComboBox.SelectedIndex;
+                int f = FloorSemiAutoCombobox.SelectedIndex;
                 int x = stacker[r, f].X;
                 int y = stacker[r, f].Y;
                 r++; f++;
-                bool side = LeftRackManualButton.IsChecked == true;
+                bool side = LeftRackSemiAutoButton.IsChecked == true;
                 //Включаем режим перемещения по координатам
                 WriteDword(PLC, 8, 2);
                 //Пишем координаты
@@ -851,7 +853,7 @@ namespace Stacker
                 //Даем команду на старт
                 SetMerker(PLC, 1, true);
                 bt = sender as Button;
-                bt.IsEnabled = true;
+                bt.IsEnabled = false;
             }
         }
     }
