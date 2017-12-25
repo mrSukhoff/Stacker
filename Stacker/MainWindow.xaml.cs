@@ -58,6 +58,7 @@ namespace Stacker
         //Максимальные значения координат
         const int MaxX = 55000;
         const int MaxY = 14000;
+        
         //формат ввода координат в textbox'ы
         Regex CoordinateRegex = new Regex(@"\d");
 
@@ -209,7 +210,7 @@ namespace Stacker
             ErrorListView.ItemsSource = ErrorList; 
         }
 
-        //метод настройки вида списка заявок
+        //Настройки вида списка заявок
         private void GridSetUp()
         {
             GridView OrdersGridView = new GridView();
@@ -242,7 +243,7 @@ namespace Stacker
 
         }
 
-        //метода проверки и чтения заявок из файла
+        //Проверки изменений файла с заданими и чтения заявок из него
         private void ReadOrdersFile(object ob)
         {
             try
@@ -272,7 +273,7 @@ namespace Stacker
             }
         }
 
-        //метод сохранения отработанной заявки в архиве и удаления из исходного файла и коллекции заявок
+        //Сохранения отработанной заявки в архиве и удаления из исходного файла и коллекции заявок
         private void SaveAndDeleteOrder(Order order, string res)
         {
             try
@@ -294,7 +295,7 @@ namespace Stacker
             }
         }
 
-        //Метод записывает массивы ячеек в файлы
+        //Сохранение массивов координат ячеек в файлы
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -308,7 +309,7 @@ namespace Stacker
             }
         }
 
-        //метод при изменении адреса ячеек перечитывает координаты
+        //При изменении адреса ячеек перечитываем координаты
         private void CellChanged(object sender, SelectionChangedEventArgs e)
         {
             try
@@ -336,7 +337,7 @@ namespace Stacker
             }
         }
 
-        //методы перезаписывают координаты в cellgrid
+        //При изменении координат перезаписываем их в cellgrid
         private void CoordinateChanged(object sender, TextChangedEventArgs e)
         {
             try
@@ -373,7 +374,7 @@ namespace Stacker
             CoordinateChanged(sender, null);
         }
 
-        //методы отжимают) противоположную кнопку
+        //отжимаем) противоположную кнопку
         private void RightRackManualButton_Click(object sender, RoutedEventArgs e)
         {
             if (RightRackSemiAutoButton.IsChecked == true)
@@ -403,7 +404,7 @@ namespace Stacker
             ManualComboBox_SelectionChanged(sender, null);
         }
 
-        //метод проверяет вводимы в textbox символы на соотвктствие правилам
+        //Проверка вводимых в textbox символы на соотвктствие правилам
         private void TextBox_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
         {
             Match match = CoordinateRegex.Match(e.Text);
@@ -633,7 +634,7 @@ namespace Stacker
             }
         }
 
-        //по таймеру читаем слово состояния контроллера
+        //По таймеру читаем слово состояния контроллера
         private void ReadStateWord(object ob)
         {
             if (PLC != null)
@@ -687,7 +688,7 @@ namespace Stacker
             }
         }
 
-        //вызывается при возникновении ошибки
+        //вызывается при появления флага ошибки в слове состояния
         private void ErrorHandler()
         {
             ReadDword(PLC, 110,out int ErrorWord);
@@ -798,7 +799,7 @@ namespace Stacker
 
         }
 
-        //метод обрабатывает нажатие кнопки "привезти"
+        //обрабатывает нажатие кнопки "привезти"
         private void BringManualButton_Click(object sender, RoutedEventArgs e)
         {
             if (PLC != null)
@@ -831,7 +832,7 @@ namespace Stacker
             }
         }
 
-        //метод обрабатывает нажатие кнопки "увезти"
+        //обрабатывает нажатие кнопки "увезти"
         private void TakeAwayManualButton_Click(object sender, RoutedEventArgs e)
         {
             if (PLC != null)
