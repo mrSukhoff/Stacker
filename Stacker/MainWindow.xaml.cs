@@ -91,6 +91,12 @@ namespace Stacker
             //Настраиваем вид списка заявок
             GridSetUp();
 
+            //Записываем в класс заявок имена и названия штабелеров для идентификации заявок
+            Order.LeftStackerName = LeftRackName;
+            Order.LeftStackerNumber = LeftRackNumber;
+            Order.RightStackerName = RightRackName;
+            Order.RightStackerNumber = RightRackNumber;
+
             //Запускаем таймер для проверки изменений списка заявок
             FileTimer = new Timer(ReadOrdersFile, null, 0, 10000);
 
@@ -247,15 +253,18 @@ namespace Stacker
         {
             try
             {
+                //проверяем не изменился ли файл с момента последнего чтения
                 if (File.GetLastWriteTime(OrdersFile) != LastOrdersFileAccessTime)
                 {
 
+                    //и если изменился читаем его, находим новые приказы и добавляем их в список
                     string[] lines = File.ReadAllLines(OrdersFile, System.Text.Encoding.Default);
                     foreach (string str in lines)
                     {
-                        Order o = new Order(str, LeftRackName, LeftRackNumber, RightRackName, RightRackNumber);
+                        Order o = new Order(str);
                         if ((!Orders.Contains(o)) && (o.StackerName != '?')) Orders.Add(o);
                     }
+                    //и запоминаем время последнего чтения
                     LastOrdersFileAccessTime = File.GetLastWriteTime(OrdersFile);
                     Dispatcher.Invoke(new RefreshList(() => OrdersLitsView.Items.Refresh()));
                 }
@@ -263,7 +272,8 @@ namespace Stacker
             catch (ArgumentException ae)
             {
                 FileTimer.Dispose();
-                MessageBox.Show(messageBoxText: "Чтение заявок остановлено! " + ae.Message, caption: "ReadOrdersFile");
+                MessageBox.Show(messageBoxText: "Найдена некорректная заявка! Чтения заявок прекращено" 
+                    + ae.Message, caption: "ReadOrdersFile");
             }
             catch (Exception ex)
             {

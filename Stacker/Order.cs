@@ -5,6 +5,12 @@ namespace Stacker
 {
     class Order : IEquatable<Order>
     {
+        //поля хранят имена и номера штабелеров
+        public static char LeftStackerName;
+        public static int LeftStackerNumber;
+        public static char RightStackerName;
+        public static int RightStackerNumber;
+
         public string OrderType { get;}    //1-поступление, 2-отпуск
         public string OrderNumber { get;}
         public string LineNumberInOrder { get;}
@@ -21,7 +27,9 @@ namespace Stacker
         public string Address { get; }
         public char StackerName { get; }
 
-        public Order(string str, char LeftStackerName, int LeftStackerNumber, char RightStackerName, int RightStackerNumber)
+        
+        
+        public Order(string str)
         {
             str = str.TrimEnd('\r', '\n');
             this.OriginalString = str;
@@ -32,6 +40,7 @@ namespace Stacker
             {
                 if (str[i]=='~') { z++; }
             }
+            //если количество полей в строке отличается от 11 кидаем исключение
             if (z!=11)
             {
                 throw new ArgumentException("Неправильный формат заявки");
@@ -58,9 +67,7 @@ namespace Stacker
             this.Address = StackerName +"-"+ Row + "-" + Floor;
         }
 
-        public bool Equals(Order other)
-        {
-            return  (this.ProductCode == other.ProductCode)&&(this.Address == other.Address);
-        }
+        //для интерфейса IEquatable сравнение двух заявок
+        public bool Equals(Order other) => (ProductCode == other.ProductCode) && (Address == other.Address);
     }
 }
