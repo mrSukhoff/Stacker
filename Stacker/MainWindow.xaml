@@ -304,7 +304,7 @@
                         <RowDefinition/>
                         <RowDefinition Height="70"/>
                     </Grid.RowDefinitions>
-                    <ListView x:Name="ErrorListView" Margin="3" Background="#FF91AAB4">
+                    <ListView x:Name="ErrorListView" Margin="3" Background="#FF91AAB4" Foreground="#FF9E2E2E">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn/>

@@ -58,6 +58,7 @@ namespace Stacker
         //Максимальные значения координат
         const int MaxX = 55000;
         const int MaxY = 14000;
+        
         //формат ввода координат в textbox'ы
         Regex CoordinateRegex = new Regex(@"\d");
 
@@ -215,7 +216,7 @@ namespace Stacker
             ErrorListView.ItemsSource = ErrorList; 
         }
 
-        //метод настройки вида списка заявок
+        //Настройки вида списка заявок
         private void GridSetUp()
         {
             GridView OrdersGridView = new GridView();
@@ -248,7 +249,7 @@ namespace Stacker
 
         }
 
-        //метода проверки и чтения заявок из файла
+        //Проверки изменений файла с заданими и чтения заявок из него
         private void ReadOrdersFile(object ob)
         {
             try
@@ -282,7 +283,7 @@ namespace Stacker
             }
         }
 
-        //метод сохранения отработанной заявки в архиве и удаления из исходного файла и коллекции заявок
+        //Сохранения отработанной заявки в архиве и удаления из исходного файла и коллекции заявок
         private void SaveAndDeleteOrder(Order order, string res)
         {
             try
@@ -304,7 +305,7 @@ namespace Stacker
             }
         }
 
-        //Метод записывает массивы ячеек в файлы
+        //Сохранение массивов координат ячеек в файлы
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -318,7 +319,7 @@ namespace Stacker
             }
         }
 
-        //метод при изменении адреса ячеек перечитывает координаты
+        //При изменении адреса ячеек перечитываем координаты
         private void CellChanged(object sender, SelectionChangedEventArgs e)
         {
             try
@@ -346,7 +347,7 @@ namespace Stacker
             }
         }
 
-        //методы перезаписывают координаты в cellgrid
+        //При изменении координат перезаписываем их в cellgrid
         private void CoordinateChanged(object sender, TextChangedEventArgs e)
         {
             try
@@ -383,7 +384,7 @@ namespace Stacker
             CoordinateChanged(sender, null);
         }
 
-        //методы отжимают) противоположную кнопку
+        //отжимаем) противоположную кнопку
         private void RightRackManualButton_Click(object sender, RoutedEventArgs e)
         {
             if (RightRackSemiAutoButton.IsChecked == true)
@@ -413,7 +414,7 @@ namespace Stacker
             ManualComboBox_SelectionChanged(sender, null);
         }
 
-        //метод проверяет вводимы в textbox символы на соотвктствие правилам
+        //Проверка вводимых в textbox символы на соотвктствие правилам
         private void TextBox_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
         {
             Match match = CoordinateRegex.Match(e.Text);
@@ -643,7 +644,7 @@ namespace Stacker
             }
         }
 
-        //по таймеру читаем слово состояния контроллера
+        //По таймеру читаем слово состояния контроллера
         private void ReadStateWord(object ob)
         {
             if (PLC != null)
@@ -677,14 +678,17 @@ namespace Stacker
                     while (lbltxt.Length < 17) { lbltxt = "0" + lbltxt; }
                     Dispatcher.Invoke(new WriteStateWord(() => StateWordLabel.Content = "State Word: " + lbltxt));
 
-                    if ((bt != null) && ((word>>14 != 0) && (StateWord>>14 == 0)))
+                    //если появился флаг завершения выполнения
+                    if ((bt != null) && ((word >> 14 != 0) && (StateWord >> 14 == 0)))
                     {
-                        Dispatcher.Invoke(new ChangeButtonState(()=> bt.IsEnabled = true));
+                        Dispatcher.Invoke(new ChangeButtonState(() => bt.IsEnabled = true));
                         bt = null;
                     }
-                    if (((word & 0x2000) == 0x2000) && ((StateWord & 0x2000) != 0x2000)) ErrorHandler();
-                        StateWord = word;
                     
+                    //если появился флаг ошибки
+                    if (GetBitState(word,13) && !GetBitState(StateWord,13)) ErrorHandler();
+
+                    StateWord = word;
                 }
                 catch (Exception ex)
                 {
@@ -694,12 +698,14 @@ namespace Stacker
             }
         }
 
+        //вызывается при появления флага ошибки в слове состояния
         private void ErrorHandler()
         {
-            ReadDword(PLC, 100,out int ErrorWord);
-            if ((ErrorWord & 1) == 1) ErrorList.Add("Нажата кнопка аварийной остановки");
-            if ((ErrorWord & 2) == 2) ErrorList.Add("Одновременное включение контакторов");
-            if ((ErrorWord & 4) == 4) ErrorList.Add("Ошибка блока перемещения");
+            ReadDword(PLC, 110,out int ErrorWord);
+            if (GetBitState(ErrorWord, 0)) ErrorList.Add(DateTime.Now.ToString() +  " : Нажата кнопка аварийной остановки");
+            if (GetBitState(ErrorWord, 1)) ErrorList.Add(DateTime.Now.ToString() + " : Одновременное включение контакторов");
+            if (GetBitState(ErrorWord, 2)) ErrorList.Add(DateTime.Now.ToString() + " : Ошибка блока перемещения");
+            if (GetBitState(ErrorWord, 3)) ErrorList.Add(DateTime.Now.ToString() + " : Ячейка для установки ящика занята");
             Dispatcher.Invoke(new RefreshList(()=>ErrorListView.Items.Refresh()));
         }
 
@@ -803,7 +809,7 @@ namespace Stacker
 
         }
 
-        //метод обрабатывает нажатие кнопки "привезти"
+        //обрабатывает нажатие кнопки "привезти"
         private void BringManualButton_Click(object sender, RoutedEventArgs e)
         {
             if (PLC != null)
@@ -836,7 +842,7 @@ namespace Stacker
             }
         }
 
-        //метод обрабатывает нажатие кнопки "увезти"
+        //обрабатывает нажатие кнопки "увезти"
         private void TakeAwayManualButton_Click(object sender, RoutedEventArgs e)
         {
             if (PLC != null)
@@ -865,6 +871,19 @@ namespace Stacker
                 bt = sender as Button;
                 bt.IsEnabled = false;
             }
+        }
+
+        //метод возвращает состояния указанного бита
+        private bool GetBitState(int b, int num)
+        {
+            bool[] bits = new bool[16];
+            int z = 1;
+            for (int i = 0; i < 16; i++)
+            {
+                bits[i] = ((b & z) == z);
+                z *= 2;
+            }
+            return bits[num];
         }
     }
 }
