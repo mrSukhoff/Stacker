@@ -77,6 +77,7 @@ namespace Stacker
         private List<string> ErrorList = new List<string>();
 
         //##########################################################################################################################
+        //*
         //Основная точка входа ----------------------------------------------------------------------------------------------------!
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -101,6 +102,7 @@ namespace Stacker
             //Запускаем таймер для проверки изменений списка заявок
             FileTimer = new Timer(ReadOrdersFile, null, 0, 10000);
 
+            //**
             //Открываем порт и создаем контроллер
             try
             {
@@ -124,6 +126,7 @@ namespace Stacker
 
         }
 
+        //**
         //Читаем первоначальные настройки
         private void ReadINISettings()
         {
@@ -146,6 +149,7 @@ namespace Stacker
             }
         }
 
+        //**
         //Загружаем таблицы координат ячеек
         private void LoadCellGrid()
         {
@@ -249,6 +253,7 @@ namespace Stacker
 
         }
 
+        //**
         //Проверки изменений файла с заданими и чтения заявок из него
         private void ReadOrdersFile(object ob)
         {
@@ -283,6 +288,7 @@ namespace Stacker
             }
         }
 
+        //**
         //Сохранения отработанной заявки в архиве и удаления из исходного файла и коллекции заявок
         private void SaveAndDeleteOrder(Order order, string res)
         {
@@ -443,6 +449,7 @@ namespace Stacker
             }
         }
 
+        //**
         //завершение работы программы
         private void Stacker_Closed(object sender, EventArgs e)
         {
@@ -451,6 +458,7 @@ namespace Stacker
             if (ComPort != null) ComPort.Dispose();
         }
 
+        //**
         //метод записывает 32-битное число в контроллер
         public bool WriteDword(IModbusMaster plc, int adr, int d)
         {
@@ -471,6 +479,7 @@ namespace Stacker
             }
         }
 
+        //**
         //метод читает 32-битное число из контроллера
         public bool ReadDword(IModbusMaster plc, ushort address, out int d)
         {
@@ -490,6 +499,7 @@ namespace Stacker
             }
         }
 
+        //**
         //метод читает меркер из ПЛК
         public bool ReadMerker(IModbusMaster plc, ushort address, out bool m)
         {
@@ -509,6 +519,7 @@ namespace Stacker
             }
         }
 
+        //**
         //метод устанавливает меркер в ПЛК
         public bool SetMerker(IModbusMaster plc, ushort address, bool m)
         {
