@@ -217,6 +217,18 @@ namespace Stacker
             CoordinateChanged(sender, null);
         }
 
+        //Сохранение массивов координат ячеек в файлы
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                control.SaveCells();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
         //отжимаем) противоположную кнопку
         private void RightRackManualButton_Click(object sender, RoutedEventArgs e)
         {
@@ -462,52 +474,28 @@ namespace Stacker
         //обрабатывает нажатие кнопки "привезти"
         private void BringSemiAutoButton_Click(object sender, RoutedEventArgs e)
         {
-            bool stacker = LeftRackSemiAutoButton.IsChecked == true ? LeftStacker : RightStacker;
+            bool stacker = RightRackSemiAutoButton.IsChecked == true;
             int r = RowSemiAutoComboBox.SelectedIndex;
             int f = FloorSemiAutoCombobox.SelectedIndex;
             control.BringOrTakeAwayCommand(stacker,r,f,true);           
-                r++;f++;
-                //side = true если нам нужен правый стеллаж
-                bool side = LeftRackSemiAutoButton.IsChecked == true;
+            r++;f++;
+            bt = sender as Button;
+            bt.IsEnabled = false;
+        }
 
-                
-                bt = sender as Button;
-                bt.IsEnabled = false;
-            }
-
-
-    }
-
-    //обрабатывает нажатие кнопки "увезти"
-    private void TakeAwayManualButton_Click(object sender, RoutedEventArgs e)
+        //обрабатывает нажатие кнопки "увезти"
+        private void TakeAwayManualButton_Click(object sender, RoutedEventArgs e)
         {
-            if (PLC != null)
-            {
-                CellsGrid stacker = LeftRackSemiAutoButton.IsChecked == true ? LeftStacker : RightStacker;
-                int r = RowSemiAutoComboBox.SelectedIndex;
-                int f = FloorSemiAutoCombobox.SelectedIndex;
-                int x = stacker[r, f].X;
-                int y = stacker[r, f].Y;
-                r++; f++;
-                bool side = LeftRackSemiAutoButton.IsChecked == true;
-                //Включаем режим перемещения по координатам
-                WriteDword(PLC, 8, 2);
-                //Пишем координаты
-                WriteDword(PLC, 0, x);
-                WriteDword(PLC, 2, y);
-                //Пишем ряд и этаж
-                WriteDword(PLC, 4, r);
-                WriteDword(PLC, 6, f);
-                //Устанваливаем сторону
-                SetMerker(PLC, 2, side);
-                //Устанавливаем флаг в "увезти"
-                SetMerker(PLC, 3, false);
-                //Даем команду на старт
-                SetMerker(PLC, 1, true);
-                bt = sender as Button;
-                bt.IsEnabled = false;
-            }
+            bool stacker = RightRackSemiAutoButton.IsChecked == true;
+            int r = RowSemiAutoComboBox.SelectedIndex;
+            int f = FloorSemiAutoCombobox.SelectedIndex;
+            control.BringOrTakeAwayCommand(stacker, r, f, false);
+            r++; f++;
+            bt = sender as Button;
+            bt.IsEnabled = false;
         }
                 
+
     }
 }
+

@@ -202,7 +202,7 @@ namespace Stacker
         }
 
         //Сохранение массивов координат ячеек в файлы
-        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        public void SaveCells()
         {
             try
             {
