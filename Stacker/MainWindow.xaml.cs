@@ -73,15 +73,16 @@ namespace Stacker
             RackComboBox.Items.Add(control.RightRackName);
             RackComboBox.SelectedIndex = 0;
 
-            //присваеваем обработчики тут, а не в визуальной части, чтобы они не вызывались 
+            //присваеваем обработчики тут, а не статически, чтобы они не вызывались 
             //во время первоначальных настроек
-            LeftRackSemiAutoButton.Checked += LeftRackManualButton_Click;
-            LeftRackSemiAutoButton.Unchecked += LeftRackManualButton_Click;
-            RightRackSemiAutoButton.Unchecked += RightRackManualButton_Click;
-            RightRackSemiAutoButton.Checked += RightRackManualButton_Click;
-
-            RowSemiAutoComboBox.SelectionChanged += ManualComboBox_SelectionChanged;
-            FloorSemiAutoCombobox.SelectionChanged += ManualComboBox_SelectionChanged;
+            //полуавтомат
+            LeftRackSemiAutoButton.Checked += LeftRackSemiAutoButton_Click;
+            LeftRackSemiAutoButton.Unchecked += LeftRackSemiAutoButton_Click;
+            RightRackSemiAutoButton.Unchecked += RightRackSemiAutoButton_Click;
+            RightRackSemiAutoButton.Checked += RightRackSemiAutoButton_Click;
+            RowSemiAutoComboBox.SelectionChanged += SemiAutoComboBox_SelectionChanged;
+            FloorSemiAutoCombobox.SelectionChanged += SemiAutoComboBox_SelectionChanged;
+            //ручной режим
             RackComboBox.SelectionChanged += CellChanged;
             RowComboBox.SelectionChanged += CellChanged;
             FloorComboBox.SelectionChanged += CellChanged;
@@ -101,8 +102,9 @@ namespace Stacker
 
             //включаем кнопку левого ряда
             LeftRackSemiAutoButton.IsChecked = true;
-            LeftRackManualButton_Click(null, null);
+            LeftRackSemiAutoButton_Click(null, null);
 
+            //источник данных для списка ошибок
             ErrorListView.ItemsSource = control.ErrorList; 
         }
 
@@ -136,7 +138,6 @@ namespace Stacker
             OrdersGridView.Columns.Add(gvc6);
             OrdersLitsView.View = OrdersGridView;
             OrdersLitsView.ItemsSource = control.Orders;
-
         }
         
         //При изменении адреса ячеек перечитываем координаты
@@ -179,7 +180,7 @@ namespace Stacker
             try
             {
                 //вычисляем адрес ячейки
-                bool stacker = RackComboBox.SelectedIndex == 0;
+                bool stacker = RackComboBox.SelectedIndex != 0;
                 int row = RowComboBox.SelectedIndex;
                 int floor = FloorComboBox.SelectedIndex;
 
@@ -229,8 +230,9 @@ namespace Stacker
                 MessageBox.Show(ex.Message);
             }
         }
+        
         //отжимаем) противоположную кнопку
-        private void RightRackManualButton_Click(object sender, RoutedEventArgs e)
+        private void RightRackSemiAutoButton_Click(object sender, RoutedEventArgs e)
         {
             if (RightRackSemiAutoButton.IsChecked == true)
             {
@@ -242,9 +244,9 @@ namespace Stacker
                 LeftRackSemiAutoButton.IsChecked = true;
                 LeftRackSemiAutoButton.Effect = null;
             }
-            ManualComboBox_SelectionChanged(sender, null);
+            SemiAutoComboBox_SelectionChanged(sender, null);
         }
-        private void LeftRackManualButton_Click(object sender, RoutedEventArgs e)
+        private void LeftRackSemiAutoButton_Click(object sender, RoutedEventArgs e)
         {
             if (LeftRackSemiAutoButton.IsChecked == true)
             {
@@ -256,7 +258,7 @@ namespace Stacker
                 RightRackSemiAutoButton.IsChecked = true;
                 RightRackSemiAutoButton.Effect = null;
             }
-            ManualComboBox_SelectionChanged(sender, null);
+            SemiAutoComboBox_SelectionChanged(sender, null);
         }
 
         //Проверка вводимых в textbox символы на соотвктствие правилам
@@ -267,7 +269,8 @@ namespace Stacker
         }
 
         //при изменении выбранных ячеек в полуавтоматическом режиме меняет доступность кнопок в зависимости от доступности ячейки
-        private void ManualComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //и формируем строку адреса выбранной ячейки
+        private void SemiAutoComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
             {
@@ -281,11 +284,11 @@ namespace Stacker
 
                 BringSemiAutoButton.IsEnabled = isEnabled;
                 TakeAwaySemiAutoButton.IsEnabled = isEnabled;
-                ManualAddressLabel.IsEnabled = isEnabled;
+                SemiAutoAddressLabel.IsEnabled = isEnabled;
 
                 char rack = LeftRackSemiAutoButton.IsChecked == true ? control.LeftRackName : control.RightRackName;
                 r++;f++;
-                ManualAddressLabel.Content = rack + " - " + r.ToString() + " - " + f.ToString();
+                SemiAutoAddressLabel.Content = rack + " - " + r.ToString() + " - " + f.ToString();
             }
             catch (Exception ex)
             {

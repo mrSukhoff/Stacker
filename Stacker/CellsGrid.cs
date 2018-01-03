@@ -97,13 +97,13 @@ namespace Stacker
                         grid[r, f].IsNotAvailable.ToString();
                 }
             }
-            //try
+            try
             {
                 File.WriteAllLines(path, lines, System.Text.Encoding.Default);
             }
-            //catch (Exception ex)
+            catch (Exception ex)
             {
-               // MessageBox.Show(ex.Message, caption:"SaveCellGrid");
+                MessageBox.Show(ex.Message, caption:"SaveCellGrid");
             }
         }
     }

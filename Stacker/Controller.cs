@@ -13,6 +13,8 @@ namespace Stacker
 {
     class Controller:IDisposable
     {
+        //видимые свойства объекта ****************************************************************************
+
         //места хранения файлов заявлок и архива
         private string OrdersFile;
         private string ArchiveFile;
@@ -26,6 +28,30 @@ namespace Stacker
         public char RightRackName { get; private set; }
         public int RightRackNumber { get; private set; }
         
+        //Максимальные значения координат
+        public int MaxX { get; } = 55000;
+        public int MaxY { get; } = 14000;
+
+        //коллекция заявок
+        public List<Order> Orders { get; private set; } = new List<Order>();
+        //public IObservable<Order> Orders { get; private set; } = new List<Order>();
+
+        //делегат для обратного вызова при появлении флага завершения операции
+        public delegate void EventHandler();
+        public EventHandler CommandDone;
+        public EventHandler ErrorAppeared;
+
+        //Актуальные координаты крана
+        public int ActualX { get; private set; }
+        public int ActualY { get; private set; }
+        public int ActualRow { get; private set; }
+        public int ActualFloor { get; private set; }
+
+        //список ошибок контроллера
+        public List<string> ErrorList { get; private set; } = new List<string>();
+
+        //внутренние поля класса ******************************************************************************
+
         // переменная для контроля изменения файла заявок
         private DateTime LastOrdersFileAccessTime = DateTime.Now;
 
@@ -35,21 +61,9 @@ namespace Stacker
         //Таймер для чтения слова состояния контроллера
         private Timer PlcTimer;
         
-        //делегат для обратного вызова при появлении флага завершения операции
-        public delegate void EventHandler();
-        public EventHandler CommandDone;
-        public EventHandler ErrorAppeared;
-        
-        //коллекция заявок
-        public List<Order> Orders { get; private set; } = new List<Order>();
-
         //Координаты ячеек
-        CellsGrid LeftStacker;
-        CellsGrid RightStacker;
-
-        //Максимальные значения координат
-        public int MaxX { get; } = 55000;
-        public int MaxY { get; } = 14000;
+        private CellsGrid LeftStacker;
+        private CellsGrid RightStacker;
 
         //Com-порт к которому подсоединен контроллер
         private SerialPort ComPort = null;
@@ -58,16 +72,7 @@ namespace Stacker
         //Слово состояния контроллера
         private int StateWord;
 
-        //список ошибок контроллера
-        public List<string> ErrorList { get; private set; } = new List<string>();
-
-        //Актуальные координаты крана
-        public int ActualX { get; private set; }
-        public int ActualY { get; private set; }
-        public int ActualRow { get; private set; }
-        public int ActualFloor { get; private set; }
-
-        //Конструктор класса
+        //Конструктор класса **********************************************************************************
         public Controller()
         {
             //Читаем первоначальные настройки
