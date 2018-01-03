@@ -118,6 +118,14 @@ namespace Stacker
             Dispose();
         }
 
+        //закрываем неуправляемые ресурсы
+        public void Dispose()
+        {
+            if (FileTimer != null) FileTimer.Dispose();
+            if (PLC != null) PLC.Dispose();
+            if (ComPort != null) ComPort.Dispose();
+        }
+
         //Читаем первоначальные настройки
         private void ReadINISettings()
         {
@@ -352,14 +360,6 @@ namespace Stacker
             return bits[num];
         }
 
-        //закрываем неуправляемые ресурсы
-        public void Dispose()
-        {
-            if (FileTimer != null) FileTimer.Dispose();
-            if (PLC != null) PLC.Dispose();
-            if (ComPort != null) ComPort.Dispose();
-        }
-
         //выдает по адресу ячейки её координаты и доступность
         //левый стеллаж - false
         public void GetCell(bool r, int row, int floor, out int x, out int y, out bool isNotAvailable)
@@ -388,6 +388,18 @@ namespace Stacker
             ErrorList.Clear();
         }
 
+        //команда дальше
+        public void FartherButton(bool state)
+        {
+            if (PLC != null)
+            {
+                //устанавливаем ручной режим передвижения
+                WriteDword(PLC, 8, 1);
+                //задаем команду "движение дальше"
+                SetMerker(PLC, 10, state);
+            }
+        }
+
         //команда ближе
         public void CloserButton(bool state)
         {
@@ -399,23 +411,15 @@ namespace Stacker
                 SetMerker(PLC, 11, state);
             }
         }
-        
-        //команда дальше
-        public void FartherButton(bool state)
-        {
-            if (PLC != null)
-            {
-                WriteDword(PLC, 8, 1);
-                SetMerker(PLC, 10, state);
-            }
-        }
 
         //команда вверх
         public void UpButton(bool state)
         {
             if (PLC != null)
             {
+                //устанавливаем ручной режим передвижения
                 WriteDword(PLC, 8, 1);
+                //задаем команду "движение вверх"
                 SetMerker(PLC, 12, state);
             }
         }
@@ -425,8 +429,58 @@ namespace Stacker
         {
             if (PLC != null)
             {
+                //устанавливаем ручной режим передвижения
                 WriteDword(PLC, 8, 1);
+                //задаем команду "движение вниз"
                 SetMerker(PLC, 13, state);
+            }
+        }
+
+        //Команда на движение дальше до следующего ряда
+        public void NextLineFartherCommand()
+        {
+            if (PLC != null)
+            {
+                //устанавливаем режим движения по координатам
+                WriteDword(PLC, 8, 4);
+                //задаем команду "движение дальше"
+                SetMerker(PLC, 10, true);
+            }
+        }
+
+        //Команда на движение ближе до следующего ряда
+        public void NextLineCloserCommand()
+        {
+            if (PLC != null)
+            {
+                //устанавливаем режим движения по координатам
+                WriteDword(PLC, 8, 4);
+                //задаем команду "движение ближе"
+                SetMerker(PLC, 11, true);
+            }
+        }
+
+        //Команда на движение вверх до следующего этажа
+        public void NextLineUpCommand()
+        {
+            if (PLC != null)
+            {
+                //устанавливаем режим движения по координатам
+                WriteDword(PLC, 8, 4);
+                //задаем команду "движение вверх"
+                SetMerker(PLC, 12, true);
+            }
+        }
+
+        //Команда на движение вниз до следующего этажа
+        public void NextLineDownCommand()
+        {
+            if (PLC != null)
+            {
+                //устанавливаем режим движения по координатам
+                WriteDword(PLC, 8, 4);
+                //задаем команду "движение вниз"
+                SetMerker(PLC, 13, true);
             }
         }
 
@@ -437,10 +491,11 @@ namespace Stacker
             {
                 //включаем ручной режим
                 WriteDword(PLC, 8, 1);
+                //задаем команду "платформа влево"
                 SetMerker(PLC, 14, true);
             }
         }
-        
+
         //команда "платформа влево"
         public void PlatformToRight()
         {
@@ -448,6 +503,7 @@ namespace Stacker
             {
                 //включаем ручной режим
                 WriteDword(PLC, 8, 1);
+                //задаем команду "платформа вправо"
                 SetMerker(PLC, 15, true);
             }
         }
@@ -461,58 +517,19 @@ namespace Stacker
         //команда "Перейти на координаты"
         public void GotoXY(int x, int y)
         {
+            //проверяем аргументы на допустимость
             if ((x < 0) || (y < 0) || (x > MaxX) || (y > MaxY)) throw new ArgumentException();
             if (PLC != null)
             {
                 //Включаем режим перемещения по координатам
                 WriteDword(PLC, 8, 3);
-                
+
                 //Записываем координаты в ПЛК
                 WriteDword(PLC, 0, x);
                 WriteDword(PLC, 2, y);
 
                 //даем команду на движение
                 SetMerker(PLC, 20, true);
-            }
-        }
-
-        //Команда на движение дальше до следующего ряда
-        public void NextLineFartherCommand()
-        {
-            if (PLC != null)
-            {
-                WriteDword(PLC, 8, 4);
-                SetMerker(PLC, 10, true);
-            }
-        }
-
-        //Команда на движение ближе до следующего ряда
-        public void NextLineCloserCommand()
-        {
-            if (PLC != null)
-            {
-                WriteDword(PLC, 8, 4);
-                SetMerker(PLC, 11, true);
-            }
-        }
-
-        //Команда на движение вверх до следующего этажа
-        public void NextLineUpCommand()
-        {
-            if (PLC != null)
-            {
-                WriteDword(PLC, 8, 4);
-                SetMerker(PLC, 12, true);
-            }
-        }
-
-        //Команда на движение вниз до следующего этажа
-        public void NextLineDownCommand()
-        {
-            if (PLC != null)
-            {
-                WriteDword(PLC, 8, 4);
-                SetMerker(PLC, 13, true);
             }
         }
 

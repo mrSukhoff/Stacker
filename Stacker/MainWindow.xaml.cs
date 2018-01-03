@@ -33,11 +33,13 @@ namespace Stacker
         //контроллер паттерна MVC
         Controller control;
 
-        //##########################################################################################################################
-        //Основная точка входа ----------------------------------------------------------------------------------------------------!
+        //#####################################################################################################
+        //Основная точка входа -------------------------------------------------------------------------------!
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             control = new Controller();
+            control.CommandDone += CommandDone;
+            control.ErrorAppeared += ErrorAppeared;
             
             //Настраиваем визуальные компоненты
             SetUpButtons();
@@ -139,7 +141,20 @@ namespace Stacker
             OrdersLitsView.View = OrdersGridView;
             OrdersLitsView.ItemsSource = control.Orders;
         }
-        
+
+        //обработчик события "команда выполнена"
+        private void CommandDone()
+        {
+            bt.IsEnabled = true;
+            bt = null;
+        }
+
+        //обработчик события "ошибка"
+        private void ErrorAppeared()
+        {
+            //ErrorListView.Re
+        }
+
         //При изменении адреса ячеек перечитываем координаты
         private void CellChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -268,8 +283,8 @@ namespace Stacker
             if ((!match.Success) || (sender as TextBox).Text.Length > 5) e.Handled = true;
         }
 
-        //при изменении выбранных ячеек в полуавтоматическом режиме меняет доступность кнопок в зависимости от доступности ячейки
-        //и формируем строку адреса выбранной ячейки
+        //при изменении выбранных ячеек в полуавтоматическом режиме меняет доступность кнопок 
+        //в зависимости от доступности ячейки и формируем строку адреса выбранной ячейки
         private void SemiAutoComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
@@ -474,31 +489,22 @@ namespace Stacker
 
         }
 
-        //обрабатывает нажатие кнопки "привезти"
-        private void BringSemiAutoButton_Click(object sender, RoutedEventArgs e)
+        //обрабатывает нажатие кнопок "привезти" и "увезти" в полуавтоматическом режиме
+        private void BringOrTakeAwaySemiAutoButton_Click(object sender, RoutedEventArgs e)
         {
             bool stacker = RightRackSemiAutoButton.IsChecked == true;
             int r = RowSemiAutoComboBox.SelectedIndex;
             int f = FloorSemiAutoCombobox.SelectedIndex;
-            control.BringOrTakeAwayCommand(stacker,r,f,true);           
-            r++;f++;
+            //если была нажата кнопка привезти устанавливае переменную в true
+            bool bring = sender == BringSemiAutoButton ? true : false;
+            control.BringOrTakeAwayCommand(stacker,r,f,bring);           
             bt = sender as Button;
             bt.IsEnabled = false;
         }
 
-        //обрабатывает нажатие кнопки "увезти"
-        private void TakeAwayManualButton_Click(object sender, RoutedEventArgs e)
-        {
-            bool stacker = RightRackSemiAutoButton.IsChecked == true;
-            int r = RowSemiAutoComboBox.SelectedIndex;
-            int f = FloorSemiAutoCombobox.SelectedIndex;
-            control.BringOrTakeAwayCommand(stacker, r, f, false);
-            r++; f++;
-            bt = sender as Button;
-            bt.IsEnabled = false;
-        }
-                
+       
 
+        
     }
 }
 
