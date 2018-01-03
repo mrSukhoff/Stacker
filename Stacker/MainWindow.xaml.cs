@@ -150,10 +150,7 @@ namespace Stacker
         }
 
         //обработчик события "ошибка"
-        private void ErrorAppeared()
-        {
-            //ErrorListView.Re
-        }
+        private void ErrorAppeared() => ErrorListView.Items.Refresh();
 
         //При изменении адреса ячеек перечитываем координаты
         private void CellChanged(object sender, SelectionChangedEventArgs e)
