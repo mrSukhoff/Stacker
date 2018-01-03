@@ -371,11 +371,11 @@ namespace Stacker
         }
 
         //устанавливает по адресу ячейки её координаты и доступность
-        //левый стеллаж - false
+        //левый стеллаж r = false
         public void SetCell(bool r, int row, int floor, int x, int y, bool isNotAvailable)
         {
             if ((x < 0) || (y < 0) || (x > MaxX) || (y > MaxY)) throw new ArgumentException();
-            CellsGrid rack = !r ? LeftStacker : RightStacker;
+            CellsGrid rack = r ? RightStacker : LeftStacker;
             rack[row, floor].X = x;
             rack[row, floor].Y = y;
             rack[row, floor].IsNotAvailable = isNotAvailable;
@@ -558,9 +558,5 @@ namespace Stacker
                 SetMerker(PLC, 1, true);
             }
         }
-
-
     }
-
-
 }

@@ -438,7 +438,6 @@ namespace Stacker
             bt.IsEnabled = false;
         }
 
-
         //В зависимости от состояния чекбокса выбираем действия кнопок
         private void LineMotionCheckbox_Checked(object sender, RoutedEventArgs e)
         {
@@ -482,8 +481,6 @@ namespace Stacker
             CloserButton.IsEnabled = true;
             UpButton.IsEnabled = true;
             DownButton.IsEnabled = true;
-
-
         }
 
         //обрабатывает нажатие кнопок "привезти" и "увезти" в полуавтоматическом режиме
@@ -498,10 +495,6 @@ namespace Stacker
             bt = sender as Button;
             bt.IsEnabled = false;
         }
-
-       
-
-        
     }
 }
 
