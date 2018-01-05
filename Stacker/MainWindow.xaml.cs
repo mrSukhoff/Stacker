@@ -28,18 +28,20 @@ namespace Stacker
 
         //Кнопка, выдавшая задание)
         Button bt = null;
-        delegate void ChangeButtonState();
-
+        
         //контроллер паттерна MVC
-        Controller control;
+        StackerModel model;
 
         //#####################################################################################################
         //Основная точка входа -------------------------------------------------------------------------------!
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            control = new Controller();
-            control.CommandDone += CommandDone;
-            control.ErrorAppeared += ErrorAppeared;
+            //создаем модель
+            model = new StackerModel();
+            
+            //подписываемся на события
+            model.CommandDone += CommandDone;
+            model.ErrorAppeared += ErrorAppeared;
             
             //Настраиваем визуальные компоненты
             SetUpButtons();
@@ -52,11 +54,11 @@ namespace Stacker
         private void SetUpButtons()
         {
             //Подписываем кнопки рядов
-            LeftRackSemiAutoButton.Content = control.LeftRackName;
-            RightRackSemiAutoButton.Content = control.RightRackName;
+            LeftRackSemiAutoButton.Content = model.LeftRackName;
+            RightRackSemiAutoButton.Content = model.RightRackName;
 
             //Заполняем combobox'ы номерами рядов
-            int[] rowItems = new int[control.StackerDepth - 1];
+            int[] rowItems = new int[model.StackerDepth - 1];
             for (int i = 0; i < rowItems.Length; i++) { rowItems[i] = i + 1; }
             RowSemiAutoComboBox.ItemsSource = rowItems;
             RowComboBox.ItemsSource = rowItems;
@@ -64,15 +66,15 @@ namespace Stacker
             RowComboBox.SelectedIndex = 0;
 
             // .. и этажей
-            int[] floorItems = new int[control.StackerHight];
+            int[] floorItems = new int[model.StackerHight];
             for (int i = 0; i < floorItems.Length; i++) { floorItems[i] = i + 1; }
             FloorSemiAutoCombobox.ItemsSource = floorItems;
             FloorComboBox.ItemsSource = floorItems;
             FloorSemiAutoCombobox.SelectedIndex = 0;
             FloorComboBox.SelectedIndex = 0;
 
-            RackComboBox.Items.Add(control.LeftRackName);
-            RackComboBox.Items.Add(control.RightRackName);
+            RackComboBox.Items.Add(model.LeftRackName);
+            RackComboBox.Items.Add(model.RightRackName);
             RackComboBox.SelectedIndex = 0;
 
             //присваеваем обработчики тут, а не статически, чтобы они не вызывались 
@@ -107,7 +109,7 @@ namespace Stacker
             LeftRackSemiAutoButton_Click(null, null);
 
             //источник данных для списка ошибок
-            ErrorListView.ItemsSource = control.ErrorList; 
+            ErrorListView.ItemsSource = model.ErrorList; 
         }
 
         //Настройки вида списка заявок
@@ -139,7 +141,7 @@ namespace Stacker
             OrdersGridView.Columns.Add(gvc5);
             OrdersGridView.Columns.Add(gvc6);
             OrdersLitsView.View = OrdersGridView;
-            OrdersLitsView.ItemsSource = control.Orders;
+            OrdersLitsView.ItemsSource = model.Orders;
         }
 
         //обработчик события "команда выполнена"
@@ -163,7 +165,7 @@ namespace Stacker
                 int floor = FloorComboBox.SelectedIndex;
 
                 //получаем координаты
-                control.GetCell(stacker, row, floor, out int x, out int y, out bool isNOTAvailable);
+                model.GetCell(stacker, row, floor, out int x, out int y, out bool isNOTAvailable);
 
                 //отключаем обработчики на изменение координат
                 CoordinateXTextBox.TextChanged -= CoordinateChanged;
@@ -205,20 +207,20 @@ namespace Stacker
                 int y = Convert.ToInt32(CoordinateYTextBox.Text);
                 
                 //если координата больше максимальноразрешшенной, устанавливаем ее максимальной
-                if (x > control.MaxX)
+                if (x > model.MaxX)
                 {
-                    x = control.MaxX;
+                    x = model.MaxX;
                     CoordinateXTextBox.Text = x.ToString();
                 }
-                if (y > control.MaxY)
+                if (y > model.MaxY)
                 {
-                    y = control.MaxY;
+                    y = model.MaxY;
                     CoordinateYTextBox.Text = y.ToString();
                 }
                 
                 bool isNotAvailable = (bool)IsNOTAvailableCheckBox.IsChecked;
                 //записываем
-                control.SetCell(stacker,row,floor,x,y,isNotAvailable);
+                model.SetCell(stacker,row,floor,x,y,isNotAvailable);
             }
             catch (Exception ex)
             {
@@ -235,7 +237,7 @@ namespace Stacker
         {
             try
             {
-                control.SaveCells();
+                model.SaveCells();
             }
             catch (Exception ex)
             {
@@ -290,7 +292,7 @@ namespace Stacker
                 int r = RowSemiAutoComboBox.SelectedIndex;
                 int f = FloorSemiAutoCombobox.SelectedIndex;
 
-                control.GetCell(stacker, r, f,out int x,out int y,out bool isNotAvailable);
+                model.GetCell(stacker, r, f,out int x,out int y,out bool isNotAvailable);
 
                 bool isEnabled = !isNotAvailable;
 
@@ -298,26 +300,26 @@ namespace Stacker
                 TakeAwaySemiAutoButton.IsEnabled = isEnabled;
                 SemiAutoAddressLabel.IsEnabled = isEnabled;
 
-                char rack = LeftRackSemiAutoButton.IsChecked == true ? control.LeftRackName : control.RightRackName;
+                char rack = LeftRackSemiAutoButton.IsChecked == true ? model.LeftRackName : model.RightRackName;
                 r++;f++;
                 SemiAutoAddressLabel.Content = rack + " - " + r.ToString() + " - " + f.ToString();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, caption: "ManualComboBox_SelectionChanged");
+                MessageBox.Show(ex.Message, caption: "SemiAutoComboBox_SelectionChanged");
             }
         }
         
         //завершение работы программы
         private void Stacker_Closed(object sender, EventArgs e)
         {
-            if (control != null) control.Dispose();
+            if (model != null) model.Dispose();
         }
 
         //Обработчик нажатия кнопки подтверждения ошибки
         private void SubmitErrorButton_Click(object sender, RoutedEventArgs e)
         {
-            control.SubmitError();
+            model.SubmitError();
             ErrorListView.Items.Refresh();
             ManPlatformToLeftButton.IsEnabled = true;
             ManPlatformToRightButton.IsEnabled = true;
@@ -331,47 +333,47 @@ namespace Stacker
         //Обработчик нажатия кнопки "ближе"
         private void CloserButton_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            control.CloserButton(true);
+            model.CloserButton(true);
         }
         private void CloserButton_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            control.CloserButton(false);
+            model.CloserButton(false);
         }
 
         //Обработчик нажатия кнопки "дальше"
         private void FartherButton_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            control.FartherButton(true);
+            model.FartherButton(true);
         }
         private void FartherButton_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            control.FartherButton(false);
+            model.FartherButton(false);
         }
 
         //Обработчик нажатия кнопки "вверх"
         private void UpButton_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            control.UpButton(true);
+            model.UpButton(true);
         }
         private void UpButton_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            control.UpButton(false);
+            model.UpButton(false);
         }
 
         //Обработчик нажатия кнопки "вниз"
         private void DownButton_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            control.DownButton(true);
+            model.DownButton(true);
         }
         private void DownButton_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            control.DownButton(state: false);
+            model.DownButton(state: false);
         }
 
         //Обработчик нажатия кнопки "платформа влево"
         private void ManPlatformToLeftButton_Checked(object sender, RoutedEventArgs e)
         {
-            control.PlatformToLeft();   
+            model.PlatformToLeft();   
             bt = sender as Button;
             bt.IsEnabled = false;
         }
@@ -379,7 +381,7 @@ namespace Stacker
         //Обработчик нажатия кнопки платформа "вправо вправо"
         private void ManPlatformToRightButton_Checked(object sender, RoutedEventArgs e)
         {
-            control.PlatformToRight();
+            model.PlatformToRight();
             bt = sender as Button;
             bt.IsEnabled = false;
         }
@@ -387,7 +389,7 @@ namespace Stacker
         //Обработчик нажатия кнопки STOP
         private void StopButton_Click(object sender, RoutedEventArgs e)
         {
-            control.StopButton();
+            model.StopButton();
         }
 
         //Обработчик нажатия кнопки "Перейти на координаты"
@@ -395,9 +397,9 @@ namespace Stacker
         {
             int x = Convert.ToUInt16(GotoXTextBox.Text);
             int y = Convert.ToUInt16(GotoYTextBox.Text);
-            x = x > control.MaxX ? control.MaxX : x;
-            y = y > control.MaxY ? control.MaxY : y;
-            control.GotoXY(x, y);
+            x = x > model.MaxX ? model.MaxX : x;
+            y = y > model.MaxY ? model.MaxY : y;
+            model.GotoXY(x, y);
             bt = sender as Button;
             bt.IsEnabled = false;
         }
@@ -415,25 +417,25 @@ namespace Stacker
         //При клике по кнопке движение до следующего ряда
         private void FartherButton_NextLine(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            control.NextLineFartherCommand();
+            model.NextLineFartherCommand();
             bt = sender as Button;
             bt.IsEnabled = false;
         }
         private void CloserButton_NextLine(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            control.NextLineCloserCommand();
+            model.NextLineCloserCommand();
             bt = sender as Button;
             bt.IsEnabled = false;
         }
         private void UpButton_NextLine(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            control.NextLineUpCommand();
+            model.NextLineUpCommand();
             bt = sender as Button;
             bt.IsEnabled = false;
         }
         private void DownButton_NextLine(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            control.NextLineDownCommand();
+            model.NextLineDownCommand();
             bt = sender as Button;
             bt.IsEnabled = false;
         }
@@ -491,7 +493,7 @@ namespace Stacker
             int f = FloorSemiAutoCombobox.SelectedIndex;
             //если была нажата кнопка привезти устанавливае переменную в true
             bool bring = sender == BringSemiAutoButton ? true : false;
-            control.BringOrTakeAwayCommand(stacker,r,f,bring);           
+            model.BringOrTakeAwayCommand(stacker,r,f,bring);           
             bt = sender as Button;
             bt.IsEnabled = false;
         }

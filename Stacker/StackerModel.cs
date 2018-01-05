@@ -11,7 +11,7 @@ using Modbus.Device;
 
 namespace Stacker
 {
-    class Controller:IDisposable
+    class StackerModel:IDisposable
     {
         //видимые свойства объекта ****************************************************************************
 
@@ -37,9 +37,9 @@ namespace Stacker
         //public IObservable<Order> Orders { get; private set; } = new List<Order>();
 
         //делегат для обратного вызова при появлении флага завершения операции
-        public delegate void EventHandler();
-        public EventHandler CommandDone;
-        public EventHandler ErrorAppeared;
+        public delegate void StackerModelEventHandler();
+        public event StackerModelEventHandler CommandDone;
+        public event StackerModelEventHandler ErrorAppeared;
 
         //Актуальные координаты крана
         public int ActualX { get; private set; }
@@ -73,7 +73,7 @@ namespace Stacker
         private int StateWord;
 
         //Конструктор класса **********************************************************************************
-        public Controller()
+        public StackerModel()
         {
             //Читаем первоначальные настройки
             ReadINISettings();
@@ -113,7 +113,7 @@ namespace Stacker
         }
 
         //завершение работы программы
-         ~Controller()
+         ~StackerModel()
         {
             Dispose();
         }
@@ -224,7 +224,7 @@ namespace Stacker
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, caption: "SaveCells");
             }
         }
 

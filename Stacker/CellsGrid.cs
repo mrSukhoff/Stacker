@@ -23,48 +23,48 @@ namespace Stacker
         //индексатор
         public Cell this[int rowIndex,int floorIndex]
         {
-            get
-            {
-                return grid[rowIndex,floorIndex];
-            }
-            set
-            {
-                grid[rowIndex,floorIndex] = value;
-            }
+            get => grid[rowIndex, floorIndex];
+            set => grid[rowIndex, floorIndex] = value;
         }
 
-        public int RowSize { get { return rowSize; } }
-        public int FloorSize { get { return floorSize; } }
-
-        private int rowSize;
-        private int floorSize;
         private Cell[,] grid;
 
         //конструктор создает массив и инициализирует его
         public CellsGrid(int RowSize, int FloorSize)
         {
-            rowSize = RowSize > 0 ? RowSize : 1;
-            floorSize = FloorSize > 0 ? FloorSize : 1;
-            grid = new Cell[rowSize, floorSize];
-            for (int r=0;r<rowSize;r++) 
-                for (int f=0;f<floorSize;f++)
+            //проверяем не слишком малы ли аргументы
+            if (RowSize < 1 || FloorSize < 1) throw new ArgumentException("Размры массива слишком малы");
+            
+            //создаем массив координат
+            grid = new Cell[RowSize, FloorSize];
+            
+            //и инициализируем каждый элемент
+            for (int r=0;r<RowSize;r++) 
+                for (int f=0;f<FloorSize;f++)
                     grid[r, f] = new Cell(); 
         }
 
-        //конструктор считывает массив значений из файла
+        //конструктор считывает массив координат из файла
         public CellsGrid(string path)
         {
             if (File.Exists(path))
             {
+                //читаем файл с координатами  в массив строк
                 string[] lines = File.ReadAllLines(path, System.Text.Encoding.Default);
+
+                //первые две строки хранят размер массива
                 int rowSize = Convert.ToInt32(lines[0]);
                 int floorSize = Convert.ToInt32(lines[1]);
-                this.rowSize = rowSize > 0 ? rowSize : 1;
-                this.floorSize = floorSize > 0 ? floorSize : 1;
-                this.grid = new Cell[rowSize, floorSize];
+                
+                //создаем массив координат
+                grid = new Cell[rowSize, floorSize];
+
+                //и инициализируем каждый элемент
                 for (int r = 0; r < rowSize; r++)
                     for (int f = 0; f < floorSize; f++)
                         grid[r, f] = new Cell();
+
+                //разбираем все строки и заносим значения в массив
                 for (int i = 2; i < lines.Length; i++)
                 {
                     string[] line = lines[i].Split('~');
@@ -80,16 +80,25 @@ namespace Stacker
             }
         }
 
+        //сохраняет массив координат в файл
         public void SaveCellsGrid(string path)
         {
-            string[] lines = new string[RowSize*FloorSize+2];
-            lines[0] = this.RowSize.ToString();
-            lines[1] = this.FloorSize.ToString();
-            for (int r = 0; r < RowSize; r++)
+            //создаем массив строк размером равным количеству ячеек + 2
+            int rowSize = grid.GetLength(0);
+            int floorSize = grid.GetLength(1);
+
+            string[] lines = new string[rowSize*floorSize+2];
+
+            //первые две строки хранят размер массива
+            lines[0] = rowSize.ToString();
+            lines[1] = floorSize.ToString();
+
+            //для каждой ячейки формируем строку с координатами
+            for (int r = 0; r < rowSize; r++)
             {
-                for (int f = 0; f < FloorSize; f++)
+                for (int f = 0; f < floorSize; f++)
                 {
-                    lines[2+f+r*FloorSize] = 
+                    lines[2+f+r*floorSize] = 
                         r.ToString()+'~'+
                         f.ToString() + '~' +
                         grid[r, f].X.ToString() + '~'+
@@ -97,6 +106,7 @@ namespace Stacker
                         grid[r, f].IsNotAvailable.ToString();
                 }
             }
+            //пытаемся сохранить получееные строки в файл
             try
             {
                 File.WriteAllLines(path, lines, System.Text.Encoding.Default);
