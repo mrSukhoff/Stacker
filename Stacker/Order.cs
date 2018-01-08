@@ -19,9 +19,9 @@ namespace Stacker
         public string BatchERPLN { get; }
         public string ManufacturersBatchNumber { get; }
         public string Amount { get; }
-        public string StackerNumber { get; }
-        public string Row { get; }
-        public string Floor { get; }
+        public int StackerNumber { get; }
+        public int Row { get; }
+        public int Floor { get; }
         public string Cell { get; } // уточнить что за сущность
         public string OriginalString { get; }
         public string Address { get; }
@@ -48,18 +48,18 @@ namespace Stacker
             
             //разбиваем строку и заносим данные в соответсвтующие поля
             string[] strings = str.Split('~');
-            this.OrderType = strings[0];
-            this.OrderNumber = strings[1];
-            this.LineNumberInOrder = strings[2];
-            this.ProductCode = strings[3];
-            this.ProductDescription = strings[4];
-            this.BatchERPLN = strings[5];
-            this.ManufacturersBatchNumber = strings[6];
-            this.Amount = strings[7];
-            this.StackerNumber = strings[8];
-            this.Row = strings[9];
-            this.Floor = strings[10];
-            this.Cell = strings[11];
+            OrderType = strings[0];
+            OrderNumber = strings[1];
+            LineNumberInOrder = strings[2];
+            ProductCode = strings[3];
+            ProductDescription = strings[4];
+            BatchERPLN = strings[5];
+            ManufacturersBatchNumber = strings[6];
+            Amount = strings[7];
+            StackerNumber = Convert.ToInt32(strings[8]);
+            Row = Convert.ToInt32(strings[9]);
+            Floor = Convert.ToInt32(strings[10]);
+            Cell = strings[11];
             int sn = Convert.ToInt32(StackerNumber);
             if ((sn == LeftStackerNumber) || (sn == RightStackerNumber))
                 StackerName = sn == LeftStackerNumber ? LeftStackerName : RightStackerName;

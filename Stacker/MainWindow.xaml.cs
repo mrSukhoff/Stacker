@@ -109,7 +109,10 @@ namespace Stacker
             LeftRackSemiAutoButton_Click(null, null);
 
             //источник данных для списка ошибок
-            ErrorListView.ItemsSource = model.ErrorList; 
+            ErrorListView.ItemsSource = model.ErrorList;
+
+            //изначально кнопка "увезти" не актиквна, так как предполагается, что увозить пока нечего
+            TakeAwayAutoButton.IsEnabled = false;
         }
 
         //Настройки вида списка заявок
@@ -496,6 +499,59 @@ namespace Stacker
             model.BringOrTakeAwayCommand(stacker,r,f,bring);           
             bt = sender as Button;
             bt.IsEnabled = false;
+        }
+
+        private void BringAutoButton_Click(object sender, RoutedEventArgs e)
+        {
+            int i = OrdersLitsView.SelectedIndex;
+            //Если не выбран ни один элемент - выходим
+            if (i < 0) return;
+            //Устанавливаем номер заявки
+            model.SelectOrder(i);
+            //Даем команду привезти
+            model.BringOrTakeAwayOrder(true);
+            //Выключаем кнопку
+            BringAutoButton.IsEnabled = false;
+            //Заменяем обработчик события "команда выполена"
+            model.CommandDone -= CommandDone;
+            model.CommandDone += BringDone;
+        }
+
+        private void BringDone()
+        {
+            TakeAwayAutoButton.IsEnabled = true;
+        }
+
+        private void TakeAwayAutoButton_Click(object sender, RoutedEventArgs e)
+        {
+            int i = OrdersLitsView.SelectedIndex;
+            //Если не выбран ни один элемент - выходим
+            if (i < 0) return;
+            //Даем команду привезти
+            model.BringOrTakeAwayOrder(false);
+            //Выключаем кнопку
+            TakeAwayAutoButton.IsEnabled = false;
+            //Заменяем обработчик события "команда выполена"
+            model.CommandDone -= BringDone;
+            model.CommandDone += TakeAwayDone;
+        }
+
+        private void TakeAwayDone()
+        {
+            BringAutoButton.IsEnabled = true;
+            model.CommandDone -= TakeAwayDone;
+            model.CommandDone += CommandDone;
+            model.FinishOrder(true);
+        }
+
+        private void CancleAutoButton_Click(object sender, RoutedEventArgs e)
+        {
+            int i = OrdersLitsView.SelectedIndex;
+            //Если не выбран ни один элемент - выходим
+            if (i < 0) return;
+
+            model.SelectOrder(i);
+            model.FinishOrder(false);
         }
     }
 }

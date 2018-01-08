@@ -72,6 +72,9 @@ namespace Stacker
         //Слово состояния контроллера
         private int StateWord;
 
+        //хранит номер выбранной заявки в автоматическом режиме
+        int SelectedOrderNumber = -1;
+
         //Конструктор класса **********************************************************************************
         public StackerModel()
         {
@@ -533,7 +536,7 @@ namespace Stacker
             }
         }
 
-        //Команда Привезти bring = true - привезти
+        //Команда "привезти/увезти" bring = true - привезти
         public void BringOrTakeAwayCommand(bool rack, int row, int floor, bool bring)
         {
             if (PLC != null)
@@ -552,11 +555,77 @@ namespace Stacker
                 WriteDword(PLC, 6, floor);
                 //Устанваливаем сторону
                 SetMerker(PLC, 2, rack);
-                //Устанавливаем флаг в "привезти"
+                //Устанавливаем флаг в "привезти/увезти"
                 SetMerker(PLC, 3, bring);
                 //Даем команду на старт
                 SetMerker(PLC, 1, true);
             }
+        }
+        
+        //Команда "привезти/увезти" bring = true - привезти
+        public void BringOrTakeAwayOrder(bool bring)
+        {
+            if (SelectedOrderNumber == -1) throw new Exception("Не установлен номер заявки");
+            if (PLC != null)
+            {
+                bool rack = Orders[SelectedOrderNumber].StackerNumber == LeftRackNumber;
+                int row = Orders[SelectedOrderNumber].Row;
+                int floor = Orders[SelectedOrderNumber].Floor;
+
+                CellsGrid stacker = rack ? LeftStacker : RightStacker;
+                int x = stacker[row, floor].X;
+                int y = stacker[row, floor].Y;
+
+                //Включаем режим перемещения по координатам
+                WriteDword(PLC, 8, 2);
+                //Пишем координаты
+                WriteDword(PLC, 0, x);
+                WriteDword(PLC, 2, y);
+                //Пишем ряд и этаж
+                WriteDword(PLC, 4, row);
+                WriteDword(PLC, 6, floor);
+                //Устанваливаем сторону
+                SetMerker(PLC, 2, rack);
+                //Устанавливаем флаг в "привезти/увезти"
+                SetMerker(PLC, 3, bring);
+                //Даем команду на старт
+                SetMerker(PLC, 1, true);
+            }
+        }
+
+        public void FinishOrder(bool succesed)
+        {
+            if (SelectedOrderNumber == -1) throw new Exception("Не установлен номер заявки");
+            string res;
+            if (succesed) res = " - succeeded";
+            else res = " - canceled";
+            string orderString = Orders[SelectedOrderNumber].OriginalString;
+
+            
+            try
+            {
+                File.AppendAllText(ArchiveFile,
+                    DateTime.Now.ToString() + " : " + orderString + " - " + res + '\r' + '\n',
+                        System.Text.Encoding.Default);
+
+                string[] strings = File.ReadAllLines(OrdersFile, System.Text.Encoding.Default).
+                    Where(v => v.TrimEnd('\r', '\n').IndexOf(orderString) == -1).ToArray();
+
+                File.WriteAllLines(OrdersFile, strings, System.Text.Encoding.Default);
+
+                Orders.RemoveAt(SelectedOrderNumber);
+                SelectedOrderNumber = -1;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message,"FinishOrder");
+            }
+        }
+
+        public void SelectOrder(int orderNumber)
+        {
+            if (orderNumber < 0 || orderNumber > Orders.Count) throw new ArgumentException("Номер заявки за прелами списка");
+            SelectedOrderNumber = orderNumber;
         }
     }
 }
