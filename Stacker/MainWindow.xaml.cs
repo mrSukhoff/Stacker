@@ -544,7 +544,7 @@ namespace Stacker
             model.FinishOrder(true);
         }
 
-        private void CancleAutoButton_Click(object sender, RoutedEventArgs e)
+        private void CancelAutoButton_Click(object sender, RoutedEventArgs e)
         {
             int i = OrdersLitsView.SelectedIndex;
             //Если не выбран ни один элемент - выходим
