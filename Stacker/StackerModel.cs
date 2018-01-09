@@ -40,6 +40,7 @@ namespace Stacker
         public delegate void StackerModelEventHandler();
         public event StackerModelEventHandler CommandDone;
         public event StackerModelEventHandler ErrorAppeared;
+        public event StackerModelEventHandler SomethingChanged;
 
         //Актуальные координаты крана
         public int ActualX { get; private set; }
@@ -49,6 +50,9 @@ namespace Stacker
 
         //список ошибок контроллера
         public List<string> ErrorList { get; private set; } = new List<string>();
+
+        //Слово состояния контроллера
+        public int StateWord { get; private set; }
 
         //внутренние поля класса ******************************************************************************
 
@@ -68,9 +72,6 @@ namespace Stacker
         //Com-порт к которому подсоединен контроллер
         private SerialPort ComPort = null;
         private IModbusMaster PLC;
-
-        //Слово состояния контроллера
-        private int StateWord;
 
         //хранит номер выбранной заявки в автоматическом режиме
         int SelectedOrderNumber = -1;
@@ -179,7 +180,7 @@ namespace Stacker
                     }
                     //и запоминаем время последнего чтения
                     LastOrdersFileAccessTime = File.GetLastWriteTime(OrdersFile);
-                    //Dispatcher.Invoke(new RefreshList(() => OrdersLitsView.Items.Refresh()));
+                    
                 }
             }
             catch (ArgumentException ae)
@@ -312,17 +313,32 @@ namespace Stacker
             {
                 try
                 {
+                    /* почему-то не работает
                     //читаем оптом из ПЛК актуальные координаты крана
                     ushort[] word = PLC.ReadHoldingRegisters(1,0x1408,8);
                     //и записываем их значения
-                    ActualX = word[0] + 0x10000 * word[1];
-                    ActualY = word[2] + 0x10000 * word[3];
+                    int actualX = word[0] + 0x10000 * word[1];
+                    int actualY = word[2] + 0x10000 * word[3];
                     ActualRow = word[4];
                     ActualFloor = word[6];
+                    */
+
+                    ReadDword(PLC,408,out int w);
+                    ActualX = w;
+
+                    ReadDword(PLC, 410, out w);
+                    ActualY = w;
+
+                    ReadDword(PLC, 412, out w);
+                    ActualRow = w;
+
+                    ReadDword(PLC, 414, out w);
+                    ActualFloor = w;
 
                     //читаем слово состояния ПЛК
                     ReadDword(PLC, 100, out  int stateWord);
-                    
+
+                    SomethingChanged();
                     //если появился флаг завершения выполнения вызываем событие
                     if ((stateWord >> 14 != 0) && (StateWord >> 14 == 0)) CommandDone();
                         

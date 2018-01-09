@@ -342,7 +342,7 @@
                             <ComboBox x:Name="RackComboBox" HorizontalAlignment="Left" Margin="63,0,0,22" Width="70" Grid.ColumnSpan="2" VerticalContentAlignment="Center" VerticalAlignment="Bottom" Height="36" FontSize="24" Background="#FFCBDBB7"/>
                             <TextBox x:Name="CoordinateXTextBox" HorizontalAlignment="Left" TextWrapping="Wrap" Width="100" Margin="91,0,0,22" Height="36" Grid.Column="3" Grid.ColumnSpan="2" VerticalAlignment="Bottom" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="24" AllowDrop="False" Text="0" PreviewTextInput="TextBox_PreviewTextInput" Background="#FFCBDBB7"/>
                             <TextBox x:Name="CoordinateYTextBox" HorizontalAlignment="Left" TextWrapping="Wrap" Text="0" Width="100" Margin="91,0,0,22" Height="36" Grid.Column="4" Grid.ColumnSpan="2" VerticalAlignment="Bottom" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="24" PreviewTextInput="TextBox_PreviewTextInput" Background="#FFCBDBB7"/>
-                            <CheckBox x:Name="IsNOTAvailableCheckBox" Content="Ячейка&#xD;&#xA;отсутсвует" Grid.Column="5" HorizontalAlignment="Left" Height="67" Margin="73,0,0,0" VerticalAlignment="Bottom" Width="141.333" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" Foreground="#FFFCFFF5"/>
+                            <CheckBox x:Name="IsNOTAvailableCheckBox" Content="Ячейка&#xA;отсутствует" Grid.Column="5" HorizontalAlignment="Left" Height="67" Margin="73,0,0,0" VerticalAlignment="Bottom" Width="141.333" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" Foreground="#FFFCFFF5"/>
                             <Button x:Name="SaveButton" Content="Записать" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="150" Margin="58.597,0,72.156,22" Grid.Row="1" Height="48" Grid.Column="3" FontWeight="Bold" Click="SaveButton_Click" Grid.ColumnSpan="2" FontSize="24" Background="#FF91AAB4" BorderBrush="#FFCBDBD7"/>
                             <Label Content="Стеллаж" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="45.332,0,0,75" Grid.ColumnSpan="2" Width="106" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" Height="36" Foreground="#FFFCFFF5"/>
                             <Label Content="Ряд" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.ColumnSpan="2" Grid.Column="1" Margin="61.34,0,0,75" Width="72.667" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" Height="36" Foreground="#FFFCFFF5"/>
@@ -373,7 +373,7 @@
                             <Button x:Name="YResButton" Content="R" Grid.Column="1" HorizontalAlignment="Left" Margin="3.509,0,0,1" Width="36" MinWidth="25" Grid.Row="1" Click="YResButton_Click" Height="36" VerticalAlignment="Bottom" RenderTransformOrigin="-0.27,0.512"/>
                         </Grid>
                     </GroupBox>
-                    <GroupBox Header="Премещение" Margin="3,0,3,3" Background="#FF193441" Grid.Column="1" Grid.Row="1" Foreground="#FFFCFFF5">
+                    <GroupBox Header="Перемещение" Margin="3,0,3,3" Background="#FF193441" Grid.Column="1" Grid.Row="1" Foreground="#FFFCFFF5">
                         <Grid Grid.Column="1" Grid.Row="1" Background="#FF193441" Margin="0">
                             <Grid.RowDefinitions>
                                 <RowDefinition/>

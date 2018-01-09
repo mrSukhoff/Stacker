@@ -32,6 +32,8 @@ namespace Stacker
         //контроллер паттерна MVC
         StackerModel model;
 
+        delegate void RefreshStatusBar();
+
         //#####################################################################################################
         //Основная точка входа -------------------------------------------------------------------------------!
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -42,6 +44,7 @@ namespace Stacker
             //подписываемся на события
             model.CommandDone += CommandDone;
             model.ErrorAppeared += ErrorAppeared;
+            model.SomethingChanged += UpdateCoordinate;
             
             //Настраиваем визуальные компоненты
             SetUpButtons();
@@ -157,6 +160,18 @@ namespace Stacker
         //обработчик события "ошибка"
         private void ErrorAppeared() => ErrorListView.Items.Refresh();
 
+        //Обновление координат и слова состояния
+        private void UpdateCoordinate()
+        {
+            string sw = Convert.ToString(model.StateWord, 2);
+            while (sw.Length < 15) sw = "0" + sw;
+            Dispatcher.Invoke(new RefreshStatusBar (() =>  StateWordLabel.Content = "State Word : " +sw));
+
+            Dispatcher.Invoke(new RefreshStatusBar(() => RowLabel.Content = "R:" + model.ActualRow));
+            Dispatcher.Invoke(new RefreshStatusBar(() => FloorLabel.Content = "F:" + model.ActualFloor));
+            Dispatcher.Invoke(new RefreshStatusBar(() => XLabel.Content = "X:" + model.ActualX));
+            Dispatcher.Invoke(new RefreshStatusBar(() => YLabel.Content = "Y:" + model.ActualY));
+        }
         //При изменении адреса ячеек перечитываем координаты
         private void CellChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -403,7 +418,7 @@ namespace Stacker
             x = x > model.MaxX ? model.MaxX : x;
             y = y > model.MaxY ? model.MaxY : y;
             model.GotoXY(x, y);
-            bt = sender as Button;
+            bt = (Button)sender;
             bt.IsEnabled = false;
         }
        
