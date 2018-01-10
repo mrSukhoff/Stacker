@@ -39,7 +39,7 @@ namespace Stacker
         //делегат для обратного вызова при появлении флага завершения операции
         public delegate void StackerModelEventHandler();
         public event StackerModelEventHandler CommandDone;
-        public event StackerModelEventHandler ErrorAppeared;
+        //public event StackerModelEventHandler ErrorAppeared;
         public event StackerModelEventHandler SomethingChanged;
 
         //Актуальные координаты крана
@@ -341,9 +341,9 @@ namespace Stacker
                     SomethingChanged();
                     //если появился флаг завершения выполнения вызываем событие
                     if ((stateWord >> 14 != 0) && (StateWord >> 14 == 0)) CommandDone();
-                        
+
                     //если появился флаг ошибки вызываем обрабочик ошибок
-                    if (GetBitState(stateWord, 13) && !GetBitState(StateWord, 13)) 
+                    if (GetBitState(stateWord, 13) && !GetBitState(StateWord, 13)) ErrorHandler();
 
                     StateWord = stateWord;
                 }
@@ -363,7 +363,8 @@ namespace Stacker
             if (GetBitState(ErrorWord, 1)) ErrorList.Add(DateTime.Now.ToString() + " : Одновременное включение контакторов");
             if (GetBitState(ErrorWord, 2)) ErrorList.Add(DateTime.Now.ToString() + " : Ошибка блока перемещения");
             if (GetBitState(ErrorWord, 3)) ErrorList.Add(DateTime.Now.ToString() + " : Ячейка для установки ящика занята");
-            ErrorAppeared();
+            if (GetBitState(ErrorWord, 4)) ErrorList.Add(DateTime.Now.ToString() + " : Обнаружена помеха вертикальному перемещению крана");
+            //ErrorAppeared();
         }
 
         //метод возвращает состояния указанного бита
@@ -403,8 +404,8 @@ namespace Stacker
         //устанавливает флаг подтверждения ошибок в ПЛК и очищает список ошибок
         public void SubmitError()
         {
-            if (PLC != null) SetMerker(PLC, 101, true);
             ErrorList.Clear();
+            if (PLC != null) SetMerker(PLC, 101, true);
         }
 
         //команда дальше

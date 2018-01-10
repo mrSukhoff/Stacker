@@ -33,7 +33,7 @@ namespace Stacker
         StackerModel model;
 
         delegate void RefreshStatusBar();
-
+        
         //#####################################################################################################
         //Основная точка входа -------------------------------------------------------------------------------!
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -43,7 +43,7 @@ namespace Stacker
             
             //подписываемся на события
             model.CommandDone += CommandDone;
-            model.ErrorAppeared += ErrorAppeared;
+            //model.ErrorAppeared += ErrorAppeared;
             model.SomethingChanged += UpdateCoordinate;
             
             //Настраиваем визуальные компоненты
@@ -59,6 +59,8 @@ namespace Stacker
             //Подписываем кнопки рядов
             LeftRackSemiAutoButton.Content = model.LeftRackName;
             RightRackSemiAutoButton.Content = model.RightRackName;
+            ManPlatformToLeftButton.Content = model.LeftRackName; 
+            ManPlatformToRightButton.Content = model.RightRackName;
 
             //Заполняем combobox'ы номерами рядов
             int[] rowItems = new int[model.StackerDepth - 1];
@@ -153,7 +155,12 @@ namespace Stacker
         //обработчик события "команда выполнена"
         private void CommandDone()
         {
-            bt.IsEnabled = true;
+            Dispatcher.Invoke(UnblockButton);
+        }
+
+        private void UnblockButton()
+        {
+            if (bt!=null) bt.IsEnabled = true;
             bt = null;
         }
 
@@ -345,7 +352,8 @@ namespace Stacker
             BringSemiAutoButton.IsEnabled = true;
             TakeAwaySemiAutoButton.IsEnabled = true;
             BringAutoButton.IsEnabled = true;
-            TakeAwayAutoButton.IsEnabled = true;
+            //возможны проблемы при возникновении ошибки во время возврата контейнера на место
+            //TakeAwayAutoButton.IsEnabled = true;
         }
 
         //Обработчик нажатия кнопки "ближе"
@@ -516,6 +524,7 @@ namespace Stacker
             bt.IsEnabled = false;
         }
 
+        //в автоматическом режиме даем команду на подвоз контейнера
         private void BringAutoButton_Click(object sender, RoutedEventArgs e)
         {
             int i = OrdersLitsView.SelectedIndex;
@@ -531,12 +540,14 @@ namespace Stacker
             model.CommandDone -= CommandDone;
             model.CommandDone += BringDone;
         }
-
+        
+        //после доставки разрешаем кнопку "увезти"
         private void BringDone()
         {
             TakeAwayAutoButton.IsEnabled = true;
         }
 
+        //увозим контейнер на место
         private void TakeAwayAutoButton_Click(object sender, RoutedEventArgs e)
         {
             int i = OrdersLitsView.SelectedIndex;
@@ -551,14 +562,19 @@ namespace Stacker
             model.CommandDone += TakeAwayDone;
         }
 
+        //после доставки  на место разрешаем кнопкку "привезти"
         private void TakeAwayDone()
         {
+            //отжимаем кнопку
             BringAutoButton.IsEnabled = true;
+            //возвращаем обработчик события
             model.CommandDone -= TakeAwayDone;
             model.CommandDone += CommandDone;
+            //завершаем заявку
             model.FinishOrder(true);
         }
-
+        
+        //нажатие кнопки "отменить заявку"
         private void CancelAutoButton_Click(object sender, RoutedEventArgs e)
         {
             int i = OrdersLitsView.SelectedIndex;
