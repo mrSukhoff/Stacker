@@ -21,7 +21,7 @@ namespace Stacker
 
         //размеры, имена и номера штабелеров
         //нулевая позиция по горизонтали - место погрузки
-        public int StackerDepth { get; } = 30;
+        public int StackerDepth { get; } = 29;
         public int StackerHight { get; } = 16;
         public char LeftRackName { get; private set; }
         public int LeftRackNumber { get; private set; }
@@ -113,7 +113,7 @@ namespace Stacker
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, caption: "Ошибка открытия порта");
-                throw new Exception("No com port");
+                //throw new Exception("No com port");
             }
         }
 
@@ -391,7 +391,7 @@ namespace Stacker
             isNotAvailable = rack[row, floor].IsNotAvailable;
         }
 
-        //устанавливает по адресу ячейки её координаты и доступность
+        //устанавливает для ячейки её координаты и доступность
         //левый стеллаж r = false
         public void SetCell(bool r, int row, int floor, int x, int y, bool isNotAvailable)
         {

@@ -38,16 +38,16 @@ namespace Stacker
         //Основная точка входа -------------------------------------------------------------------------------!
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            try
+            //try
             {
                 //создаем модель
                 model = new StackerModel();
           
             }
-            catch (Exception)
+            /*catch (Exception)
             {
                 Application.Current.Shutdown();
-            }
+            }*/
 
             if (model != null)
             {
@@ -74,7 +74,7 @@ namespace Stacker
             ManPlatformRightButton.Content = model.RightRackName;
 
             //Заполняем combobox'ы номерами рядов
-            int[] rowItems = new int[model.StackerDepth - 1];
+            int[] rowItems = new int[model.StackerDepth];
             for (int i = 0; i < rowItems.Length; i++) { rowItems[i] = i + 1; }
             RowSemiAutoComboBox.ItemsSource = rowItems;
             RowComboBox.ItemsSource = rowItems;
@@ -201,8 +201,8 @@ namespace Stacker
             {
                 //вычисляем адрес ячейки
                 bool stacker = RackComboBox.SelectedIndex != 0;
-                int row = RowComboBox.SelectedIndex;
-                int floor = FloorComboBox.SelectedIndex;
+                int row = RowComboBox.SelectedIndex+1;
+                int floor = FloorComboBox.SelectedIndex+1;
 
                 //получаем координаты
                 model.GetCell(stacker, row, floor, out int x, out int y, out bool isNOTAvailable);
@@ -235,8 +235,8 @@ namespace Stacker
             {
                 //вычисляем адрес ячейки
                 bool stacker = RackComboBox.SelectedIndex != 0;
-                int row = RowComboBox.SelectedIndex;
-                int floor = FloorComboBox.SelectedIndex;
+                int row = RowComboBox.SelectedIndex + 1;
+                int floor = FloorComboBox.SelectedIndex + 1;
 
                 //если поле пустое, то записываем в него ноль
                 CoordinateXTextBox.Text = CoordinateXTextBox.Text == "" ? "0" : CoordinateXTextBox.Text;
@@ -329,8 +329,8 @@ namespace Stacker
             try
             {
                 bool stacker = RightRackSemiAutoButton.IsChecked == true;
-                int r = RowSemiAutoComboBox.SelectedIndex;
-                int f = FloorSemiAutoCombobox.SelectedIndex;
+                int r = RowSemiAutoComboBox.SelectedIndex + 1;
+                int f = FloorSemiAutoCombobox.SelectedIndex + 1;
 
                 model.GetCell(stacker, r, f,out int x,out int y,out bool isNotAvailable);
 
@@ -341,7 +341,6 @@ namespace Stacker
                 SemiAutoAddressLabel.IsEnabled = isEnabled;
 
                 char rack = LeftRackSemiAutoButton.IsChecked == true ? model.LeftRackName : model.RightRackName;
-                r++;f++;
                 SemiAutoAddressLabel.Content = rack + " - " + r.ToString() + " - " + f.ToString();
             }
             catch (Exception ex)
@@ -530,8 +529,8 @@ namespace Stacker
         private void BringOrTakeAwaySemiAutoButton_Click(object sender, RoutedEventArgs e)
         {
             bool stacker = RightRackSemiAutoButton.IsChecked == true;
-            int r = RowSemiAutoComboBox.SelectedIndex;
-            int f = FloorSemiAutoCombobox.SelectedIndex;
+            int r = RowSemiAutoComboBox.SelectedIndex + 1;
+            int f = FloorSemiAutoCombobox.SelectedIndex + 1;
             //если была нажата кнопка привезти устанавливае переменную в true
             bool bring = sender == BringSemiAutoButton ? true : false;
             model.BringOrTakeAwayCommand(stacker,r,f,bring);           

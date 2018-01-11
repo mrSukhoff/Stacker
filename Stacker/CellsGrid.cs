@@ -4,13 +4,14 @@ using System.Windows;
 
 namespace Stacker
 {
+    //класс ячейки массива для хранения координат и доступности 
     class Cell
     {
         public Cell()
         {
-            this.X = 0;
-            this.Y = 0;
-            this.IsNotAvailable = false;
+            X = 0;
+            Y = 0;
+            IsNotAvailable = false;
         }
 
         public int X { get; set; }
@@ -18,15 +19,18 @@ namespace Stacker
         public bool IsNotAvailable { get; set; }
     }
 
+    //класс-обертка для массива ячеек
     class CellsGrid
     {
         //индексатор
         public Cell this[int rowIndex,int floorIndex]
         {
-            get => grid[rowIndex, floorIndex];
-            set => grid[rowIndex, floorIndex] = value;
+            //так как стеллажи нумируются с единицы вычитаем 1
+            get => grid[--rowIndex, --floorIndex];
+            set => grid[--rowIndex, --floorIndex] = value;
         }
 
+        //массив с координатами ячеек
         private Cell[,] grid;
 
         //конструктор создает массив и инициализирует его
@@ -68,14 +72,14 @@ namespace Stacker
                 for (int i = 2; i < lines.Length; i++)
                 {
                     string[] line = lines[i].Split('~');
-                    int r = Convert.ToInt32(line[0]);
-                    int f = Convert.ToInt32(line[1]);
+                    int r = Convert.ToInt32(line[0])-1;
+                    int f = Convert.ToInt32(line[1])-1;
                     int x = Convert.ToInt32(line[2]);
                     int y = Convert.ToInt32(line[3]);
                     bool isNotAvailable = Convert.ToBoolean(line[4]);
-                    this.grid[r, f].X = x;
-                    this.grid[r, f].Y = y;
-                    this.grid[r, f].IsNotAvailable = isNotAvailable;
+                    grid[r, f].X = x;
+                    grid[r, f].Y = y;
+                    grid[r, f].IsNotAvailable = isNotAvailable;
                 }
             }
         }
@@ -99,8 +103,8 @@ namespace Stacker
                 for (int f = 0; f < floorSize; f++)
                 {
                     lines[2+f+r*floorSize] = 
-                        r.ToString()+'~'+
-                        f.ToString() + '~' +
+                        (r+1).ToString()+'~'+
+                        (f+1).ToString() + '~' +
                         grid[r, f].X.ToString() + '~'+
                         grid[r, f].Y.ToString() + "~"+
                         grid[r, f].IsNotAvailable.ToString();
