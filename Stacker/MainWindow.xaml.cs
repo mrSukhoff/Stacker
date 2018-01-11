@@ -59,8 +59,8 @@ namespace Stacker
             //Подписываем кнопки рядов
             LeftRackSemiAutoButton.Content = model.LeftRackName;
             RightRackSemiAutoButton.Content = model.RightRackName;
-            ManPlatformToLeftButton.Content = model.LeftRackName; 
-            ManPlatformToRightButton.Content = model.RightRackName;
+            ManPlatformLeftButton.Content = model.LeftRackName; 
+            ManPlatformRightButton.Content = model.RightRackName;
 
             //Заполняем combobox'ы номерами рядов
             int[] rowItems = new int[model.StackerDepth - 1];
@@ -346,8 +346,8 @@ namespace Stacker
         {
             model.SubmitError();
             ErrorListView.Items.Refresh();
-            ManPlatformToLeftButton.IsEnabled = true;
-            ManPlatformToRightButton.IsEnabled = true;
+            ManPlatformLeftButton.IsEnabled = true;
+            ManPlatformRightButton.IsEnabled = true;
             GotoButton.IsEnabled = true;
             BringSemiAutoButton.IsEnabled = true;
             TakeAwaySemiAutoButton.IsEnabled = true;
@@ -397,17 +397,17 @@ namespace Stacker
         }
 
         //Обработчик нажатия кнопки "платформа влево"
-        private void ManPlatformToLeftButton_Checked(object sender, RoutedEventArgs e)
+        private void ManPlatformLeftButton_Checked(object sender, RoutedEventArgs e)
         {
-            model.PlatformToLeft();   
+            model.PlatformToRight();   
             bt = sender as Button;
             bt.IsEnabled = false;
         }
 
         //Обработчик нажатия кнопки платформа "вправо вправо"
-        private void ManPlatformToRightButton_Checked(object sender, RoutedEventArgs e)
+        private void ManPlatformRightButton_Checked(object sender, RoutedEventArgs e)
         {
-            model.PlatformToRight();
+            model.PlatformToLeft();
             bt = sender as Button;
             bt.IsEnabled = false;
         }
@@ -584,6 +584,8 @@ namespace Stacker
             model.SelectOrder(i);
             model.FinishOrder(false);
         }
+
+
     }
 }
 
