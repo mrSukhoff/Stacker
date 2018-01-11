@@ -38,19 +38,30 @@ namespace Stacker
         //Основная точка входа -------------------------------------------------------------------------------!
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            //создаем модель
-            model = new StackerModel();
-            
-            //подписываемся на события
-            model.CommandDone += CommandDone;
-            //model.ErrorAppeared += ErrorAppeared;
-            model.SomethingChanged += UpdateCoordinate;
-            
-            //Настраиваем визуальные компоненты
-            SetUpButtons();
+            try
+            {
+                //создаем модель
+                model = new StackerModel();
+          
+            }
+            catch (Exception)
+            {
+                Application.Current.Shutdown();
+            }
 
-            //Настраиваем вид списка заявок
-            GridSetUp();
+            if (model != null)
+            {
+                //подписываемся на события
+                model.CommandDone += CommandDone;
+                //model.ErrorAppeared += ErrorAppeared;
+                model.SomethingChanged += UpdateCoordinate;
+
+                //Настраиваем визуальные компоненты
+                SetUpButtons();
+
+                //Настраиваем вид списка заявок
+                GridSetUp();
+            }
         }
                 
         //Настраиваем визуальные компоненты
@@ -118,6 +129,9 @@ namespace Stacker
 
             //изначально кнопка "увезти" не актиквна, так как предполагается, что увозить пока нечего
             TakeAwayAutoButton.IsEnabled = false;
+
+            //считываем координаты
+            CellChanged(null,null);
         }
 
         //Настройки вида списка заявок
@@ -179,6 +193,7 @@ namespace Stacker
             Dispatcher.Invoke(new RefreshStatusBar(() => XLabel.Content = "X:" + model.ActualX));
             Dispatcher.Invoke(new RefreshStatusBar(() => YLabel.Content = "Y:" + model.ActualY));
         }
+        
         //При изменении адреса ячеек перечитываем координаты
         private void CellChanged(object sender, SelectionChangedEventArgs e)
         {

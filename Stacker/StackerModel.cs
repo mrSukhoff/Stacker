@@ -113,6 +113,7 @@ namespace Stacker
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, caption: "Ошибка открытия порта");
+                throw new Exception("No com port");
             }
         }
 
