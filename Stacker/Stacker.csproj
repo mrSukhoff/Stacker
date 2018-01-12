@@ -90,6 +90,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CellsGrid.cs" />
+    <Compile Include="OrdersClass.cs" />
     <Compile Include="StackerModel.cs" />
     <Compile Include="INIManager.cs" />
     <Compile Include="Order.cs" />

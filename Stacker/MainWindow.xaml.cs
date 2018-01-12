@@ -1,14 +1,8 @@
 ﻿
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.IO.Ports;
-using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 
 namespace Stacker
@@ -120,7 +114,7 @@ namespace Stacker
             DownButton.PreviewMouseLeftButtonUp += DownButton_PreviewMouseLeftButtonUp;
             DownButton.PreviewMouseLeftButtonDown += DownButton_PreviewMouseLeftButtonDown;
 
-            //включаем кнопку левого ряда
+            //для полуавтоматического режима включаем кнопку левого ряда
             LeftRackSemiAutoButton.IsChecked = true;
             LeftRackSemiAutoButton_Click(null, null);
 
@@ -172,6 +166,7 @@ namespace Stacker
             Dispatcher.Invoke(UnblockButton);
         }
 
+        //по завершении команды разблокирует кнопку
         private void UnblockButton()
         {
             if (bt!=null) bt.IsEnabled = true;
@@ -179,7 +174,7 @@ namespace Stacker
         }
 
         //обработчик события "ошибка"
-        private void ErrorAppeared() => ErrorListView.Items.Refresh();
+        //private void ErrorAppeared() => ErrorListView.Items.Refresh();
 
         //Обновление координат и слова состояния
         private void UpdateCoordinate()
@@ -334,11 +329,9 @@ namespace Stacker
 
                 model.GetCell(stacker, r, f,out int x,out int y,out bool isNotAvailable);
 
-                bool isEnabled = !isNotAvailable;
-
-                BringSemiAutoButton.IsEnabled = isEnabled;
-                TakeAwaySemiAutoButton.IsEnabled = isEnabled;
-                SemiAutoAddressLabel.IsEnabled = isEnabled;
+                BringSemiAutoButton.IsEnabled = !isNotAvailable;
+                TakeAwaySemiAutoButton.IsEnabled = !isNotAvailable;
+                SemiAutoAddressLabel.IsEnabled = !isNotAvailable;
 
                 char rack = LeftRackSemiAutoButton.IsChecked == true ? model.LeftRackName : model.RightRackName;
                 SemiAutoAddressLabel.Content = rack + " - " + r.ToString() + " - " + f.ToString();
@@ -542,17 +535,16 @@ namespace Stacker
         private void BringAutoButton_Click(object sender, RoutedEventArgs e)
         {
             int i = OrdersLitsView.SelectedIndex;
-            //Если не выбран ни один элемент - выходим
-            if (i < 0) return;
-            //Устанавливаем номер заявки
-            model.SelectOrder(i);
-            //Даем команду привезти
-            model.BringOrTakeAwayOrder(true);
-            //Выключаем кнопку
-            BringAutoButton.IsEnabled = false;
-            //Заменяем обработчик события "команда выполена"
-            model.CommandDone -= CommandDone;
-            model.CommandDone += BringDone;
+            if (model.SelectOrder(i))
+            {
+                //Даем команду привезти
+                model.BringOrTakeAwayOrder(true);
+                //Выключаем кнопку
+                BringAutoButton.IsEnabled = false;
+                //Заменяем обработчик события "команда выполена"
+                model.CommandDone -= CommandDone;
+                model.CommandDone += BringDone;
+            }
         }
         
         //после доставки разрешаем кнопку "увезти"
@@ -593,10 +585,7 @@ namespace Stacker
         {
             int i = OrdersLitsView.SelectedIndex;
             //Если не выбран ни один элемент - выходим
-            if (i < 0) return;
-
-            model.SelectOrder(i);
-            model.FinishOrder(false);
+            if (model.SelectOrder(i)) model.FinishOrder(false);
         }
 
 

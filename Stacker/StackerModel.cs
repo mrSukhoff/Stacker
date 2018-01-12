@@ -162,7 +162,7 @@ namespace Stacker
                     new CellsGrid(path + "\\RightStack.cell") : new CellsGrid(StackerDepth, StackerHight);
         }
 
-        //Проверки изменений файла с заданими и чтения заявок из него
+        //Проверки изменений файла с заданиями и чтения заявок из него
         private void ReadOrdersFile(object ob)
         {
             try
@@ -196,49 +196,32 @@ namespace Stacker
             }
         }
 
-        //Сохранения отработанной заявки в архиве и удаления из исходного файла и коллекции заявок
-        private void SaveAndDeleteOrder(Order order, string res)
-        {
-            try
-            {
-                File.AppendAllText(ArchiveFile,
-                    DateTime.Now.ToString() + " : " + order.OriginalString + " - " + res + '\r' + '\n',
-                        System.Text.Encoding.Default);
-
-                string[] strings = File.ReadAllLines(OrdersFile, System.Text.Encoding.Default).
-                    Where(v => v.TrimEnd('\r', '\n').IndexOf(order.OriginalString) == -1).ToArray();
-
-                File.WriteAllLines(OrdersFile, strings, System.Text.Encoding.Default);
-
-                Orders.Remove(order);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, caption: "Save&DeleteOrder");
-            }
-        }
-
         //завершение заявки с удалением ее из файла заявок и запись в файл архива с временем
         //и результатом выополнения
         public void FinishOrder(bool succesed)
         {
             if (SelectedOrderNumber == -1) throw new Exception("Не установлен номер заявки");
-            string res;
-            if (succesed) res = " - succeeded";
-            else res = " - canceled";
+            string res = succesed ? " succeeded" : " canceled";
+            
+            //получаем оригинальную строку из файла
             string orderString = Orders[SelectedOrderNumber].OriginalString;
             try
             {
+                //записываем в архив строку заявки, время и результат
                 File.AppendAllText(ArchiveFile,
                     DateTime.Now.ToString() + " : " + orderString + " - " + res + '\r' + '\n',
                         System.Text.Encoding.Default);
 
+                //читаем файл заявок и удаляем из него строку с нашей заявкой
                 string[] strings = File.ReadAllLines(OrdersFile, System.Text.Encoding.Default).
                     Where(v => v.TrimEnd('\r', '\n').IndexOf(orderString) == -1).ToArray();
 
+                //записываем его обратно
                 File.WriteAllLines(OrdersFile, strings, System.Text.Encoding.Default);
 
+                //удаляем заявку из коллекции
                 Orders.RemoveAt(SelectedOrderNumber);
+                //сбрасываем указатель
                 SelectedOrderNumber = -1;
             }
             catch (Exception ex)
@@ -248,10 +231,14 @@ namespace Stacker
         }
 
         //выбор заявки для последующей работы с ней
-        public void SelectOrder(int orderNumber)
+        public bool SelectOrder(int orderNumber)
         {
-            if (orderNumber < 0 || orderNumber > Orders.Count) throw new ArgumentException("Номер заявки за прелами списка");
-            SelectedOrderNumber = orderNumber;
+            if (orderNumber < 0 || orderNumber >= Orders.Count) return false;
+            else
+            {
+                SelectedOrderNumber = orderNumber;
+                return true;
+            }
         }
 
         //Сохранение массивов координат ячеек в файлы
