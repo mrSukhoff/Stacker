@@ -34,12 +34,11 @@ namespace Stacker
 
         //коллекция заявок
         public List<Order> Orders { get; private set; } = new List<Order>();
-        //public IObservable<Order> Orders { get; private set; } = new List<Order>();
-
+        
         //делегат для обратного вызова при появлении флага завершения операции
         public delegate void StackerModelEventHandler();
         public event StackerModelEventHandler CommandDone;
-        //public event StackerModelEventHandler ErrorAppeared;
+        public event StackerModelEventHandler ErrorAppeared;
         public event StackerModelEventHandler SomethingChanged;
 
         //Актуальные координаты крана
@@ -365,7 +364,7 @@ namespace Stacker
             if (GetBitState(ErrorWord, 2)) ErrorList.Add(DateTime.Now.ToString() + " : Ошибка блока перемещения");
             if (GetBitState(ErrorWord, 3)) ErrorList.Add(DateTime.Now.ToString() + " : Ячейка для установки ящика занята");
             if (GetBitState(ErrorWord, 4)) ErrorList.Add(DateTime.Now.ToString() + " : Обнаружена помеха вертикальному перемещению крана");
-            //ErrorAppeared();
+            ErrorAppeared();
         }
 
         //метод возвращает состояния указанного бита
@@ -559,10 +558,10 @@ namespace Stacker
         {
             if (PLC != null)
             {
-                CellsGrid stacker = rack ? LeftStacker : RightStacker;
+                CellsGrid stacker = rack ?  RightStacker: LeftStacker;
                 int x = stacker[row, floor].X;
                 int y = stacker[row, floor].Y;
-
+                
                 //Включаем режим перемещения по координатам
                 WriteDword(PLC, 8, 2);
                 //Пишем координаты
@@ -590,7 +589,7 @@ namespace Stacker
                 int row = Orders[SelectedOrderNumber].Row;
                 int floor = Orders[SelectedOrderNumber].Floor;
 
-                CellsGrid stacker = rack ? LeftStacker : RightStacker;
+                CellsGrid stacker = rack ? RightStacker : LeftStacker;
                 int x = stacker[row, floor].X;
                 int y = stacker[row, floor].Y;
 

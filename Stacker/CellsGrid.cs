@@ -26,8 +26,19 @@ namespace Stacker
         public Cell this[int rowIndex,int floorIndex]
         {
             //так как стеллажи нумируются с единицы вычитаем 1
-            get => grid[--rowIndex, --floorIndex];
-            set => grid[--rowIndex, --floorIndex] = value;
+            get
+            {
+                int row = rowIndex - 1;
+                int floor = floorIndex - 1;
+                return grid[row, floor];
+            }
+
+            set
+            {
+                int row = rowIndex - 1;
+                int floor = floorIndex - 1;
+                grid[row, floor] = value;
+            }
         }
 
         //массив с координатами ячеек
