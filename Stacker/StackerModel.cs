@@ -218,6 +218,42 @@ namespace Stacker
             }
         }
 
+        //завершение заявки с удалением ее из файла заявок и запись в файл архива с временем
+        //и результатом выополнения
+        public void FinishOrder(bool succesed)
+        {
+            if (SelectedOrderNumber == -1) throw new Exception("Не установлен номер заявки");
+            string res;
+            if (succesed) res = " - succeeded";
+            else res = " - canceled";
+            string orderString = Orders[SelectedOrderNumber].OriginalString;
+            try
+            {
+                File.AppendAllText(ArchiveFile,
+                    DateTime.Now.ToString() + " : " + orderString + " - " + res + '\r' + '\n',
+                        System.Text.Encoding.Default);
+
+                string[] strings = File.ReadAllLines(OrdersFile, System.Text.Encoding.Default).
+                    Where(v => v.TrimEnd('\r', '\n').IndexOf(orderString) == -1).ToArray();
+
+                File.WriteAllLines(OrdersFile, strings, System.Text.Encoding.Default);
+
+                Orders.RemoveAt(SelectedOrderNumber);
+                SelectedOrderNumber = -1;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "FinishOrder");
+            }
+        }
+
+        //выбор заявки для последующей работы с ней
+        public void SelectOrder(int orderNumber)
+        {
+            if (orderNumber < 0 || orderNumber > Orders.Count) throw new ArgumentException("Номер заявки за прелами списка");
+            SelectedOrderNumber = orderNumber;
+        }
+
         //Сохранение массивов координат ячеек в файлы
         public void SaveCells()
         {
@@ -610,39 +646,6 @@ namespace Stacker
             }
         }
 
-        public void FinishOrder(bool succesed)
-        {
-            if (SelectedOrderNumber == -1) throw new Exception("Не установлен номер заявки");
-            string res;
-            if (succesed) res = " - succeeded";
-            else res = " - canceled";
-            string orderString = Orders[SelectedOrderNumber].OriginalString;
 
-            
-            try
-            {
-                File.AppendAllText(ArchiveFile,
-                    DateTime.Now.ToString() + " : " + orderString + " - " + res + '\r' + '\n',
-                        System.Text.Encoding.Default);
-
-                string[] strings = File.ReadAllLines(OrdersFile, System.Text.Encoding.Default).
-                    Where(v => v.TrimEnd('\r', '\n').IndexOf(orderString) == -1).ToArray();
-
-                File.WriteAllLines(OrdersFile, strings, System.Text.Encoding.Default);
-
-                Orders.RemoveAt(SelectedOrderNumber);
-                SelectedOrderNumber = -1;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message,"FinishOrder");
-            }
-        }
-
-        public void SelectOrder(int orderNumber)
-        {
-            if (orderNumber < 0 || orderNumber > Orders.Count) throw new ArgumentException("Номер заявки за прелами списка");
-            SelectedOrderNumber = orderNumber;
-        }
     }
 }
