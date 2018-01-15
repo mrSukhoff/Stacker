@@ -361,9 +361,9 @@ namespace Stacker
                     //читаем слово состояния ПЛК
                     ReadDword(PLC, 100, out  int stateWord);
 
-                    SomethingChanged();
+                    SomethingChanged?.Invoke();
                     //если появился флаг завершения выполнения вызываем событие
-                    if ((stateWord >> 14 != 0) && (StateWord >> 14 == 0)) CommandDone();
+                    if ((stateWord >> 14 != 0) && (StateWord >> 14 == 0)) CommandDone?.Invoke();
 
                     //если появился флаг ошибки вызываем обрабочик ошибок
                     if (GetBitState(stateWord, 13) && !GetBitState(StateWord, 13)) ErrorHandler();
@@ -387,7 +387,7 @@ namespace Stacker
             if (GetBitState(ErrorWord, 2)) ErrorList.Add(DateTime.Now.ToString() + " : Ошибка блока перемещения");
             if (GetBitState(ErrorWord, 3)) ErrorList.Add(DateTime.Now.ToString() + " : Ячейка для установки ящика занята");
             if (GetBitState(ErrorWord, 4)) ErrorList.Add(DateTime.Now.ToString() + " : Обнаружена помеха вертикальному перемещению крана");
-            ErrorAppeared();
+            ErrorAppeared?.Invoke();
         }
 
         //метод возвращает состояния указанного бита
