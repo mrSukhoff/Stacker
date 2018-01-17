@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Media;
 
 namespace Stacker
 {
@@ -47,7 +48,7 @@ namespace Stacker
             {
                 //подписываемся на события
                 model.CommandDone += CommandDone;
-                //model.ErrorAppeared += ErrorAppeared;
+                model.ErrorAppeared += ErrorAppeared;
                 model.SomethingChanged += UpdateCoordinate;
 
                 //Настраиваем визуальные компоненты
@@ -174,7 +175,11 @@ namespace Stacker
         }
 
         //обработчик события "ошибка"
-        //private void ErrorAppeared() => ErrorListView.Items.Refresh();
+        private void ErrorAppeared()
+        {
+            Dispatcher.Invoke(( () => { StatusPlane.Background = new SolidColorBrush(Colors.DarkRed); } ) );
+            Dispatcher.Invoke((() => { ErrorTabItem.Background = new SolidColorBrush(Colors.DarkRed); }));
+        }
 
         //Обновление координат и слова состояния
         private void UpdateCoordinate()
@@ -359,6 +364,8 @@ namespace Stacker
             BringSemiAutoButton.IsEnabled = true;
             TakeAwaySemiAutoButton.IsEnabled = true;
             BringAutoButton.IsEnabled = true;
+            StatusPlane.Background = new SolidColorBrush(Color.FromArgb(0xFF, 0x3E, 0x60, 0x6F));
+            ErrorTabItem.Background = new SolidColorBrush(Color.FromArgb(0xFF, 0xCB, 0xDB, 0xD7));
             //возможны проблемы при возникновении ошибки во время возврата контейнера на место
             //TakeAwayAutoButton.IsEnabled = true;
         }

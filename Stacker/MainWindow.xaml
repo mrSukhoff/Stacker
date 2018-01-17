@@ -221,7 +221,7 @@
             <RowDefinition/>
             <RowDefinition Height="Auto" MinHeight="23"/>
         </Grid.RowDefinitions>
-        <StatusBar HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="14" Background="#FF3E606F" Grid.Row="1" Margin="0,0,0,-4">
+        <StatusBar x:Name="StatusPlane" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="14" Background="#FF3E606F" Grid.Row="1" Margin="0,0,0,-4">
             <Label x:Name="StateWordLabel" Content="State Word: 000000000000000" Foreground="#FFFCFFF5"/>
             <Label x:Name="RowLabel" Content="R:00"/>
             <Label x:Name="FloorLabel" Content="F:00"/>
