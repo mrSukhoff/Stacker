@@ -27,7 +27,6 @@ namespace Stacker
         //модель паттерна MVP(если это конечно он)
         StackerModel model;
 
-        
         //#####################################################################################################
         //Основная точка входа -------------------------------------------------------------------------------!
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -186,12 +185,12 @@ namespace Stacker
         {
             string sw = Convert.ToString(model.StateWord, 2);
             while (sw.Length < 16) sw = "0" + sw;
-            Dispatcher.Invoke( () => { StateWordLabel.Content = "State Word : " + sw; } );
+            Dispatcher.Invoke( () => StateWordLabel.Content = "State Word : " + sw );
 
-            Dispatcher.Invoke( () => { RowLabel.Content = "R:" + model.ActualRow; } );
-            Dispatcher.Invoke( () => { FloorLabel.Content = "F:" + model.ActualFloor; } );
-            Dispatcher.Invoke( () => { XLabel.Content = "X:" + model.ActualX; } );
-            Dispatcher.Invoke( () => { YLabel.Content = "Y:" + model.ActualY; } );
+            Dispatcher.Invoke( () => RowLabel.Content = "R:" + model.ActualRow  );
+            Dispatcher.Invoke( () => FloorLabel.Content = "F:" + model.ActualFloor );
+            Dispatcher.Invoke( () => XLabel.Content = "X:" + model.ActualX );
+            Dispatcher.Invoke( () => YLabel.Content = "Y:" + model.ActualY );
         }
         
         //
@@ -199,11 +198,11 @@ namespace Stacker
         {
             if ((model.StateWord & 2) == 2)
             {
-                Dispatcher.Invoke(() => { BringAutoButton.IsEnabled = false; });
-                Dispatcher.Invoke(() => { TakeAwayAutoButton.IsEnabled = true; });
+                Dispatcher.Invoke( () => BringAutoButton.IsEnabled = false );
+                Dispatcher.Invoke( () => TakeAwayAutoButton.IsEnabled = true );
 
-                Dispatcher.Invoke(() => { BringSemiAutoButton.IsEnabled = false; });
-                Dispatcher.Invoke(() => { TakeAwaySemiAutoButton.IsEnabled = true; });
+                Dispatcher.Invoke( () => BringSemiAutoButton.IsEnabled = false );
+                Dispatcher.Invoke( () => TakeAwaySemiAutoButton.IsEnabled = true );
             }
         }
 

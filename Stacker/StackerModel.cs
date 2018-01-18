@@ -5,7 +5,6 @@ using System.IO.Ports;
 using System.Linq;
 using System.Threading;
 using System.Windows;
-using System.Windows.Threading;
 using Modbus.Device;
 
 
@@ -339,30 +338,30 @@ namespace Stacker
             {
                 try
                 {
-                    /* почему-то не работает :(
                     //читаем оптом из ПЛК актуальные координаты крана
-                    ushort[] word = PLC.ReadHoldingRegisters(1,0x1408,8);
+                    ushort[] word = PLC.ReadHoldingRegisters(1, 0x1198, 8);
+                    
                     //и записываем их значения
-                    int actualX = word[0] + 0x10000 * word[1];
-                    int actualY = word[2] + 0x10000 * word[3];
+                    ActualX = word[0] + 0x10000 * word[1];
+                    ActualY = word[2] + 0x10000 * word[3];
                     ActualRow = word[4];
                     ActualFloor = word[6];
-                    */
-
+                    
+                    /*
                     ReadDword(PLC,408,out int w);
                     ActualX = w;
-
                     ReadDword(PLC, 410, out w);
                     ActualY = w;
-
                     ReadDword(PLC, 412, out w);
                     ActualRow = w;
-
                     ReadDword(PLC, 414, out w);
-                    ActualFloor = w;
+                    ActualFloor = w;*/
 
                     //читаем слово состояния ПЛК
-                    ReadDword(PLC, 100, out  int stateWord);
+                    ReadDword(PLC, 100, out int stateWord);
+
+                    //вызываем событие по чтению координат
+                    CoordinateReaded();
 
                     //если поменялось слово состояния
                     if (stateWord != StateWord) SomethingChanged?.Invoke();
@@ -387,12 +386,28 @@ namespace Stacker
         private void ErrorHandler()
         {
             ReadDword(PLC, 110, out int ErrorWord);
-            if (GetBitState(ErrorWord, 0)) ErrorList.Add(DateTime.Now.ToString() + " : Нажата кнопка аварийной остановки");
-            if (GetBitState(ErrorWord, 1)) ErrorList.Add(DateTime.Now.ToString() + " : Одновременное включение контакторов");
-            if (GetBitState(ErrorWord, 2)) ErrorList.Add(DateTime.Now.ToString() + " : Ошибка блока перемещения");
-            if (GetBitState(ErrorWord, 3)) ErrorList.Add(DateTime.Now.ToString() + " : Ячейка для установки ящика занята");
-            if (GetBitState(ErrorWord, 4)) ErrorList.Add(DateTime.Now.ToString() + " : Обнаружена помеха вертикальному перемещению крана");
+            if (GetBitState(ErrorWord, 0)) addAlarm("Нажата кнопка аварийной остановки");
+            if (GetBitState(ErrorWord, 1)) addAlarm("Одновременное включение контакторов");
+            if (GetBitState(ErrorWord, 2)) addAlarm("Попытка загрузки на занятый кран");
+            if (GetBitState(ErrorWord, 3)) addAlarm("Ячейка для установки ящика занята");
+            if (GetBitState(ErrorWord, 4)) addAlarm("Обнаружена помеха вертикальному перемещению крана");
+            if (GetBitState(ErrorWord, 5)) addAlarm("Ошибка преобразователя частоты №1");
+            if (GetBitState(ErrorWord, 6)) addAlarm("Ошибка преобразователя частоты №2");
             ErrorAppeared?.Invoke();
+
+            void addAlarm(string alarmText)
+            {
+                string str = DateTime.Now.ToString() + " : " + alarmText;
+                ErrorList.Add(str);
+                try
+                {
+                    //записываем в лог 
+                    File.AppendAllText("Errors.log",str+'\r'+'\n', System.Text.Encoding.Default);
+                }
+                catch (Exception ex)
+                { MessageBox.Show(ex.Message, caption: "ErrorHandler"); }
+
+            }
         }
 
         //метод возвращает состояния указанного бита
