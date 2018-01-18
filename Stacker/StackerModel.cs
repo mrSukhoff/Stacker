@@ -39,6 +39,7 @@ namespace Stacker
         public delegate void StackerModelEventHandler();
         public event StackerModelEventHandler CommandDone;
         public event StackerModelEventHandler ErrorAppeared;
+        public event StackerModelEventHandler CoordinateReaded;
         public event StackerModelEventHandler SomethingChanged;
 
         //Актуальные координаты крана
@@ -70,6 +71,8 @@ namespace Stacker
 
         //Com-порт к которому подсоединен контроллер
         private SerialPort ComPort = null;
+        
+        //интерфейс контроллера
         private IModbusMaster PLC;
 
         //хранит номер выбранной заявки в автоматическом режиме
@@ -116,7 +119,7 @@ namespace Stacker
             }
         }
 
-        //завершение работы программы
+        //завершение работы программы  - нужно поправить оп Микрософту!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
          ~StackerModel()
         {
             Dispose();
@@ -336,7 +339,7 @@ namespace Stacker
             {
                 try
                 {
-                    /* почему-то не работает
+                    /* почему-то не работает :(
                     //читаем оптом из ПЛК актуальные координаты крана
                     ushort[] word = PLC.ReadHoldingRegisters(1,0x1408,8);
                     //и записываем их значения
@@ -361,8 +364,10 @@ namespace Stacker
                     //читаем слово состояния ПЛК
                     ReadDword(PLC, 100, out  int stateWord);
 
-                    SomethingChanged?.Invoke();
-                    //если появился флаг завершения выполнения вызываем событие
+                    //если поменялось слово состояния
+                    if (stateWord != StateWord) SomethingChanged?.Invoke();
+
+                    //если появился флаг завершения
                     if ((stateWord >> 14 != 0) && (StateWord >> 14 == 0)) CommandDone?.Invoke();
 
                     //если появился флаг ошибки вызываем обрабочик ошибок
@@ -424,7 +429,7 @@ namespace Stacker
             rack[row, floor].IsNotAvailable = isNotAvailable;
         }
 
-        //устанавливает флаг подтверждения ошибок в ПЛК и очищает список ошибок
+        //команда подтверждения ошибок в ПЛК и очистка списка ошибок
         public void SubmitError()
         {
             ErrorList.Clear();
@@ -584,7 +589,9 @@ namespace Stacker
                 CellsGrid stacker = rack ?  RightStacker: LeftStacker;
                 int x = stacker[row, floor].X;
                 int y = stacker[row, floor].Y;
-                
+                //требуемая ячейка не может находится в начале штабелера или иметь вертикальную координату 0
+                if ( x == 0 || (y==0 && row!=1) ) throw new ArgumentException("Неверные координаты ячеейки");
+
                 //Включаем режим перемещения по координатам
                 WriteDword(PLC, 8, 2);
                 //Пишем координаты

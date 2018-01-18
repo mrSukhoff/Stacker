@@ -24,10 +24,9 @@ namespace Stacker
         //Кнопка, выдавшая задание)
         Button bt = null;
         
-        //контроллер паттерна MVC
+        //модель паттерна MVP(если это конечно он)
         StackerModel model;
 
-        delegate void RefreshStatusBar();
         
         //#####################################################################################################
         //Основная точка входа -------------------------------------------------------------------------------!
@@ -49,7 +48,8 @@ namespace Stacker
                 //подписываемся на события
                 model.CommandDone += CommandDone;
                 model.ErrorAppeared += ErrorAppeared;
-                model.SomethingChanged += UpdateCoordinate;
+                model.CoordinateReaded += UpdateCoordinate;
+                model.SomethingChanged +=ButtonsAndBins;
 
                 //Настраиваем визуальные компоненты
                 SetUpButtons();
@@ -177,23 +177,36 @@ namespace Stacker
         //обработчик события "ошибка"
         private void ErrorAppeared()
         {
-            Dispatcher.Invoke(( () => { StatusPlane.Background = new SolidColorBrush(Colors.DarkRed); } ) );
-            Dispatcher.Invoke((() => { ErrorTabItem.Background = new SolidColorBrush(Colors.DarkRed); }));
+            Dispatcher.Invoke( () => { StatusPlane.Background = new SolidColorBrush(Colors.DarkRed); } );
+            Dispatcher.Invoke( () => { ErrorTabItem.Background = new SolidColorBrush(Colors.DarkRed); } );
         }
 
         //Обновление координат и слова состояния
         private void UpdateCoordinate()
         {
             string sw = Convert.ToString(model.StateWord, 2);
-            while (sw.Length < 15) sw = "0" + sw;
-            Dispatcher.Invoke(new RefreshStatusBar (() =>  StateWordLabel.Content = "State Word : " +sw));
+            while (sw.Length < 16) sw = "0" + sw;
+            Dispatcher.Invoke( () => { StateWordLabel.Content = "State Word : " + sw; } );
 
-            Dispatcher.Invoke(new RefreshStatusBar(() => RowLabel.Content = "R:" + model.ActualRow));
-            Dispatcher.Invoke(new RefreshStatusBar(() => FloorLabel.Content = "F:" + model.ActualFloor));
-            Dispatcher.Invoke(new RefreshStatusBar(() => XLabel.Content = "X:" + model.ActualX));
-            Dispatcher.Invoke(new RefreshStatusBar(() => YLabel.Content = "Y:" + model.ActualY));
+            Dispatcher.Invoke( () => { RowLabel.Content = "R:" + model.ActualRow; } );
+            Dispatcher.Invoke( () => { FloorLabel.Content = "F:" + model.ActualFloor; } );
+            Dispatcher.Invoke( () => { XLabel.Content = "X:" + model.ActualX; } );
+            Dispatcher.Invoke( () => { YLabel.Content = "Y:" + model.ActualY; } );
         }
         
+        //
+        private void ButtonsAndBins()
+        {
+            if ((model.StateWord & 2) == 2)
+            {
+                Dispatcher.Invoke(() => { BringAutoButton.IsEnabled = false; });
+                Dispatcher.Invoke(() => { TakeAwayAutoButton.IsEnabled = true; });
+
+                Dispatcher.Invoke(() => { BringSemiAutoButton.IsEnabled = false; });
+                Dispatcher.Invoke(() => { TakeAwaySemiAutoButton.IsEnabled = true; });
+            }
+        }
+
         //При изменении адреса ячеек перечитываем координаты
         private void CellChanged(object sender, SelectionChangedEventArgs e)
         {
