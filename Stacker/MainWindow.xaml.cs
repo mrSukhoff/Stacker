@@ -61,9 +61,7 @@ namespace Stacker
         //Настраиваем визуальные компоненты
         private void SetUpButtons()
         {
-            //Подписываем кнопки рядов
-            LeftRackSemiAutoButton.Content = model.LeftRackName;
-            RightRackSemiAutoButton.Content = model.RightRackName;
+            //Подписываем кнопки
             ManPlatformLeftButton.Content = model.LeftRackName; 
             ManPlatformRightButton.Content = model.RightRackName;
 
@@ -83,19 +81,21 @@ namespace Stacker
             FloorSemiAutoCombobox.SelectedIndex = 0;
             FloorComboBox.SelectedIndex = 0;
 
+            //.. и названиями стеллажей
             RackComboBox.Items.Add(model.LeftRackName);
             RackComboBox.Items.Add(model.RightRackName);
             RackComboBox.SelectedIndex = 0;
+            RackSemiAutoComboBox.Items.Add(model.LeftRackName);
+            RackSemiAutoComboBox.Items.Add(model.RightRackName);
+            RackSemiAutoComboBox.SelectedIndex = 0;
 
             //присваеваем обработчики тут, а не статически, чтобы они не вызывались 
             //во время первоначальных настроек
             //полуавтомат
-            LeftRackSemiAutoButton.Checked += LeftRackSemiAutoButton_Click;
-            LeftRackSemiAutoButton.Unchecked += LeftRackSemiAutoButton_Click;
-            RightRackSemiAutoButton.Unchecked += RightRackSemiAutoButton_Click;
-            RightRackSemiAutoButton.Checked += RightRackSemiAutoButton_Click;
+            RackSemiAutoComboBox.SelectionChanged += SemiAutoComboBox_SelectionChanged;
             RowSemiAutoComboBox.SelectionChanged += SemiAutoComboBox_SelectionChanged;
             FloorSemiAutoCombobox.SelectionChanged += SemiAutoComboBox_SelectionChanged;
+            
             //ручной режим
             RackComboBox.SelectionChanged += CellChanged;
             RowComboBox.SelectionChanged += CellChanged;
@@ -113,10 +113,6 @@ namespace Stacker
             UpButton.PreviewMouseLeftButtonDown += UpButton_PreviewMouseLeftButtonDown;
             DownButton.PreviewMouseLeftButtonUp += DownButton_PreviewMouseLeftButtonUp;
             DownButton.PreviewMouseLeftButtonDown += DownButton_PreviewMouseLeftButtonDown;
-
-            //для полуавтоматического режима включаем кнопку левого ряда
-            LeftRackSemiAutoButton.IsChecked = true;
-            LeftRackSemiAutoButton_Click(null, null);
 
             //источник данных для списка ошибок
             ErrorListView.ItemsSource = model.ErrorList;
@@ -297,36 +293,6 @@ namespace Stacker
             }
         }
         
-        //отжимаем) противоположную кнопку
-        private void RightRackSemiAutoButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (RightRackSemiAutoButton.IsChecked == true)
-            {
-                RightRackSemiAutoButton.Effect = null;
-                LeftRackSemiAutoButton.IsChecked = false;
-            }
-            else
-            {
-                LeftRackSemiAutoButton.IsChecked = true;
-                LeftRackSemiAutoButton.Effect = null;
-            }
-            SemiAutoComboBox_SelectionChanged(sender, null);
-        }
-        private void LeftRackSemiAutoButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (LeftRackSemiAutoButton.IsChecked == true)
-            {
-                LeftRackSemiAutoButton.Effect = null;
-                RightRackSemiAutoButton.IsChecked = false;
-            }
-            else
-            {
-                RightRackSemiAutoButton.IsChecked = true;
-                RightRackSemiAutoButton.Effect = null;
-            }
-            SemiAutoComboBox_SelectionChanged(sender, null);
-        }
-
         //Проверка вводимых в textbox символы на соотвктствие правилам
         private void TextBox_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
         {
@@ -340,7 +306,7 @@ namespace Stacker
         {
             try
             {
-                bool stacker = RightRackSemiAutoButton.IsChecked == true;
+                bool stacker = RackSemiAutoComboBox.SelectedIndex == 1;
                 int r = RowSemiAutoComboBox.SelectedIndex + 1;
                 int f = FloorSemiAutoCombobox.SelectedIndex + 1;
 
@@ -350,7 +316,7 @@ namespace Stacker
                 TakeAwaySemiAutoButton.IsEnabled = !isNotAvailable;
                 SemiAutoAddressLabel.IsEnabled = !isNotAvailable;
 
-                char rack = LeftRackSemiAutoButton.IsChecked == true ? model.LeftRackName : model.RightRackName;
+                char rack = RackSemiAutoComboBox.SelectedIndex == 0 ? model.LeftRackName : model.RightRackName;
                 SemiAutoAddressLabel.Content = rack + " - " + r.ToString() + " - " + f.ToString();
             }
             catch (Exception ex)
@@ -540,7 +506,7 @@ namespace Stacker
         //обрабатывает нажатие кнопок "привезти" и "увезти" в полуавтоматическом режиме
         private void BringOrTakeAwaySemiAutoButton_Click(object sender, RoutedEventArgs e)
         {
-            bool stacker = RightRackSemiAutoButton.IsChecked == true;
+            bool stacker = RackSemiAutoComboBox.SelectedIndex == 1;
             int r = RowSemiAutoComboBox.SelectedIndex + 1;
             int f = FloorSemiAutoCombobox.SelectedIndex + 1;
             //если была нажата кнопка привезти устанавливае переменную в true
