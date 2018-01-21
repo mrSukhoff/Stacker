@@ -70,6 +70,7 @@ namespace Stacker
             for (int i = 0; i < rowItems.Length; i++) { rowItems[i] = i + 1; }
             RowSemiAutoComboBox.ItemsSource = rowItems;
             RowComboBox.ItemsSource = rowItems;
+            RowXComboBox.ItemsSource = rowItems;
             RowSemiAutoComboBox.SelectedIndex = 0;
             RowComboBox.SelectedIndex = 0;
 
@@ -78,6 +79,7 @@ namespace Stacker
             for (int i = 0; i < floorItems.Length; i++) { floorItems[i] = i + 1; }
             FloorSemiAutoCombobox.ItemsSource = floorItems;
             FloorComboBox.ItemsSource = floorItems;
+            FloorYComboBox.ItemsSource = floorItems;
             FloorSemiAutoCombobox.SelectedIndex = 0;
             FloorComboBox.SelectedIndex = 0;
 
@@ -324,7 +326,17 @@ namespace Stacker
                 MessageBox.Show(ex.Message, caption: "SemiAutoComboBox_SelectionChanged");
             }
         }
-        
+
+        private void XYComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            int r = RowXComboBox.SelectedIndex + 1;
+            int f = FloorYComboBox.SelectedIndex + 1;
+            if (r < 1 | f < 1) return;
+            model.GetCell(false, r, f, out int x, out int y, out bool z);
+            GotoXTextBox.Text = x.ToString();
+            GotoYTextBox.Text = y.ToString();
+        }
+
         //завершение работы программы
         private void Stacker_Closed(object sender, EventArgs e)
         {
@@ -572,7 +584,6 @@ namespace Stacker
             //Если не выбран ни один элемент - выходим
             if (model.SelectOrder(i)) model.FinishOrder(false);
         }
-
 
     }
 }

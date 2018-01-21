@@ -396,6 +396,7 @@ namespace Stacker
             if (GetBitState(ErrorWord, 7)) addAlarm("Попытка установить большой ящик не на первый этаж");
             if (GetBitState(ErrorWord, 8)) addAlarm("Попытка установить средний ящик выше седьмого этажа");
             if (GetBitState(ErrorWord, 9)) addAlarm("Ошибка перемещения платформы");
+            if (GetBitState(ErrorWord, 9)) addAlarm("Ошибка позиционирования крана");
             ErrorAppeared?.Invoke();
 
             void addAlarm(string alarmText)

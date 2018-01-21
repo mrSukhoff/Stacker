@@ -300,40 +300,40 @@
             <TabItem x:Name="SettingTab" Header="Ручное управление" BorderBrush="#FF91AAB4" Height="30" Background="#FFCBDBD7" Margin="4,0,-8,0">
                 <Grid Background="#FF193441">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
                         <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="3*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="3*"/>
                     </Grid.RowDefinitions>
                     <GroupBox Header="Координаты ячеек" Margin="3,0,3,3" Background="#FF193441" Grid.ColumnSpan="2" Foreground="#FFFCFFF5">
                         <Grid Grid.ColumnSpan="2" Margin="0" Background="#FF193441">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="138*"/>
-                                <RowDefinition Height="79*"/>
+                                <RowDefinition Height="107*"/>
+                                <RowDefinition Height="58*"/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="100*"/>
-                                <ColumnDefinition Width="100*"/>
-                                <ColumnDefinition Width="100*"/>
-                                <ColumnDefinition Width="143*"/>
-                                <ColumnDefinition Width="143*"/>
-                                <ColumnDefinition Width="143*"/>
-                                <ColumnDefinition Width="143*"/>
+                                <ColumnDefinition Width="88*"/>
+                                <ColumnDefinition Width="88*"/>
+                                <ColumnDefinition Width="88*"/>
+                                <ColumnDefinition Width="107*"/>
+                                <ColumnDefinition Width="126*"/>
+                                <ColumnDefinition Width="126*"/>
+                                <ColumnDefinition Width="126*"/>
                             </Grid.ColumnDefinitions>
                             <ComboBox x:Name="RackComboBox" HorizontalAlignment="Left" Margin="63,0,0,22" Width="70" Grid.ColumnSpan="2" VerticalContentAlignment="Center" VerticalAlignment="Bottom" Height="36" FontSize="24" Background="#FFCBDBB7"/>
                             <TextBox x:Name="CoordinateXTextBox" HorizontalAlignment="Left" TextWrapping="Wrap" Width="100" Margin="91,0,0,22" Height="36" Grid.Column="3" Grid.ColumnSpan="2" VerticalAlignment="Bottom" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="24" AllowDrop="False" Text="0" PreviewTextInput="TextBox_PreviewTextInput" Background="#FFCBDBB7"/>
                             <TextBox x:Name="CoordinateYTextBox" HorizontalAlignment="Left" TextWrapping="Wrap" Text="0" Width="100" Margin="91,0,0,22" Height="36" Grid.Column="4" Grid.ColumnSpan="2" VerticalAlignment="Bottom" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="24" PreviewTextInput="TextBox_PreviewTextInput" Background="#FFCBDBB7"/>
-                            <CheckBox x:Name="IsNOTAvailableCheckBox" Content="Ячейка&#xA;отсутствует" Grid.Column="5" HorizontalAlignment="Left" Height="67" Margin="73,0,0,0" VerticalAlignment="Bottom" Width="141.333" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" Foreground="#FFFCFFF5"/>
-                            <Button x:Name="SaveButton" Content="Записать" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="150" Margin="58.597,0,72.156,22" Grid.Row="1" Height="48" Grid.Column="3" FontWeight="Bold" Click="SaveButton_Click" Grid.ColumnSpan="2" FontSize="24" Background="#FF91AAB4" BorderBrush="#FFCBDBD7"/>
-                            <Label Content="Стеллаж" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="45.332,0,0,75" Grid.ColumnSpan="2" Width="106" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" Height="36" Foreground="#FFFCFFF5"/>
-                            <Label Content="Ряд" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.ColumnSpan="2" Grid.Column="1" Margin="61.34,0,0,75" Width="72.667" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" Height="36" Foreground="#FFFCFFF5"/>
-                            <Label Content="Этаж" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="2" Margin="55.337,0,0,75" Grid.ColumnSpan="2" Width="85" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" Height="36" Foreground="#FFFCFFF5"/>
-                            <Label Content="X" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="3" Margin="107,0,0,75" Grid.ColumnSpan="2" Width="66.667" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" Height="36" Foreground="#FFFCFFF5"/>
-                            <Label Content="Y" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="4" Margin="111,0,0,75" Grid.ColumnSpan="2" Width="58.666" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" Height="36" Foreground="#FFFCFFF5"/>
+                            <CheckBox x:Name="IsNOTAvailableCheckBox" Content="Ячейка&#xA;отсутствует" Grid.Column="5" HorizontalAlignment="Left" Height="57" Margin="74,0,0,10" VerticalAlignment="Bottom" Width="143" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Foreground="#FFFCFFF5"/>
+                            <Label Content="Стеллаж" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="45,-4,0,75" Grid.ColumnSpan="2" Width="106" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" Height="36" Foreground="#FFFCFFF5"/>
+                            <Label Content="Ряд" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.ColumnSpan="2" Grid.Column="1" Margin="61,-4,0,75" Width="73" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" Height="36" Foreground="#FFFCFFF5"/>
+                            <Label Content="Этаж" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="2" Margin="55,-4,0,75" Grid.ColumnSpan="2" Width="85" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" Height="36" Foreground="#FFFCFFF5"/>
+                            <Label Content="X" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="3" Margin="107,-4,0,75" Grid.ColumnSpan="2" Width="67" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" Height="36" Foreground="#FFFCFFF5"/>
+                            <Label Content="Y" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="4" Margin="111,-4,0,75" Grid.ColumnSpan="2" Width="59" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" Height="36" Foreground="#FFFCFFF5"/>
                             <ComboBox x:Name="RowComboBox" Grid.ColumnSpan="2" Grid.Column="1" Margin="63,0,0,22" VerticalContentAlignment="Center" Height="36" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="70" FontSize="24" Background="#FFCBDBB7"/>
                             <ComboBox x:Name="FloorComboBox" Grid.ColumnSpan="2" Grid.Column="2" Margin="63,0,0,22" VerticalContentAlignment="Center" Height="36" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="70" FontSize="24" Background="#FFCBDBB7"/>
+                            <Button x:Name="SaveButton" Content="Записать" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="150" Margin="130,0,10,10" Grid.Row="1" Height="48" Grid.Column="5" FontWeight="Bold" Click="SaveButton_Click" FontSize="24" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" Grid.ColumnSpan="2"/>
                         </Grid>
                     </GroupBox>
                     <GroupBox VerticalContentAlignment="Bottom" Margin="3,0,3,3" Grid.Row="1" Header="Перейти на координаты" Foreground="#FFFCFFF5">
@@ -344,16 +344,20 @@
                                 <RowDefinition Height="73*"/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="7*"/>
-                                <ColumnDefinition Width="4*"/>
+                                <ColumnDefinition Width="166*"/>
+                                <ColumnDefinition Width="167*"/>
                             </Grid.ColumnDefinitions>
-                            <Button x:Name="GotoButton" Content="Перейти" HorizontalAlignment="Center" Width="153" Margin="61.297,0,60.37,8" Grid.Row="2" MinWidth="101" MinHeight="36" FontWeight="Bold" FontSize="24" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" Click="GotoButton_Click" Height="46" VerticalAlignment="Bottom" Grid.ColumnSpan="2"/>
-                            <TextBox x:Name="GotoXTextBox" Height="36" TextWrapping="Wrap" Text="0" VerticalAlignment="Bottom" RenderTransformOrigin="0.492,0.45" Margin="0,0,11.861,0" MinWidth="100" MinHeight="30" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="24" PreviewTextInput="TextBox_PreviewTextInput" Background="#FFCBDBB7" HorizontalAlignment="Right" Width="100"/>
-                            <TextBox x:Name="GotoYTextBox" HorizontalAlignment="Right" Height="36" TextWrapping="Wrap" Text="0" VerticalAlignment="Bottom" Width="100" Margin="0,0,11.861,1" MinWidth="100" MinHeight="30" Grid.Row="1" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="24" PreviewTextInput="TextBox_PreviewTextInput" Background="#FFCBDBB7"/>
-                            <Label Content="X" HorizontalAlignment="Right" Margin="0,-0.202,11.861,36" VerticalAlignment="Bottom" Width="50" VerticalContentAlignment="Center" Height="36" MinWidth="50" MinHeight="30" FontSize="24" HorizontalContentAlignment="Center" Foreground="#FFFCFFF5"/>
-                            <Label Content="Y" HorizontalAlignment="Right" Margin="0,0,11.861,34.9" VerticalAlignment="Bottom" Width="50" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="36" MinWidth="50" MinHeight="30" FontSize="24" Foreground="#FFFCFFF5" Grid.RowSpan="2"/>
-                            <Button x:Name="XResButton" Content="R" Grid.Column="1" HorizontalAlignment="Left" Height="36" Margin="3.509,0,0,0" VerticalAlignment="Bottom" Width="36" MinWidth="25" Click="XResButton_Click"/>
-                            <Button x:Name="YResButton" Content="R" Grid.Column="1" HorizontalAlignment="Left" Margin="3.509,0,0,1" Width="36" MinWidth="25" Grid.Row="1" Click="YResButton_Click" Height="36" VerticalAlignment="Bottom" RenderTransformOrigin="-0.27,0.512"/>
+                            <Button x:Name="GotoButton" Content="Перейти" HorizontalAlignment="Center" Width="153" Margin="90,0,90,8" Grid.Row="2" MinWidth="101" MinHeight="36" FontWeight="Bold" FontSize="24" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" Click="GotoButton_Click" Height="46" VerticalAlignment="Bottom" Grid.ColumnSpan="2"/>
+                            <TextBox x:Name="GotoXTextBox" Height="36" TextWrapping="Wrap" Text="0" VerticalAlignment="Bottom" RenderTransformOrigin="0.492,0.45" Margin="0,0,25,0" MinWidth="100" MinHeight="30" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="24" PreviewTextInput="TextBox_PreviewTextInput" Background="#FFCBDBB7" HorizontalAlignment="Right" Width="100"/>
+                            <TextBox x:Name="GotoYTextBox" HorizontalAlignment="Right" Height="36" TextWrapping="Wrap" Text="0" VerticalAlignment="Bottom" Width="100" Margin="0,0,25,1" MinWidth="100" MinHeight="30" Grid.Row="1" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="24" PreviewTextInput="TextBox_PreviewTextInput" Background="#FFCBDBB7"/>
+                            <Label Content="X" HorizontalAlignment="Right" Margin="0,0,51,38" VerticalAlignment="Bottom" Width="50" VerticalContentAlignment="Center" Height="36" MinWidth="50" MinHeight="30" FontSize="24" HorizontalContentAlignment="Center" Foreground="#FFFCFFF5"/>
+                            <Label Content="Y" HorizontalAlignment="Right" Margin="0,0,51,38" VerticalAlignment="Bottom" Width="50" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="36" MinWidth="50" MinHeight="30" FontSize="24" Foreground="#FFFCFFF5" Grid.Row="1"/>
+                            <Button x:Name="XResButton" Content="R" HorizontalAlignment="Left" Height="36" VerticalAlignment="Bottom" Width="36" MinWidth="25" Click="XResButton_Click" Margin="14,0,0,0" Grid.Column="1"/>
+                            <Button x:Name="YResButton" Content="R" HorizontalAlignment="Left" Width="36" MinWidth="25" Grid.Row="1" Click="YResButton_Click" Height="36" VerticalAlignment="Bottom" RenderTransformOrigin="-0.27,0.512" Margin="14,0,0,0" Grid.Column="1"/>
+                            <ComboBox x:Name="RowXComboBox" Margin="86,0,0,0" VerticalContentAlignment="Center" HorizontalAlignment="Left" Width="70" FontSize="24" Background="#FFCBDBB7" RenderTransformOrigin="0.286,0.528" Height="36" VerticalAlignment="Bottom" Grid.Column="1" SelectionChanged="XYComboBox_SelectionChanged"/>
+                            <ComboBox x:Name="FloorYComboBox" Margin="86,0,0,1" VerticalContentAlignment="Center" Height="36" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="70" FontSize="24" Background="#FFCBDBB7" Grid.Row="1" Grid.Column="1"/>
+                            <Label Content="Ряд" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="84,0,0,38" Width="73" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" Height="36" Foreground="#FFFCFFF5" Grid.Column="1"/>
+                            <Label Content="Этаж" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="1" Margin="86,0,0,38" Width="73" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" Height="36" Foreground="#FFFCFFF5" Grid.Row="1"/>
                         </Grid>
                     </GroupBox>
                     <GroupBox Header="Перемещение" Margin="3,0,3,3" Background="#FF193441" Grid.Column="1" Grid.Row="1" Foreground="#FFFCFFF5">
@@ -369,16 +373,16 @@
                                 <ColumnDefinition Width="10*"/>
                                 <ColumnDefinition Width="10*"/>
                                 <ColumnDefinition Width="10*"/>
-                                <ColumnDefinition Width="10*"/>
+                                <ColumnDefinition Width="5*"/>
                             </Grid.ColumnDefinitions>
-                            <Button x:Name="CloserButton" Content="БЛИЖЕ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="63.467,4.555" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" ClickMode="Press"/>
-                            <Button x:Name="DownButton" Content="ВНИЗ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="63.341,4.43,63.592,4.68" Grid.ColumnSpan="2" Grid.Row="2" Grid.Column="1" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" ClickMode="Press"/>
-                            <Button x:Name="UpButton" Content="ВВЕРХ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="63.341,4.43,63.592,4.68" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" ClickMode="Press" />
-                            <Button x:Name="FartherButton" Content="ДАЛЬШЕ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="63.467,4.555,63.466,4.555" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" ClickMode="Press"/>
-                            <Button x:Name="StopButton" Content="STOP" Grid.Column="4" Margin="0,0,1.005,1.016" Grid.Row="3" BorderBrush="#FFCBDBD7" Background="#FF9E2E2E" FontSize="24" HorizontalAlignment="Right" Width="75" Height="50" VerticalAlignment="Bottom" Foreground="Black" Style="{DynamicResource StopButtonStyle}" ClickMode="Press" IsCancel="True" Click="StopButton_Click"/>
-                            <Button x:Name="ManPlatformLeftButton" Content="X" HorizontalAlignment="Right" Margin="0,4,14,15" Width="35" FontSize="20" Click="ManPlatformLeftButton_Checked" Height="35"/>
-                            <Button x:Name="ManPlatformRightButton" Content="Y" Margin="16,4,0,15" HorizontalAlignment="Left" Width="35" FontSize="20" Grid.Column="1" Click="ManPlatformRightButton_Checked" Height="35"/>
-                            <CheckBox x:Name="LineMotionCheckbox" Content="Движение&#xD;&#xA; по рядам" Grid.Column="4" HorizontalAlignment="Right" Margin="0,3,0,0" VerticalAlignment="Top" Width="112" Height="51" Checked="LineMotionCheckbox_Checked" Grid.RowSpan="2" Foreground="#FFFCFFF5" Unchecked="LineMotionCheckbox_Unchecked"/>
+                            <Button x:Name="CloserButton" Content="БЛИЖЕ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="52,4,52,3" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" ClickMode="Press"/>
+                            <Button x:Name="DownButton" Content="ВНИЗ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="52,4.5,52,2.5" Grid.ColumnSpan="2" Grid.Row="2" Grid.Column="1" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" ClickMode="Press"/>
+                            <Button x:Name="UpButton" Content="ВВЕРХ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="52,4,52,3.5" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" ClickMode="Press" />
+                            <Button x:Name="FartherButton" Content="ДАЛЬШЕ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="52,4,52,3" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="2" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" ClickMode="Press"/>
+                            <Button x:Name="StopButton" Content="STOP" Grid.Column="3" Margin="0,0,2,0.5" Grid.Row="3" BorderBrush="#FFCBDBD7" Background="#FF9E2E2E" FontSize="24" HorizontalAlignment="Right" Width="75" Height="50" VerticalAlignment="Bottom" Foreground="Black" Style="{DynamicResource StopButtonStyle}" ClickMode="Press" IsCancel="True" Click="StopButton_Click" Grid.ColumnSpan="2"/>
+                            <Button x:Name="ManPlatformLeftButton" Content="X" Margin="20,10,0,21" FontSize="20" Click="ManPlatformLeftButton_Checked" Height="35" HorizontalAlignment="Left" Width="35"/>
+                            <Button x:Name="ManPlatformRightButton" Content="Y" Margin="78,10,0,21" HorizontalAlignment="Left" Width="35" FontSize="20" Click="ManPlatformRightButton_Checked" Height="35"/>
+                            <CheckBox x:Name="LineMotionCheckbox" Content="Движение&#xD;&#xA; по рядам" Grid.Column="3" HorizontalAlignment="Right" Margin="0,5,10,0" VerticalAlignment="Top" Width="112" Height="51" Checked="LineMotionCheckbox_Checked" Foreground="#FFFCFFF5" Unchecked="LineMotionCheckbox_Unchecked" Grid.ColumnSpan="2" FontSize="20"/>
                         </Grid>
                     </GroupBox>
                 </Grid>
