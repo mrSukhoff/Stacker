@@ -161,13 +161,7 @@ namespace Stacker
         //обработчик события "команда выполнена"
         private void CommandDone()
         {
-            Dispatcher.Invoke(UnblockButton);
-        }
-
-        //по завершении команды разблокирует кнопку
-        private void UnblockButton()
-        {
-            if (bt!=null) bt.IsEnabled = true;
+            if (bt != null)  Dispatcher.Invoke( () => (bt.IsEnabled = true));
             bt = null;
         }
 
