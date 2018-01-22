@@ -338,7 +338,7 @@ namespace Stacker
             {
                 try
                 {
-                    /*
+                    
                     //читаем оптом из ПЛК актуальные координаты крана
                     ushort[] word = PLC.ReadHoldingRegisters(1, 0x1198, 8);
                     
@@ -347,20 +347,10 @@ namespace Stacker
                     ActualY = word[2] + 0x10000 * word[3];
                     ActualRow = word[4];
                     ActualFloor = word[6];
-                    */
-                    
-                    ReadDword(PLC,408,out int w);
-                    ActualX = w;
-                    ReadDword(PLC, 410, out w);
-                    ActualY = w;
-                    ReadDword(PLC, 412, out w);
-                    ActualRow = w;
-                    ReadDword(PLC, 414, out w);
-                    ActualFloor = w;
-
+                                        
                     //читаем слово состояния ПЛК
                     ReadDword(PLC, 100, out int stateWord);
-                    MessageBox.Show(stateWord.ToString() + " - " + StateWord.ToString());
+                    
                     //вызываем событие по чтению координат
                     CoordinateReaded();
 
@@ -368,18 +358,12 @@ namespace Stacker
                     if (stateWord != StateWord) SomethingChanged();
 
                     //если появился флаг завершения
-                    //if (GetBitState(stateWord, 15) && !GetBitState(StateWord, 15)) MessageBox.Show(stateWord.ToString()+" - "+ StateWord.ToString());
-                        //CommandDone();
+                    if (GetBitState(stateWord, 15) && !GetBitState(StateWord, 15)) CommandDone();
 
                     //если появился флаг ошибки вызываем обрабочик ошибок
                     if (GetBitState(stateWord, 13) && !GetBitState(StateWord, 13)) ErrorHandler();
 
-                    /*string sw = Convert.ToString(stateWord, 2);
-                    while (sw.Length < 16) sw = "0" + sw;
-                    File.AppendAllText("State.log", sw + '\r' + '\n', System.Text.Encoding.Default);*/
-
                     StateWord = stateWord;
-                    //MessageBox.Show(stateWord.ToString() + " - " + StateWord.ToString());
                 }
                 catch (Exception ex)
                 {
