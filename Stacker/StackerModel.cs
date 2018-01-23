@@ -53,6 +53,9 @@ namespace Stacker
         //Слово состояния контроллера
         public int StateWord { get; private set; }
 
+        //вес или что-то измеренное с частотника
+        public int Weight { get; private set; }
+
         //внутренние поля класса ******************************************************************************
 
         // переменная для контроля изменения файла заявок
@@ -350,6 +353,9 @@ namespace Stacker
                                         
                     //читаем слово состояния ПЛК
                     ReadDword(PLC, 100, out int stateWord);
+
+                    ReadDword(PLC, 102, out int weight);
+                    Weight = weight + 1000; 
                     
                     //вызываем событие по чтению координат
                     CoordinateReaded();

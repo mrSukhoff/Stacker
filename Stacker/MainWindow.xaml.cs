@@ -183,6 +183,7 @@ namespace Stacker
             Dispatcher.Invoke( () => FloorLabel.Content = "F:" + model.ActualFloor );
             Dispatcher.Invoke( () => XLabel.Content = "X:" + model.ActualX );
             Dispatcher.Invoke( () => YLabel.Content = "Y:" + model.ActualY );
+            Dispatcher.Invoke(() => WeightLabel.Content = "Weight:" + model.Weight);
         }
         
         //

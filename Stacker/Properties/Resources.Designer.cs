@@ -66,13 +66,11 @@ namespace Stacker.Properties {
         ///ArchiveFile=D:\\БЕРТА\БЕРТА Сухарев\Projects\Stacker\Orders\instr_imp.txt
         ///
         ///[Stacker]
-        ///Depth=30
-        ///Hight=16
         ///LeftRackName=А
         ///LeftRackNumber=1
         ///RightRackName=Б
         ///RightRackNumber=2
-        ///Depth=30
+        ///Depth=29
         ///Hight=16
         ///
         ///[PLC]

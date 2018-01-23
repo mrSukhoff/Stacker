@@ -227,6 +227,7 @@
             <Label x:Name="FloorLabel" Content="F:00"/>
             <Label x:Name="XLabel" Content="X:000000"/>
             <Label x:Name="YLabel" Content="Y:000000"/>
+            <Label x:Name="WeightLabel" Content="Weight:0"/>
         </StatusBar>
         <TabControl x:Name="Tabs" Margin="1" FontSize="16" Background="#FF193441" BorderBrush="{x:Null}">
             <TabItem x:Name="AutoTabItrm" Header="_Автоматический режим " Margin="0" BorderBrush="#FF91AAB4" Background="#FFCBDBD7" Height="30">
@@ -355,7 +356,7 @@
                             <Button x:Name="XResButton" Content="R" HorizontalAlignment="Left" Height="36" VerticalAlignment="Bottom" Width="36" MinWidth="25" Click="XResButton_Click" Margin="14,0,0,0" Grid.Column="1"/>
                             <Button x:Name="YResButton" Content="R" HorizontalAlignment="Left" Width="36" MinWidth="25" Grid.Row="1" Click="YResButton_Click" Height="36" VerticalAlignment="Bottom" RenderTransformOrigin="-0.27,0.512" Margin="14,0,0,0" Grid.Column="1"/>
                             <ComboBox x:Name="RowXComboBox" Margin="86,0,0,0" VerticalContentAlignment="Center" HorizontalAlignment="Left" Width="70" FontSize="24" Background="#FFCBDBB7" RenderTransformOrigin="0.286,0.528" Height="36" VerticalAlignment="Bottom" Grid.Column="1" SelectionChanged="XYComboBox_SelectionChanged"/>
-                            <ComboBox x:Name="FloorYComboBox" Margin="86,0,0,1" VerticalContentAlignment="Center" Height="36" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="70" FontSize="24" Background="#FFCBDBB7" Grid.Row="1" Grid.Column="1"/>
+                            <ComboBox x:Name="FloorYComboBox" Margin="86,0,0,1" VerticalContentAlignment="Center" Height="36" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="70" FontSize="24" Background="#FFCBDBB7" Grid.Row="1" Grid.Column="1" SelectionChanged="XYComboBox_SelectionChanged"/>
                             <Label Content="Ряд" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="84,0,0,38" Width="73" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" Height="36" Foreground="#FFFCFFF5" Grid.Column="1"/>
                             <Label Content="Этаж" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="1" Margin="86,0,0,38" Width="73" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" Height="36" Foreground="#FFFCFFF5" Grid.Row="1"/>
                         </Grid>
