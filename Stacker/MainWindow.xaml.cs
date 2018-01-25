@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,9 +22,9 @@ namespace Stacker
         //формат ввода координат в textbox'ы
         Regex CoordinateRegex = new Regex(@"\d");
 
-        //Кнопка, выдавшая задание)
-        Button bt = null;
-        
+        //Список кнопок, выдавших задание и заблокированных
+        List<Button> bt = new List<Button>();
+               
         //модель паттерна MVP(если это конечно он)
         StackerModel model;
 
@@ -161,8 +162,12 @@ namespace Stacker
         //обработчик события "команда выполнена"
         private void CommandDone()
         {
-            if (bt != null)  Dispatcher.Invoke( () => (bt.IsEnabled = true));
-            bt = null;
+            //разблокируем все кнопки
+            foreach (Button b in bt)
+            {
+                Dispatcher.Invoke(() => (b.IsEnabled = true));
+            }
+            bt.Clear();
         }
 
         //обработчик события "ошибка"
@@ -399,16 +404,16 @@ namespace Stacker
         private void ManPlatformLeftButton_Checked(object sender, RoutedEventArgs e)
         {
             model.PlatformToRight();   
-            bt = sender as Button;
-            bt.IsEnabled = false;
+            bt.Add( sender as Button);
+            (sender as Button).IsEnabled = false;
         }
 
         //Обработчик нажатия кнопки платформа "вправо вправо"
         private void ManPlatformRightButton_Checked(object sender, RoutedEventArgs e)
         {
             model.PlatformToLeft();
-            bt = sender as Button;
-            bt.IsEnabled = false;
+            bt.Add(sender as Button);
+            (sender as Button).IsEnabled = false;
         }
 
         //Обработчик нажатия кнопки STOP
@@ -425,8 +430,8 @@ namespace Stacker
             x = x > model.MaxX ? model.MaxX : x;
             y = y > model.MaxY ? model.MaxY : y;
             model.GotoXY(x, y);
-            bt = (Button)sender;
-            bt.IsEnabled = false;
+            bt.Add((Button)sender);
+            (sender as Button).IsEnabled = false;
         }
        
         //кнопки сброса значений в TextBox на ноль
@@ -443,26 +448,26 @@ namespace Stacker
         private void FartherButton_NextLine(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             model.NextLineFartherCommand();
-            bt = sender as Button;
-            bt.IsEnabled = false;
+            bt.Add((Button)sender);
+            (sender as Button).IsEnabled = false;
         }
         private void CloserButton_NextLine(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             model.NextLineCloserCommand();
-            bt = sender as Button;
-            bt.IsEnabled = false;
+            bt.Add((Button)sender);
+            (sender as Button).IsEnabled = false;
         }
         private void UpButton_NextLine(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             model.NextLineUpCommand();
-            bt = sender as Button;
-            bt.IsEnabled = false;
+            bt.Add((Button)sender);
+            (sender as Button).IsEnabled = false;
         }
         private void DownButton_NextLine(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             model.NextLineDownCommand();
-            bt = sender as Button;
-            bt.IsEnabled = false;
+            bt.Add((Button)sender);
+            (sender as Button).IsEnabled = false;
         }
 
         //В зависимости от состояния чекбокса выбираем действия кнопок
@@ -513,14 +518,14 @@ namespace Stacker
         //обрабатывает нажатие кнопок "привезти" и "увезти" в полуавтоматическом режиме
         private void BringOrTakeAwaySemiAutoButton_Click(object sender, RoutedEventArgs e)
         {
-            bool stacker = RackSemiAutoComboBox.SelectedIndex == 1;
+            bool stack = RackSemiAutoComboBox.SelectedIndex == 1;
             int r = RowSemiAutoComboBox.SelectedIndex + 1;
             int f = FloorSemiAutoCombobox.SelectedIndex + 1;
             //если была нажата кнопка привезти устанавливае переменную в true
             bool bring = sender == BringSemiAutoButton ? true : false;
-            model.BringOrTakeAwayCommand(stacker,r,f,bring);           
-            bt = sender as Button;
-            bt.IsEnabled = false;
+            model.BringOrTakeAwayCommand(stack,r,f,bring);           
+            bt.Add(sender as Button);
+            (sender as Button).IsEnabled = false; 
         }
 
         //в автоматическом режиме даем команду на подвоз контейнера
