@@ -253,7 +253,7 @@
                     <Button x:Name="AutoStopButton" Content="STOP" Grid.Column="1" Margin="0,0,10,10" BorderBrush="#FFCBDBD7" Background="#FF9E2E2E" FontSize="24" Grid.Row="1" RenderTransformOrigin="0.44,-0.04" Height="50" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" Style="{DynamicResource StopButtonStyle}" Click="StopButton_Click"/>
                 </Grid>
             </TabItem>
-            <TabItem x:Name="SemiAutoTabItem" Header="_Полуавтоматический режим" Background="#FFCBDBD7" BorderBrush="#FF91AAB4" Height="30" Margin="-1,0,-3,0">
+            <TabItem x:Name="SemiAutoTabItem" Header="_Полуавтоматический режим" Background="#FFCBDBD7" BorderBrush="#FF91AAB4" Height="30" Margin="0">
                 <Grid Margin="0" Background="#FF193441">
                     <Grid.RowDefinitions>
                         <RowDefinition/>
@@ -279,26 +279,7 @@
                     <ComboBox x:Name="RackSemiAutoComboBox" Margin="0,0,95,0" FontSize="36" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsSynchronizedWithCurrentItem="False" BorderBrush="#FFFCFFF5" HorizontalAlignment="Right" Width="100" Background="#FFCBDBB7" BorderThickness="3" SnapsToDevicePixels="True" Grid.ColumnSpan="2" Height="98" VerticalAlignment="Bottom"/>
                 </Grid>
             </TabItem>
-            <TabItem x:Name="ErrorTabItem" Header="Ошибки" BorderBrush="#FF91AAB4" Foreground="Black" Height="30" Background="#FFCBDBD7" Margin="159,0,-160,0">
-                <Grid Background="#FF193441" Style="{DynamicResource ButtonFocusVisual}">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition Height="70"/>
-                    </Grid.RowDefinitions>
-                    <ListView x:Name="ErrorListView" Margin="3" Background="#FF91AAB4" Foreground="#FF9E2E2E">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn/>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                    <Button x:Name="SubmitErrorButton" Content="Подтвердить" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="286,0,285,10" Grid.Row="1" FontSize="24" FontWeight="Bold" BorderBrush="#FFCBDBD7" Background="#FF91AAB4" UseLayoutRounding="False" BorderThickness="3,0" MinWidth="175" MinHeight="50" MaxWidth="175" MaxHeight="50" Click="SubmitErrorButton_Click"/>
-                </Grid>
-            </TabItem>
-            <TabItem x:Name="SettingTab" Header="Ручное управление" BorderBrush="#FF91AAB4" Height="30" Background="#FFCBDBD7" Margin="-73,0,72,0">
+            <TabItem x:Name="SettingTab" Header="Ручное управление" BorderBrush="#FF91AAB4" Height="30" Background="#FFCBDBD7" Margin="0" Width="159">
                 <Grid Background="#FF193441">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*"/>
@@ -353,8 +334,8 @@
                             <TextBox x:Name="GotoYTextBox" HorizontalAlignment="Right" Height="36" TextWrapping="Wrap" Text="0" VerticalAlignment="Bottom" Width="100" Margin="0,0,25,1" MinWidth="100" MinHeight="30" Grid.Row="1" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="24" PreviewTextInput="TextBox_PreviewTextInput" Background="#FFCBDBB7"/>
                             <Label Content="X" HorizontalAlignment="Right" Margin="0,0,51,38" VerticalAlignment="Bottom" Width="50" VerticalContentAlignment="Center" Height="36" MinWidth="50" MinHeight="30" FontSize="24" HorizontalContentAlignment="Center" Foreground="#FFFCFFF5"/>
                             <Label Content="Y" HorizontalAlignment="Right" Margin="0,0,51,38" VerticalAlignment="Bottom" Width="50" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="36" MinWidth="50" MinHeight="30" FontSize="24" Foreground="#FFFCFFF5" Grid.Row="1"/>
-                            <Button x:Name="XResButton" Content="0" HorizontalAlignment="Left" Height="36" VerticalAlignment="Bottom" Width="36" MinWidth="25" Click="XResButton_Click" Margin="14,0,0,0" Grid.Column="1"/>
-                            <Button x:Name="YResButton" Content="0" HorizontalAlignment="Left" Width="36" MinWidth="25" Grid.Row="1" Click="YResButton_Click" Height="36" VerticalAlignment="Bottom" RenderTransformOrigin="-0.27,0.512" Margin="14,0,0,0" Grid.Column="1"/>
+                            <Button x:Name="XResButton" Content="0" HorizontalAlignment="Left" Height="36" VerticalAlignment="Bottom" Width="36" MinWidth="25" Click="XResButton_Click" Margin="14,0,0,0" Grid.Column="1" FontSize="24" HorizontalContentAlignment="Center"/>
+                            <Button x:Name="YResButton" Content="0" HorizontalAlignment="Left" Width="36" MinWidth="25" Grid.Row="1" Click="YResButton_Click" Height="37" VerticalAlignment="Bottom" RenderTransformOrigin="-0.27,0.512" Margin="14,0,0,0" Grid.Column="1" HorizontalContentAlignment="Center" FontSize="24"/>
                             <ComboBox x:Name="RowXComboBox" Margin="86,0,0,0" VerticalContentAlignment="Center" HorizontalAlignment="Left" Width="70" FontSize="24" Background="#FFCBDBB7" RenderTransformOrigin="0.286,0.528" Height="36" VerticalAlignment="Bottom" Grid.Column="1" SelectionChanged="XYComboBox_SelectionChanged"/>
                             <ComboBox x:Name="FloorYComboBox" Margin="86,0,0,1" VerticalContentAlignment="Center" Height="36" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="70" FontSize="24" Background="#FFCBDBB7" Grid.Row="1" Grid.Column="1" SelectionChanged="XYComboBox_SelectionChanged"/>
                             <Label Content="Ряд" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="84,0,0,38" Width="73" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" Height="36" Foreground="#FFFCFFF5" Grid.Column="1"/>
@@ -386,6 +367,25 @@
                             <CheckBox x:Name="LineMotionCheckbox" Content="Движение&#xA; по рядам" Grid.Column="3" HorizontalAlignment="Right" Margin="0,5,10,0" VerticalAlignment="Top" Width="112" Height="51" Checked="LineMotionCheckbox_Checked" Foreground="#FFFCFFF5" Unchecked="LineMotionCheckbox_Unchecked" Grid.ColumnSpan="2" FontSize="20"/>
                         </Grid>
                     </GroupBox>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="ErrorTabItem" Header="Ошибки" BorderBrush="#FF91AAB4" Foreground="Black" Height="30" Background="#FFCBDBD7" Margin="0">
+                <Grid Background="#FF193441" Style="{DynamicResource ButtonFocusVisual}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="70"/>
+                    </Grid.RowDefinitions>
+                    <ListView x:Name="ErrorListView" Margin="3" Background="#FF91AAB4" Foreground="#FF9E2E2E">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <Button x:Name="SubmitErrorButton" Content="Подтвердить" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="286,0,285,10" Grid.Row="1" FontSize="24" FontWeight="Bold" BorderBrush="#FFCBDBD7" Background="#FF91AAB4" UseLayoutRounding="False" BorderThickness="3,0" MinWidth="175" MinHeight="50" MaxWidth="175" MaxHeight="50" Click="SubmitErrorButton_Click"/>
                 </Grid>
             </TabItem>
         </TabControl>

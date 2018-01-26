@@ -184,11 +184,23 @@ namespace Stacker
             while (sw.Length < 16) sw = "0" + sw;
             Dispatcher.Invoke( () => StateWordLabel.Content = "State Word : " + sw );
 
-            Dispatcher.Invoke( () => RowLabel.Content = "R:" + model.ActualRow  );
-            Dispatcher.Invoke( () => FloorLabel.Content = "F:" + model.ActualFloor );
-            Dispatcher.Invoke( () => XLabel.Content = "X:" + model.ActualX );
-            Dispatcher.Invoke( () => YLabel.Content = "Y:" + model.ActualY );
-            Dispatcher.Invoke(() => WeightLabel.Content = "Weight:" + model.Weight);
+            string r = model.ActualRow.ToString();
+            r = r.Length == 1 ? "0" + r : r;
+            Dispatcher.Invoke( () => RowLabel.Content = "R:" + r);
+
+            string f = model.ActualFloor.ToString();
+            f = f.Length == 1 ? "0" + f : f;
+            Dispatcher.Invoke( () => FloorLabel.Content = "F:" + f );
+
+            string x = model.ActualX.ToString();
+            while (x.Length < 5) x = "0" + x;
+            Dispatcher.Invoke( () => XLabel.Content = "X:" +  x);
+
+            string y = model.ActualY.ToString();
+            while (y.Length < 5) y = "0" + y;
+            Dispatcher.Invoke( () => YLabel.Content = "Y:" + y );
+
+            Dispatcher.Invoke( () => WeightLabel.Content = "Weight:" + model.Weight);
         }
         
         //
