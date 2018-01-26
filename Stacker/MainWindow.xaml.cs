@@ -438,10 +438,12 @@ namespace Stacker
         private void XResButton_Click(object sender, RoutedEventArgs e)
         {
             GotoXTextBox.Text = "0";
+            RowXComboBox.SelectedIndex = -1;
         }
         private void YResButton_Click(object sender, RoutedEventArgs e)
         {
             GotoYTextBox.Text = "0";
+            FloorYComboBox.SelectedIndex = -1;
         }
 
         //При клике по кнопке движение до следующего ряда
