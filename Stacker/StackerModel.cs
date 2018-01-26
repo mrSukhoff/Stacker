@@ -606,7 +606,7 @@ namespace Stacker
                 int x = stacker[row, floor].X;
                 int y = stacker[row, floor].Y;
                 //требуемая ячейка не может находится в начале штабелера или иметь вертикальную координату 0
-                if ( x == 0 || (y==0 && row!=1) ) throw new ArgumentException("Неверные координаты ячеейки");
+                if ( x == 0 || (y==0 && floor!=1) ) throw new ArgumentException("Неверные координаты ячеейки");
 
                 //Включаем режим перемещения по координатам
                 WriteDword(PLC, 8, 2);

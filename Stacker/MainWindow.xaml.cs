@@ -543,7 +543,7 @@ namespace Stacker
                 model.CommandDone += BringDone;
             }
         }
-        
+         
         //после доставки разрешаем кнопку "увезти"
         private void BringDone()
         {
