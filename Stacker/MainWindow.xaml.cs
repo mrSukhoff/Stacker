@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace Stacker
 {
@@ -27,6 +28,10 @@ namespace Stacker
                
         //модель паттерна MVP(если это конечно он)
         StackerModel model;
+
+        //для рисования графика веса
+        Polyline myPolyline = new Polyline();
+        PointCollection myPointCollection = new PointCollection();
 
         //#####################################################################################################
         //Основная точка входа -------------------------------------------------------------------------------!
@@ -125,6 +130,14 @@ namespace Stacker
 
             //считываем координаты
             CellChanged(null,null);
+
+            //настройка графика
+            myPolyline.Stroke = Brushes.AliceBlue;
+            myPolyline.StrokeThickness = 2;
+            myPolyline.FillRule = FillRule.EvenOdd;
+            myPolyline.Points = myPointCollection;
+            WeightGrid.Children.Add(myPolyline);
+
         }
 
         //Настройки вида списка заявок
@@ -599,6 +612,29 @@ namespace Stacker
             if (model.SelectOrder(i)) model.FinishOrder(false);
         }
 
+        private void WeighButton_Click(object sender, RoutedEventArgs e)
+        {
+            bt.Add(sender as Button);
+            (sender as Button).IsEnabled = false;
+            myPointCollection.Clear();
+            model.CoordinateReaded += MakeGraph;
+            model.CommandDone += WeighDone;
+
+        }
+
+        private void MakeGraph()
+        {
+            double w = model.Weight;
+            int x = (myPointCollection.Count + 1) * 2;
+            Point point = new Point(x, w);
+            Dispatcher.Invoke(() => myPointCollection.Add(point));
+        }
+
+        private void WeighDone()
+        {
+            model.CommandDone -= WeighDone;
+            model.CoordinateReaded -= MakeGraph;
+        }
     }
 }
 

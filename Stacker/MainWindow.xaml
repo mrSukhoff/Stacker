@@ -315,7 +315,7 @@
                             <Label Content="Y" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="4" Margin="111,-4,0,75" Grid.ColumnSpan="2" Width="59" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" Height="36" Foreground="#FFFCFFF5"/>
                             <ComboBox x:Name="RowComboBox" Grid.ColumnSpan="2" Grid.Column="1" Margin="63,0,0,22" VerticalContentAlignment="Center" Height="36" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="70" FontSize="24" Background="#FFCBDBB7"/>
                             <ComboBox x:Name="FloorComboBox" Grid.ColumnSpan="2" Grid.Column="2" Margin="63,0,0,22" VerticalContentAlignment="Center" Height="36" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="70" FontSize="24" Background="#FFCBDBB7"/>
-                            <Button x:Name="SaveButton" Content="Записать" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="150" Margin="130,0,10,10" Grid.Row="1" Height="48" Grid.Column="5" FontWeight="Bold" Click="SaveButton_Click" FontSize="24" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" Grid.ColumnSpan="2"/>
+                            <Button x:Name="SaveButton" Content="Записать" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="150" Margin="130,0,10,10" Grid.Row="1" Height="50" Grid.Column="5" FontWeight="Bold" Click="SaveButton_Click" FontSize="24" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" Grid.ColumnSpan="2"/>
                         </Grid>
                     </GroupBox>
                     <GroupBox VerticalContentAlignment="Bottom" Margin="3,0,3,3" Grid.Row="1" Header="Перейти на координаты" Foreground="#FFFCFFF5">
@@ -329,7 +329,7 @@
                                 <ColumnDefinition Width="166*"/>
                                 <ColumnDefinition Width="167*"/>
                             </Grid.ColumnDefinitions>
-                            <Button x:Name="GotoButton" Content="Перейти" HorizontalAlignment="Center" Width="153" Margin="90,0,90,8" Grid.Row="2" MinWidth="101" MinHeight="36" FontWeight="Bold" FontSize="24" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" Click="GotoButton_Click" Height="46" VerticalAlignment="Bottom" Grid.ColumnSpan="2"/>
+                            <Button x:Name="GotoButton" Content="Перейти" HorizontalAlignment="Center" Width="153" Margin="90,0,90,8" Grid.Row="2" MinWidth="101" MinHeight="36" FontWeight="Bold" FontSize="24" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" Click="GotoButton_Click" Height="50" VerticalAlignment="Bottom" Grid.ColumnSpan="2"/>
                             <TextBox x:Name="GotoXTextBox" Height="36" TextWrapping="Wrap" Text="0" VerticalAlignment="Bottom" RenderTransformOrigin="0.492,0.45" Margin="0,0,25,0" MinWidth="100" MinHeight="30" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="24" PreviewTextInput="TextBox_PreviewTextInput" Background="#FFCBDBB7" HorizontalAlignment="Right" Width="100"/>
                             <TextBox x:Name="GotoYTextBox" HorizontalAlignment="Right" Height="36" TextWrapping="Wrap" Text="0" VerticalAlignment="Bottom" Width="100" Margin="0,0,25,1" MinWidth="100" MinHeight="30" Grid.Row="1" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="24" PreviewTextInput="TextBox_PreviewTextInput" Background="#FFCBDBB7"/>
                             <Label Content="X" HorizontalAlignment="Right" Margin="0,0,51,38" VerticalAlignment="Bottom" Width="50" VerticalContentAlignment="Center" Height="36" MinWidth="50" MinHeight="30" FontSize="24" HorizontalContentAlignment="Center" Foreground="#FFFCFFF5"/>
@@ -386,6 +386,14 @@
                         </ListView.View>
                     </ListView>
                     <Button x:Name="SubmitErrorButton" Content="Подтвердить" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="286,0,285,10" Grid.Row="1" FontSize="24" FontWeight="Bold" BorderBrush="#FFCBDBD7" Background="#FF91AAB4" UseLayoutRounding="False" BorderThickness="3,0" MinWidth="175" MinHeight="50" MaxWidth="175" MaxHeight="50" Click="SubmitErrorButton_Click"/>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="WeightTabItem" Header="Взвешивание" BorderBrush="#FF91AAB4" Foreground="Black" Background="#FFCBDBD7" Height="30" Width="116" Margin="0">
+                <Grid x:Name="WeightGrid" Background="#FF193441">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="WeighButton" Content="Взвесить" Margin="386,0,380,10" FontSize="24" Width="112" HorizontalAlignment="Center" VerticalAlignment="Bottom" Click="WeighButton_Click"/>
                 </Grid>
             </TabItem>
         </TabControl>

@@ -355,8 +355,8 @@ namespace Stacker
                     ReadDword(PLC, 100, out int stateWord);
 
                     ReadDword(PLC, 102, out int weight);
-                    weight = weight == 65535? 0: weight;
-                    Weight = weight != 0 ? (weight - 267)*2 : 0;
+                    weight = weight > 33000 ? 0: weight;
+                    Weight = weight;
                     
                     //вызываем событие по чтению координат
                     CoordinateReaded();
