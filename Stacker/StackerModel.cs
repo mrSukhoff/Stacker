@@ -55,6 +55,8 @@ namespace Stacker
 
         //вес или что-то измеренное с частотника
         public int Weight { get; private set; }
+        public int MeasuredWeight { get; private set; }
+        public int MeasuredWeight2 { get; private set; }
 
         //внутренние поля класса ******************************************************************************
 
@@ -357,7 +359,13 @@ namespace Stacker
                     ReadDword(PLC, 102, out int weight);
                     weight = weight > 33000 ? 0: weight;
                     Weight = weight;
-                    
+
+                    ReadDword(PLC, 104, out weight);
+                    MeasuredWeight = weight;
+
+                    ReadDword(PLC, 106, out weight);
+                    MeasuredWeight2 = weight;
+
                     //вызываем событие по чтению координат
                     CoordinateReaded();
 
@@ -654,6 +662,17 @@ namespace Stacker
                 SetMerker(PLC, 3, bring);
                 //Даем команду на старт
                 SetMerker(PLC, 1, true);
+            }
+        }
+
+        public void Weigh()
+        {
+            if (PLC != null)
+            {
+                //включаем режим взвешивания
+                WriteDword(PLC, 8, 5);
+                //задаем команду "взвесить"
+                SetMerker(PLC,21,true);
             }
         }
 

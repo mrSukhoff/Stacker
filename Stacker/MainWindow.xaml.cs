@@ -30,8 +30,11 @@ namespace Stacker
         StackerModel model;
 
         //для рисования графика веса
-        Polyline myPolyline = new Polyline();
-        PointCollection myPointCollection = new PointCollection();
+        Polyline WeightPolyline = new Polyline();
+        PointCollection WeightPointCollection = new PointCollection();
+        int c = 0;
+        Polyline MeasuredWeightPolyline = new Polyline();
+        PointCollection MeasuredWeightPointCollection = new PointCollection();
 
         //#####################################################################################################
         //Основная точка входа -------------------------------------------------------------------------------!
@@ -132,12 +135,17 @@ namespace Stacker
             CellChanged(null,null);
 
             //настройка графика
-            myPolyline.Stroke = Brushes.AliceBlue;
-            myPolyline.StrokeThickness = 2;
-            myPolyline.FillRule = FillRule.EvenOdd;
-            myPolyline.Points = myPointCollection;
-            WeightGrid.Children.Add(myPolyline);
+            WeightPolyline.Stroke = Brushes.AliceBlue;
+            WeightPolyline.StrokeThickness = 2;
+            WeightPolyline.FillRule = FillRule.EvenOdd;
+            WeightPolyline.Points = WeightPointCollection;
+            WeightGrid.Children.Add(WeightPolyline);
 
+            MeasuredWeightPolyline.Stroke = Brushes.Red;
+            MeasuredWeightPolyline.StrokeThickness = 2;
+            MeasuredWeightPolyline.FillRule = FillRule.EvenOdd;
+            MeasuredWeightPolyline.Points = MeasuredWeightPointCollection;
+            WeightGrid.Children.Add(MeasuredWeightPolyline);
         }
 
         //Настройки вида списка заявок
@@ -616,24 +624,39 @@ namespace Stacker
         {
             bt.Add(sender as Button);
             (sender as Button).IsEnabled = false;
-            myPointCollection.Clear();
+            WeightPointCollection.Clear();
+            MeasuredWeightPointCollection.Clear();
             model.CoordinateReaded += MakeGraph;
             model.CommandDone += WeighDone;
-
+            model.Weigh();
         }
 
         private void MakeGraph()
         {
-            double w = model.Weight;
-            int x = (myPointCollection.Count + 1) * 2;
-            Point point = new Point(x, w);
-            Dispatcher.Invoke(() => myPointCollection.Add(point));
+            double w = 450 - model.Weight;
+            Point point = new Point(c*10, w);
+            Dispatcher.Invoke(() => WeightPointCollection.Add(point));
+            c++;
         }
 
         private void WeighDone()
         {
+            int y = 450 - model.MeasuredWeight;
+            Point point1 = new Point(0,y);
+            Point point2 = new Point(300, y);
+            Dispatcher.Invoke(() => MeasuredWeightPointCollection.Add(point1));
+            Dispatcher.Invoke(() => MeasuredWeightPointCollection.Add(point2));
+            //float w = model.MeasuredWeight;
+
+            float w = (model.MeasuredWeight-267) * 100 /42f;
+            Dispatcher.Invoke(() => MeasuredWeightLabel.Content = w);
+            //w = model.MeasuredWeight2;
+            w = (model.MeasuredWeight2-227) * 100 / 30f;
+            Dispatcher.Invoke(() => MeasuredWeightLabel2.Content = w);
+
             model.CommandDone -= WeighDone;
             model.CoordinateReaded -= MakeGraph;
+            c = 0;
         }
     }
 }
