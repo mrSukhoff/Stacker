@@ -34,11 +34,15 @@ namespace Stacker
         //коллекция заявок
         public List<Order> Orders { get; private set; } = new List<Order>();
         
-        //делегат для обратного вызова при появлении флага завершения операции
+        //События
         public delegate void StackerModelEventHandler();
+        //появился флаг завершения выполнения команды
         public event StackerModelEventHandler CommandDone = (() => { });
+        //флаг ошибки
         public event StackerModelEventHandler ErrorAppeared = (() => { });
+        //происходит после очередного считывания текущих координат крана
         public event StackerModelEventHandler CoordinateReaded = (() => { });
+        //изменилось слово состояния контроллера
         public event StackerModelEventHandler SomethingChanged = (() => { });
 
         //Актуальные координаты крана
@@ -54,9 +58,15 @@ namespace Stacker
         public int StateWord { get; private set; }
 
         //вес или что-то измеренное с частотника
+        //мгновенное значение тока
         public int Weight { get; private set; }
+        //вес на подъеме
         public int MeasuredWeight { get; private set; }
+        //вес на спуске
         public int MeasuredWeight2 { get; private set; }
+
+        //флаг наличия контейнера на кране
+        public bool IsBinOnPlatform;
 
         //внутренние поля класса ******************************************************************************
 
@@ -352,19 +362,25 @@ namespace Stacker
                     ActualY = word[2] + 0x10000 * word[3];
                     ActualRow = word[4];
                     ActualFloor = word[6];
-                                        
+
+                    word = PLC.ReadHoldingRegisters(1, 0x1064, 8);
+
+                    int stateWord = word[0];
+                    Weight = word[2] > 32767 ? 0 : word[2];
+                    MeasuredWeight = word[4];
+                    MeasuredWeight2 = word[6];
+
+                    /*
                     //читаем слово состояния ПЛК
                     ReadDword(PLC, 100, out int stateWord);
-
                     ReadDword(PLC, 102, out int weight);
                     weight = weight > 33000 ? 0: weight;
                     Weight = weight;
-
                     ReadDword(PLC, 104, out weight);
                     MeasuredWeight = weight;
-
                     ReadDword(PLC, 106, out weight);
                     MeasuredWeight2 = weight;
+                    */
 
                     //вызываем событие по чтению координат
                     CoordinateReaded();
@@ -373,7 +389,11 @@ namespace Stacker
                     if (stateWord != StateWord) SomethingChanged();
 
                     //если появился флаг завершения
-                    if (GetBitState(stateWord, 15) && !GetBitState(StateWord, 15)) CommandDone();
+                    if (GetBitState(stateWord, 15) && !GetBitState(StateWord, 15))
+                    {
+                        IsBinOnPlatform = GetBitState(stateWord, 1);
+                        CommandDone();
+                    }
 
                     //если появился флаг ошибки вызываем обрабочик ошибок
                     if (GetBitState(stateWord, 13) && !GetBitState(StateWord, 13)) ErrorHandler();
