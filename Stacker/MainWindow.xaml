@@ -389,13 +389,13 @@
                 </Grid>
             </TabItem>
             <TabItem x:Name="WeightTabItem" Header="Взвешивание" BorderBrush="#FF91AAB4" Foreground="Black" Background="#FFCBDBD7" Height="30" Width="116" Margin="0">
-                <Grid x:Name="WeightGrid" Background="#FF193441">
+                <Grid x:Name="WeightGrid" Background="#FF193441" Margin="0,0,2,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Button x:Name="WeighButton" Content="Взвесить" Margin="386,0,380,10" FontSize="24" Width="112" HorizontalAlignment="Center" VerticalAlignment="Bottom" Click="WeighButton_Click"/>
-                    <Label x:Name="MeasuredWeightLabel" Content="00000" HorizontalAlignment="Left" Margin="674,167,0,0" VerticalAlignment="Top" Width="194" FontSize="24"/>
-                    <Label x:Name="MeasuredWeightLabel2" Content="00000" HorizontalAlignment="Left" Margin="674,227,0,0" VerticalAlignment="Top" Width="194" FontSize="24"/>
+                    <Button x:Name="WeighButton" Content="Взвесить" Margin="386,0,378,10" FontSize="24" Width="112" HorizontalAlignment="Center" VerticalAlignment="Bottom" Click="WeighButton_Click" Height="42"/>
+                    <Label x:Name="MeasuredWeightLabel" Content="000 кг" HorizontalAlignment="Left" Margin="768,132,0,0" VerticalAlignment="Top" Width="88" FontSize="24" Foreground="#FFFCFFF5" Height="42"/>
+                    <Label x:Name="MeasuredWeightLabel2" Content="000 кг" HorizontalAlignment="Left" Margin="768,215,0,0" VerticalAlignment="Top" Width="88" FontSize="24" Foreground="#FFFCFFF5" Height="42"/>
                 </Grid>
             </TabItem>
         </TabControl>

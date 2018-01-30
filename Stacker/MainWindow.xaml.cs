@@ -62,7 +62,7 @@ namespace Stacker
                 model.SomethingChanged +=ButtonsAndBins;
 
                 //Настраиваем визуальные компоненты
-                SetUpButtons();
+                SetUpComponents();
 
                 //Настраиваем вид списка заявок
                 GridSetUp();
@@ -70,7 +70,7 @@ namespace Stacker
         }
                 
         //Настраиваем визуальные компоненты
-        private void SetUpButtons()
+        private void SetUpComponents()
         {
             //Подписываем кнопки
             ManPlatformLeftButton.Content = model.LeftRackName; 
@@ -142,7 +142,7 @@ namespace Stacker
             WeightPolyline.FillRule = FillRule.EvenOdd;
             WeightPolyline.Points = WeightPointCollection;
             WeightGrid.Children.Add(WeightPolyline);
-
+            
             MeasuredWeightPolyline1.Stroke = Brushes.Red;
             MeasuredWeightPolyline1.StrokeThickness = 2;
             MeasuredWeightPolyline1.FillRule = FillRule.EvenOdd;
@@ -634,6 +634,7 @@ namespace Stacker
             (sender as Button).IsEnabled = false;
             WeightPointCollection.Clear();
             MeasuredWeight1PointCollection.Clear();
+            MeasuredWeight2PointCollection.Clear();
             model.CoordinateReaded += MakeGraph;
             model.CommandDone += WeighDone;
             model.Weigh();
@@ -649,24 +650,24 @@ namespace Stacker
 
         private void WeighDone()
         {
-            //рисуем 7 перпендикулярных красных линий)
+            //рисуем 7 перпендикулярных красных линий ;-)
             int y = 450 - model.MeasuredWeight;
-            Point point1 = new Point(0,y);
-            Point point2 = new Point(300, y);
-            Dispatcher.Invoke(() => MeasuredWeight1PointCollection.Add(point1));
-            Dispatcher.Invoke(() => MeasuredWeight1PointCollection.Add(point2));
+            Point point11 = new Point(0,y);
+            Point point12 = new Point(300, y);
+            Dispatcher.Invoke(() => MeasuredWeight1PointCollection.Add(point11));
+            Dispatcher.Invoke(() => MeasuredWeight1PointCollection.Add(point12));
                        
             y = 450 - model.MeasuredWeight2;
-            point1 = new Point(0, y);
-            point2 = new Point(300, y);
-            Dispatcher.Invoke(() => MeasuredWeight2PointCollection.Add(point1));
-            Dispatcher.Invoke(() => MeasuredWeight2PointCollection.Add(point2));
+            Point point21 = new Point(0, y);
+            Point point22 = new Point(300, y);
+            Dispatcher.Invoke(() => MeasuredWeight2PointCollection.Add(point21));
+            Dispatcher.Invoke(() => MeasuredWeight2PointCollection.Add(point22));
 
-            float w = (model.MeasuredWeight - 267) * 100 / 42f;
-            Dispatcher.Invoke(() => MeasuredWeightLabel.Content = w);
+            UInt16 w =(UInt16)((model.MeasuredWeight - 267) * 100 / 42f);
+            Dispatcher.Invoke(() => MeasuredWeightLabel.Content = w.ToString()+" кг");
 
-            w = (model.MeasuredWeight2 - 227) * 100 / 30f;
-            Dispatcher.Invoke(() => MeasuredWeightLabel2.Content = w);
+            w = (UInt16)((model.MeasuredWeight2 - 227) * 100 / 30f);
+            Dispatcher.Invoke(() => MeasuredWeightLabel2.Content = w.ToString() + " кг");
 
             model.CommandDone -= WeighDone;
             model.CoordinateReaded -= MakeGraph;
