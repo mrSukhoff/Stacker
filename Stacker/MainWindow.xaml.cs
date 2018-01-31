@@ -663,10 +663,22 @@ namespace Stacker
             Dispatcher.Invoke(() => MeasuredWeight2PointCollection.Add(point21));
             Dispatcher.Invoke(() => MeasuredWeight2PointCollection.Add(point22));
 
-            float w =(model.MeasuredWeight - 267) * 100 / 42f;
-            Dispatcher.Invoke(() => MeasuredWeightLabel.Content = w.ToString()+" кг");
+            //для первого
+            //float w = (model.MeasuredWeight - 267) * 100 / 42f;
 
-            w = (model.MeasuredWeight2 - 227) * 100 / 30f;
+            //для второго
+            float w = (model.MeasuredWeight - 261) * 100 / 42f;
+
+            //float w = model.MeasuredWeight;
+            Dispatcher.Invoke(() => MeasuredWeightLabel.Content = w.ToString() + " кг");
+
+            //для первого
+            //w = (model.MeasuredWeight2 - 227) * 100 / 30f;
+
+            //для второго
+            w = (model.MeasuredWeight2 - 217) * 100 / 28f;
+
+            //w = model.MeasuredWeight2;
             Dispatcher.Invoke(() => MeasuredWeightLabel2.Content = w.ToString() + " кг");
 
             model.CommandDone -= WeighDone;
