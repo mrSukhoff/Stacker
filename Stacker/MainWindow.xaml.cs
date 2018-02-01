@@ -42,16 +42,15 @@ namespace Stacker
         //Основная точка входа -------------------------------------------------------------------------------!
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            //try
+            try
             {
                 //создаем модель
                 model = new StackerModel();
-          
             }
-            /*catch (Exception)
+            catch (NullReferenceException)
             {
                 Application.Current.Shutdown();
-            }*/
+            }
 
             if (model != null)
             {
@@ -663,22 +662,13 @@ namespace Stacker
             Dispatcher.Invoke(() => MeasuredWeight2PointCollection.Add(point21));
             Dispatcher.Invoke(() => MeasuredWeight2PointCollection.Add(point22));
 
-            //для первого
-            //float w = (model.MeasuredWeight - 267) * 100 / 42f;
-
-            //для второго
-            float w = (model.MeasuredWeight - 261) * 100 / 42f;
-
-            //float w = model.MeasuredWeight;
+            float w = model.MeasuredWeight - model.WeighAlpha1;
+            w = model.WeighBeta1 == 0 ? w : w * 100 / model.WeighBeta1;
+                       
             Dispatcher.Invoke(() => MeasuredWeightLabel.Content = w.ToString() + " кг");
 
-            //для первого
-            //w = (model.MeasuredWeight2 - 227) * 100 / 30f;
-
-            //для второго
-            w = (model.MeasuredWeight2 - 217) * 100 / 28f;
-
-            //w = model.MeasuredWeight2;
+            w = model.MeasuredWeight2 - model.WeighAlpha2;
+            w = model.WeighBeta2 == 0 ? w : w * 100 / model.WeighBeta2;
             Dispatcher.Invoke(() => MeasuredWeightLabel2.Content = w.ToString() + " кг");
 
             model.CommandDone -= WeighDone;

@@ -68,6 +68,12 @@ namespace Stacker
         //флаг наличия контейнера на кране
         public bool IsBinOnPlatform;
 
+        //коэффициенты для пересчета тока ПЧ в вес
+        public int WeighAlpha1;
+        public int WeighBeta1;
+        public int WeighAlpha2;
+        public int WeighBeta2;
+
         //внутренние поля класса ******************************************************************************
 
         // переменная для контроля изменения файла заявок
@@ -91,6 +97,8 @@ namespace Stacker
 
         //хранит номер выбранной заявки в автоматическом режиме
         int SelectedOrderNumber = -1;
+
+        private bool CloseOrInform;
 
         //Конструктор класса **********************************************************************************
         public StackerModel()
@@ -129,8 +137,10 @@ namespace Stacker
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, caption: "Ошибка открытия порта");
-                //throw new Exception("No com port");
             }
+
+            if (!ComPort.IsOpen && !CloseOrInform) throw new NullReferenceException("!");
+            
         }
 
         //завершение работы программы  - нужно поправить оп Микрософту!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -160,8 +170,13 @@ namespace Stacker
                 LeftRackNumber = Convert.ToInt16(manager.GetPrivateString("Stacker", "LeftRackNumber"));
                 RightRackName = Convert.ToChar(manager.GetPrivateString("Stacker", "RightRackName"));
                 RightRackNumber = Convert.ToInt16(manager.GetPrivateString("Stacker", "RightRackNumber"));
+                CloseOrInform = Convert.ToBoolean(manager.GetPrivateString("General","CloseOrInform"));
                 string port = manager.GetPrivateString("PLC", "ComPort");
                 ComPort = new SerialPort(port, 115200, Parity.Even, 7, StopBits.One);
+                WeighAlpha1= Convert.ToInt16(manager.GetPrivateString("Weigh", "alfa1"));
+                WeighBeta1 = Convert.ToInt16(manager.GetPrivateString("Weigh", "beta1"));
+                WeighAlpha2 = Convert.ToInt16(manager.GetPrivateString("Weigh", "alfa2"));
+                WeighBeta2 = Convert.ToInt16(manager.GetPrivateString("Weigh", "beta2"));
             }
             catch (Exception ex)
             {

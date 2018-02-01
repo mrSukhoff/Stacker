@@ -3,6 +3,7 @@ using System.Text;
 
 namespace Stacker
 {
+    //Компонен не мой.
     public class INIManager
     {
         //Конструктор, принимающий путь к INI-файлу
