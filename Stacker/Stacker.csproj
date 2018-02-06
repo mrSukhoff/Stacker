@@ -125,7 +125,9 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <None Include="Resources\Stacker.ini" />
-    <None Include="Stacker.ini" />
+    <None Include="Stacker.ini">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

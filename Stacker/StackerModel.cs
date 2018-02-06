@@ -31,6 +31,9 @@ namespace Stacker
         public int MaxX { get; } = 55000;
         public int MaxY { get; } = 14000;
 
+        //Максимальный вес груза
+        public UInt16 MaxWeight;
+
         //коллекция заявок
         public List<Order> Orders { get; private set; } = new List<Order>();
         
@@ -117,8 +120,9 @@ namespace Stacker
 
             //Запускаем таймер для проверки изменений списка заявок
             FileTimer = new Timer(ReadOrdersFile, null, 0, 10000);
-                        
+
             //Открываем порт и создаем контроллер
+            
             try
             {
                 ComPort.Open();
@@ -131,6 +135,9 @@ namespace Stacker
                 //и максимальные значения ячеек
                 WriteDword(PLC, 14, 29);
                 WriteDword(PLC, 16, 16);
+                //записываем максимальный вес
+                WriteDword(PLC, 18, MaxWeight);
+
                 //запускаем таймер на чтение сосотояния контроллера
                 PlcTimer = new Timer(ReadStateWord, null, 0, 500);
             }
@@ -143,7 +150,7 @@ namespace Stacker
             
         }
 
-        //завершение работы программы  - нужно поправить оп Микрософту!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //завершение работы программы  - нужно поправить по Микрософту!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
          ~StackerModel()
         {
             Dispose();
@@ -173,7 +180,8 @@ namespace Stacker
                 CloseOrInform = Convert.ToBoolean(manager.GetPrivateString("General","CloseOrInform"));
                 string port = manager.GetPrivateString("PLC", "ComPort");
                 ComPort = new SerialPort(port, 115200, Parity.Even, 7, StopBits.One);
-                WeighAlpha1= Convert.ToInt16(manager.GetPrivateString("Weigh", "alfa1"));
+                MaxWeight = Convert.ToUInt16(manager.GetPrivateString("Weigh", "alfa1"));
+                WeighAlpha1 = Convert.ToInt16(manager.GetPrivateString("Weigh", "alfa1"));
                 WeighBeta1 = Convert.ToInt16(manager.GetPrivateString("Weigh", "beta1"));
                 WeighAlpha2 = Convert.ToInt16(manager.GetPrivateString("Weigh", "alfa2"));
                 WeighBeta2 = Convert.ToInt16(manager.GetPrivateString("Weigh", "beta2"));
@@ -439,6 +447,7 @@ namespace Stacker
             if (GetBitState(ErrorWord, 9)) addAlarm("Ошибка перемещения платформы");
             if (GetBitState(ErrorWord, 10)) addAlarm("Ошибка позиционирования крана");
             if (GetBitState(ErrorWord, 11)) addAlarm("Помеха движению по горизонтали");
+            if (GetBitState(ErrorWord, 12)) addAlarm("Превышен максимальный вес груза");
             ErrorAppeared?.Invoke();
 
             void addAlarm(string alarmText)
