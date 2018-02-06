@@ -120,8 +120,9 @@ namespace Stacker
 
             //Запускаем таймер для проверки изменений списка заявок
             FileTimer = new Timer(ReadOrdersFile, null, 0, 10000);
-                        
+
             //Открываем порт и создаем контроллер
+            
             try
             {
                 ComPort.Open();

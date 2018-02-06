@@ -3,7 +3,7 @@
 
 namespace Stacker
 {
-    class Order : IEquatable<Order>
+    public class Order : IEquatable<Order>
     {
         //поля хранят имена и номера штабелеров
         public static char LeftStackerName;
@@ -57,14 +57,14 @@ namespace Stacker
             ManufacturersBatchNumber = strings[6];
             Amount = strings[7];
             StackerNumber = Convert.ToInt32(strings[8]);
-            Row = Convert.ToInt32(strings[9]);
-            Floor = Convert.ToInt32(strings[10]);
+            Row = Convert.ToUInt16(strings[9]);
+            Floor = Convert.ToUInt16(strings[10]);
             Cell = strings[11];
-            int sn = Convert.ToInt32(StackerNumber);
+            int sn = Convert.ToUInt16(StackerNumber);
             if ((sn == LeftStackerNumber) || (sn == RightStackerNumber))
                 StackerName = sn == LeftStackerNumber ? LeftStackerName : RightStackerName;
             else StackerName = '?';
-            this.Address = StackerName +"-"+ Row + "-" + Floor;
+            Address = StackerName +"-"+ Row + "-" + Floor;
         }
 
         //для интерфейса IEquatable сравнение двух заявок
