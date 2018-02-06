@@ -59,28 +59,5 @@ namespace Stacker.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на [General]
-        ///OrderFile=D:\\БЕРТА\БЕРТА Сухарев\Projects\Stacker\Orders\instr_exp.txt
-        ///ArchiveFile=D:\\БЕРТА\БЕРТА Сухарев\Projects\Stacker\Orders\instr_imp.txt
-        ///
-        ///[Stacker]
-        ///LeftRackName=А
-        ///LeftRackNumber=1
-        ///RightRackName=Б
-        ///RightRackNumber=2
-        ///Depth=29
-        ///Hight=16
-        ///
-        ///[PLC]
-        ///ComPort=Com10
-        ///.
-        /// </summary>
-        internal static string Stacker {
-            get {
-                return ResourceManager.GetString("Stacker", resourceCulture);
-            }
-        }
     }
 }
