@@ -651,7 +651,7 @@ namespace Stacker
         }
 
         //Команда "привезти/увезти" bring = true - привезти
-        public void BringOrTakeAwayCommand(bool rack, int row, int floor, bool bring)
+        public void BringOrTakeAway(bool rack, int row, int floor, bool bring)
         {
             if (PLC != null)
             {
@@ -679,7 +679,7 @@ namespace Stacker
         }
         
         //Команда "привезти/увезти" bring = true - привезти
-        public void BringOrTakeAwayOrder(bool bring)
+        public void BringOrTakeAway(bool bring)
         {
             if (SelectedOrderNumber == -1) throw new Exception("Не установлен номер заявки");
             if (PLC != null)

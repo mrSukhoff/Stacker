@@ -565,7 +565,7 @@ namespace Stacker
             int f = FloorSemiAutoCombobox.SelectedIndex + 1;
             //если была нажата кнопка привезти устанавливае переменную в true
             bool bring = sender == BringSemiAutoButton ? true : false;
-            model.BringOrTakeAwayCommand(stack,r,f,bring);           
+            model.BringOrTakeAway(stack,r,f,bring);           
             bt.Add(sender as Button);
             (sender as Button).IsEnabled = false; 
         }
@@ -577,7 +577,7 @@ namespace Stacker
             if (model.SelectOrder(i))
             {
                 //Даем команду привезти
-                model.BringOrTakeAwayOrder(true);
+                model.BringOrTakeAway(true);
                 //Выключаем кнопку
                 BringAutoButton.IsEnabled = false;
                 //Заменяем обработчик события "команда выполена"
@@ -595,11 +595,8 @@ namespace Stacker
         //увозим контейнер на место
         private void TakeAwayAutoButton_Click(object sender, RoutedEventArgs e)
         {
-            int i = OrdersLitsView.SelectedIndex;
-            //Если не выбран ни один элемент - выходим
-            if (i < 0) return;
             //Даем команду привезти
-            model.BringOrTakeAwayOrder(false);
+            model.BringOrTakeAway(false);
             //Выключаем кнопку
             TakeAwayAutoButton.IsEnabled = false;
             //Заменяем обработчик события "команда выполена"
@@ -623,22 +620,28 @@ namespace Stacker
         private void CancelAutoButton_Click(object sender, RoutedEventArgs e)
         {
             int i = OrdersLitsView.SelectedIndex;
-            //Если не выбран ни один элемент - выходим
+            //Если элемент выбран, удаляем его, иначе выходим
             if (model.SelectOrder(i)) model.FinishOrder(false);
+            OrdersLitsView.Items.Refresh();
         }
 
+        //нажатие кнопки "взвесить"
         private void WeighButton_Click(object sender, RoutedEventArgs e)
         {
             bt.Add(sender as Button);
             (sender as Button).IsEnabled = false;
+            //очищаем графики
             WeightPointCollection.Clear();
             MeasuredWeight1PointCollection.Clear();
             MeasuredWeight2PointCollection.Clear();
+            //подписываемся для считывания текущих значений
             model.CoordinateReaded += MakeGraph;
             model.CommandDone += WeighDone;
+            //запускаем взвешивание
             model.Weigh();
         }
 
+        //по актуальному значению тока строим график
         private void MakeGraph()
         {
             double w = 450 - model.Weight;
@@ -647,9 +650,9 @@ namespace Stacker
             c++;
         }
 
+        //по окончании взвешивания рисуем 7 перпендикулярных красных линий ;-)
         private void WeighDone()
         {
-            //рисуем 7 перпендикулярных красных линий ;-)
             int y = 450 - model.MeasuredWeight;
             Point point11 = new Point(0,y);
             Point point12 = new Point(300, y);
