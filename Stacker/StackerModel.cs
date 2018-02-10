@@ -461,7 +461,6 @@ namespace Stacker
                 }
                 catch (Exception ex)
                 { MessageBox.Show(ex.Message, caption: "ErrorHandler"); }
-
             }
         }
 
