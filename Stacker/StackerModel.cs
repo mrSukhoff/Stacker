@@ -71,6 +71,9 @@ namespace Stacker
         //флаг наличия контейнера на кране
         public bool IsBinOnPlatform;
 
+        //флаг нахождения крана на начальной позиции
+        public bool IsStartPosiotion;
+
         //коэффициенты для пересчета тока ПЧ в вес
         public int WeighAlpha1;
         public int WeighBeta1;
@@ -147,7 +150,6 @@ namespace Stacker
             }
 
             if (!ComPort.IsOpen && !CloseOrInform) throw new NullReferenceException("!");
-            
         }
 
         //завершение работы программы  - нужно поправить по Микрософту!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -386,38 +388,28 @@ namespace Stacker
                     ActualRow = word[4];
                     ActualFloor = word[6];
 
+                    //читаем слово состояния ПЛК
                     word = PLC.ReadHoldingRegisters(1, 0x1064, 8);
 
                     int stateWord = word[0];
                     Weight = word[2] > 32767 ? 0 : word[2];
                     MeasuredWeight = word[4];
                     MeasuredWeight2 = word[6];
-
-                    /*
-                    //читаем слово состояния ПЛК
-                    ReadDword(PLC, 100, out int stateWord);
-                    ReadDword(PLC, 102, out int weight);
-                    weight = weight > 33000 ? 0: weight;
-                    Weight = weight;
-                    ReadDword(PLC, 104, out weight);
-                    MeasuredWeight = weight;
-                    ReadDword(PLC, 106, out weight);
-                    MeasuredWeight2 = weight;
-                    */
-
+                    
                     //вызываем событие по чтению координат
                     CoordinateReaded();
 
                     //если поменялось слово состояния
-                    if (stateWord != StateWord) SomethingChanged();
-
-                    //если появился флаг завершения
-                    if (GetBitState(stateWord, 15) && !GetBitState(StateWord, 15))
+                    if (stateWord != StateWord)
                     {
+                        IsStartPosiotion = GetBitState(stateWord, 0);
                         IsBinOnPlatform = GetBitState(stateWord, 1);
-                        CommandDone();
+                        SomethingChanged();
                     }
 
+                    //если появился флаг завершения
+                    if (GetBitState(stateWord, 15) && !GetBitState(StateWord, 15)) CommandDone();
+                    
                     //если появился флаг ошибки вызываем обрабочик ошибок
                     if (GetBitState(stateWord, 13) && !GetBitState(StateWord, 13)) ErrorHandler();
 
@@ -650,7 +642,7 @@ namespace Stacker
             }
         }
 
-        //Команда "привезти/увезти" bring = true - привезти
+        //Команда "привезти/увезти" из/в конкретную ячейку. bring = true - привезти
         public void BringOrTakeAway(bool rack, int row, int floor, bool bring)
         {
             if (PLC != null)
@@ -678,7 +670,7 @@ namespace Stacker
             }
         }
         
-        //Команда "привезти/увезти" bring = true - привезти
+        //Команда "привезти/увезти" по зараннее установленной заявке, bring = true - привезти
         public void BringOrTakeAway(bool bring)
         {
             if (SelectedOrderNumber == -1) throw new Exception("Не установлен номер заявки");

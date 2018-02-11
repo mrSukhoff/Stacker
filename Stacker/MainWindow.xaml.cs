@@ -127,7 +127,7 @@ namespace Stacker
             DownButton.PreviewMouseLeftButtonDown += DownButton_PreviewMouseLeftButtonDown;
 
             //источник данных для списка ошибок
-            ErrorListView.ItemsSource = model.ErrorList;
+            ErrorListBox.ItemsSource = model.ErrorList;
 
             //изначально кнопка "увезти" не актиквна, так как предполагается, что увозить пока нечего
             TakeAwayAutoButton.IsEnabled = false;
@@ -208,40 +208,28 @@ namespace Stacker
         //Обновление координат и слова состояния
         private void UpdateCoordinate()
         {
-            string sw = Convert.ToString(model.StateWord, 2);
-            while (sw.Length < 16) sw = "0" + sw;
-            Dispatcher.Invoke( () => StateWordLabel.Content = "State Word : " + sw );
-
             string r = model.ActualRow.ToString();
             r = r.Length == 1 ? "0" + r : r;
-            Dispatcher.Invoke( () => RowLabel.Content = "R:" + r);
+            Dispatcher.Invoke( () => RowLabel.Content = "Ряд : " + r);
 
             string f = model.ActualFloor.ToString();
             f = f.Length == 1 ? "0" + f : f;
-            Dispatcher.Invoke( () => FloorLabel.Content = "F:" + f );
+            Dispatcher.Invoke( () => FloorLabel.Content = "Этаж : " + f );
 
             string x = model.ActualX.ToString();
             while (x.Length < 5) x = "0" + x;
-            Dispatcher.Invoke( () => XLabel.Content = "X:" +  x);
+            Dispatcher.Invoke( () => XLabel.Content = "X : " +  x);
 
             string y = model.ActualY.ToString();
             while (y.Length < 5) y = "0" + y;
-            Dispatcher.Invoke( () => YLabel.Content = "Y:" + y );
+            Dispatcher.Invoke( () => YLabel.Content = "Y : " + y );
 
-            Dispatcher.Invoke( () => WeightLabel.Content = "Weight:" + model.Weight);
         }
         
         //
         private void ButtonsAndBins()
         {
-            if ((model.StateWord & 2) == 2)
-            {
-                Dispatcher.Invoke( () => BringAutoButton.IsEnabled = false );
-                Dispatcher.Invoke( () => TakeAwayAutoButton.IsEnabled = true );
-
-                Dispatcher.Invoke( () => BringSemiAutoButton.IsEnabled = false );
-                Dispatcher.Invoke( () => TakeAwaySemiAutoButton.IsEnabled = true );
-            }
+            SPLabel.IsEnabled = model.IsStartPosiotion;
         }
 
         //При изменении адреса ячеек перечитываем координаты
@@ -387,7 +375,7 @@ namespace Stacker
         private void SubmitErrorButton_Click(object sender, RoutedEventArgs e)
         {
             model.SubmitError();
-            ErrorListView.Items.Refresh();
+            ErrorListBox.Items.Refresh();
             ManPlatformLeftButton.IsEnabled = true;
             ManPlatformRightButton.IsEnabled = true;
             GotoButton.IsEnabled = true;

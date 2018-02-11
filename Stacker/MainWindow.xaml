@@ -221,13 +221,12 @@
             <RowDefinition/>
             <RowDefinition Height="Auto" MinHeight="23"/>
         </Grid.RowDefinitions>
-        <StatusBar x:Name="StatusPlane" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="14" Background="#FF3E606F" Grid.Row="1" Margin="0,0,0,-4">
-            <Label x:Name="StateWordLabel" Content="State Word: 000000000000000" Foreground="#FFFCFFF5"/>
-            <Label x:Name="RowLabel" Content="R:00"/>
-            <Label x:Name="FloorLabel" Content="F:00"/>
-            <Label x:Name="XLabel" Content="X:000000"/>
-            <Label x:Name="YLabel" Content="Y:000000"/>
-            <Label x:Name="WeightLabel" Content="Weight:0"/>
+        <StatusBar x:Name="StatusPlane" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="14" Background="#FF3E606F" Grid.Row="1" Margin="0,0,0,-4" Height="35">
+            <Label x:Name="RowLabel" Content="Ряд : 00"/>
+            <Label x:Name="FloorLabel" Content="Этаж : 00"/>
+            <Label x:Name="XLabel" Content="X : 000000"/>
+            <Label x:Name="YLabel" Content="Y : 000000"/>
+            <Label x:Name="SPLabel" Content="Нач.Поз." IsEnabled="False"/>
         </StatusBar>
         <TabControl x:Name="Tabs" Margin="1" FontSize="16" Background="#FF193441" BorderBrush="{x:Null}">
             <TabItem x:Name="AutoTabItrm" Header="_Автоматический режим " Margin="0" BorderBrush="#FF91AAB4" Background="#FFCBDBD7" Height="30">
@@ -273,8 +272,8 @@
                     <ComboBox x:Name="FloorSemiAutoCombobox" Margin="0,0,95,0" Grid.Row="2" FontSize="36" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" IsSynchronizedWithCurrentItem="False" BorderBrush="#FFFCFFF5" Background="#FFCBDBB7" HorizontalAlignment="Right" Width="100" Height="100" VerticalAlignment="Bottom" Grid.ColumnSpan="2"/>
                     <Label Content="Этаж" HorizontalAlignment="Left" Margin="95,0,0,0" Width="100" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="2" FontWeight="Bold" Foreground="#FFFCFFF5" Grid.Column="2" Height="100" Grid.ColumnSpan="2" VerticalAlignment="Bottom"/>
                     <Button x:Name="BringSemiAutoButton" Content="_Привезти" Height="50" Margin="0,0,0,10" Grid.Row="3" VerticalAlignment="Bottom" FontSize="24" FontWeight="Bold" Background="#FF91AAB4" HorizontalAlignment="Right" Width="150" BorderBrush="#FFCBDBD7"  HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="BringOrTakeAwaySemiAutoButton_Click"/>
-                    <Button x:Name="TakeAwaySemiAutoButton" Content="Увезти" Grid.Column="3" Height="50" Margin="0,0,0,10" Grid.Row="3" VerticalAlignment="Bottom" FontSize="24" FontWeight="Bold" Background="#FF91AAB4" HorizontalAlignment="Left" Width="150" BorderBrush="#FFCBDBD7" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="BringOrTakeAwaySemiAutoButton_Click"/>
-                    <Button x:Name="SemiAutoStopButton" Content="СТОП!" Grid.Column="3" HorizontalAlignment="Right" Height="50" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="100" BorderBrush="#FFCBDBD7" Background="#FF9E2E2E" FontSize="24" Grid.Row="3" Style="{DynamicResource StopButtonStyle}" Click="StopButton_Click"/>
+                    <Button x:Name="TakeAwaySemiAutoButton" Content="_Увезти" Grid.Column="3" Height="50" Margin="0,0,0,10" Grid.Row="3" VerticalAlignment="Bottom" FontSize="24" FontWeight="Bold" Background="#FF91AAB4" HorizontalAlignment="Left" Width="150" BorderBrush="#FFCBDBD7" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="BringOrTakeAwaySemiAutoButton_Click"/>
+                    <Button x:Name="SemiAutoStopButton" Content="_СТОП!" Grid.Column="3" HorizontalAlignment="Right" Height="50" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="100" BorderBrush="#FFCBDBD7" Background="#FF9E2E2E" FontSize="24" Grid.Row="3" Style="{DynamicResource StopButtonStyle}" Click="StopButton_Click"/>
                     <Label x:Name="SemiAutoAddressLabel" Content="X-0-0" HorizontalAlignment="Center" Margin="79,0,79,14" Width="132" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="3" Grid.ColumnSpan="2" FontWeight="Bold" VerticalAlignment="Bottom" Foreground="#FFFCFFF5" Grid.Column="1"/>
                     <ComboBox x:Name="RackSemiAutoComboBox" Margin="0,0,95,0" FontSize="36" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsSynchronizedWithCurrentItem="False" BorderBrush="#FFFCFFF5" HorizontalAlignment="Right" Width="100" Background="#FFCBDBB7" BorderThickness="3" SnapsToDevicePixels="True" Grid.ColumnSpan="2" Height="98" VerticalAlignment="Bottom"/>
                 </Grid>
@@ -378,13 +377,7 @@
                         <RowDefinition/>
                         <RowDefinition Height="70"/>
                     </Grid.RowDefinitions>
-                    <ListView x:Name="ErrorListView" Margin="3" Background="#FF91AAB4" Foreground="#FF9E2E2E">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn/>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
+                    <ListBox x:Name="ErrorListBox" Margin="3" Background="#FF91AAB4" Foreground="#FFCF3D3D" FontSize="24"/>
                     <Button x:Name="SubmitErrorButton" Content="Подтвердить" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="286,0,285,10" Grid.Row="1" FontSize="24" FontWeight="Bold" BorderBrush="#FFCBDBD7" Background="#FF91AAB4" UseLayoutRounding="False" BorderThickness="3,0" MinWidth="175" MinHeight="50" MaxWidth="175" MaxHeight="50" Click="SubmitErrorButton_Click"/>
                 </Grid>
             </TabItem>
