@@ -660,6 +660,7 @@ namespace Stacker
 
             w = model.MeasuredWeight2 - model.WeightAlpha2;
             w = model.WeightBeta2 == 0 ? w : w * 100 / model.WeightBeta2;
+
             Dispatcher.Invoke(() => MeasuredWeightLabel2.Content = w.ToString() + " кг");
 
             model.CommandDone -= WeighDone;

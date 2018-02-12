@@ -182,11 +182,11 @@ namespace Stacker
                 CloseOrInform = Convert.ToBoolean(manager.GetPrivateString("General","CloseOrInform"));
                 string port = manager.GetPrivateString("PLC", "ComPort");
                 ComPort = new SerialPort(port, 115200, Parity.Even, 7, StopBits.One);
-                MaxWeight = Convert.ToUInt16(manager.GetPrivateString("Weigh", "MaxWeight"));
                 WeightAlpha1 = Convert.ToInt16(manager.GetPrivateString("Weigh", "alfa1"));
                 WeightBeta1 = Convert.ToInt16(manager.GetPrivateString("Weigh", "beta1"));
                 WeightAlpha2 = Convert.ToInt16(manager.GetPrivateString("Weigh", "alfa2"));
                 WeightBeta2 = Convert.ToInt16(manager.GetPrivateString("Weigh", "beta2"));
+                MaxWeight =(UInt16) (Convert.ToUInt16(manager.GetPrivateString("Weigh", "MaxWeight"))/100*WeightAlpha1+WeightBeta1);
             }
             catch (Exception ex)
             {
