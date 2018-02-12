@@ -75,10 +75,10 @@ namespace Stacker
         public bool IsStartPosiotion;
 
         //коэффициенты для пересчета тока ПЧ в вес
-        public int WeighAlpha1;
-        public int WeighBeta1;
-        public int WeighAlpha2;
-        public int WeighBeta2;
+        public int WeightAlpha1;
+        public int WeightBeta1;
+        public int WeightAlpha2;
+        public int WeightBeta2;
 
         //внутренние поля класса ******************************************************************************
 
@@ -182,11 +182,11 @@ namespace Stacker
                 CloseOrInform = Convert.ToBoolean(manager.GetPrivateString("General","CloseOrInform"));
                 string port = manager.GetPrivateString("PLC", "ComPort");
                 ComPort = new SerialPort(port, 115200, Parity.Even, 7, StopBits.One);
-                MaxWeight = Convert.ToUInt16(manager.GetPrivateString("Weigh", "alfa1"));
-                WeighAlpha1 = Convert.ToInt16(manager.GetPrivateString("Weigh", "alfa1"));
-                WeighBeta1 = Convert.ToInt16(manager.GetPrivateString("Weigh", "beta1"));
-                WeighAlpha2 = Convert.ToInt16(manager.GetPrivateString("Weigh", "alfa2"));
-                WeighBeta2 = Convert.ToInt16(manager.GetPrivateString("Weigh", "beta2"));
+                MaxWeight = Convert.ToUInt16(manager.GetPrivateString("Weigh", "MaxWeight"));
+                WeightAlpha1 = Convert.ToInt16(manager.GetPrivateString("Weigh", "alfa1"));
+                WeightBeta1 = Convert.ToInt16(manager.GetPrivateString("Weigh", "beta1"));
+                WeightAlpha2 = Convert.ToInt16(manager.GetPrivateString("Weigh", "alfa2"));
+                WeightBeta2 = Convert.ToInt16(manager.GetPrivateString("Weigh", "beta2"));
             }
             catch (Exception ex)
             {
