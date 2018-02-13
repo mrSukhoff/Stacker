@@ -58,7 +58,7 @@ namespace Stacker
         public List<string> ErrorList { get; private set; } = new List<string>();
 
         //Слово состояния контроллера
-        public int StateWord { get; private set; }
+        public int StateWord { get; private set; } = 0;
 
         //вес или что-то измеренное с частотника
         //мгновенное значение тока
@@ -403,7 +403,7 @@ namespace Stacker
                     if (stateWord != StateWord)
                     {
                         IsStartPosiotion = GetBitState(stateWord, 0);
-                        IsBinOnPlatform = GetBitState(stateWord, 1);
+                        IsBinOnPlatform = GetBitState(stateWord, 10);
                         SomethingChanged();
                     }
 
@@ -712,6 +712,12 @@ namespace Stacker
             }
         }
 
-
+        //читает бит наличие ящика на платформе в слове состояния
+        public bool ChekBinOnPlatform()
+        {
+            int word = 0;
+            if (PLC != null) ReadDword(PLC, 100, out word);
+            return GetBitState(word, 10);
+        }
     }
 }
