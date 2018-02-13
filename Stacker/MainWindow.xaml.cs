@@ -67,12 +67,12 @@ namespace Stacker
                 GridSetUp();
             }
         }
-                
+
         //Настраиваем визуальные компоненты
         private void SetUpComponents()
         {
             //Подписываем кнопки
-            ManPlatformLeftButton.Content = model.LeftRackName; 
+            ManPlatformLeftButton.Content = model.LeftRackName;
             ManPlatformRightButton.Content = model.RightRackName;
 
             //Заполняем combobox'ы номерами рядов
@@ -107,7 +107,7 @@ namespace Stacker
             RackSemiAutoComboBox.SelectionChanged += SemiAutoComboBox_SelectionChanged;
             RowSemiAutoComboBox.SelectionChanged += SemiAutoComboBox_SelectionChanged;
             FloorSemiAutoCombobox.SelectionChanged += SemiAutoComboBox_SelectionChanged;
-            
+
             //ручной режим
             RackComboBox.SelectionChanged += CellChanged;
             RowComboBox.SelectionChanged += CellChanged;
@@ -129,13 +129,10 @@ namespace Stacker
             //источник данных для списка ошибок
             ErrorListBox.ItemsSource = model.ErrorList;
 
-            //изначально кнопка "увезти" не актиквна, так как предполагается, что увозить пока нечего
-            TakeAwayAutoButton.IsEnabled = false;
-
             //считываем координаты
             CellChanged(null,null);
 
-            //настройка графика
+            //настройка графика веса
             WeightPolyline.Stroke = Brushes.AliceBlue;
             WeightPolyline.StrokeThickness = 2;
             WeightPolyline.FillRule = FillRule.EvenOdd;
@@ -153,6 +150,19 @@ namespace Stacker
             MeasuredWeightPolyline2.FillRule = FillRule.EvenOdd;
             MeasuredWeightPolyline2.Points = MeasuredWeight2PointCollection;
             WeightGrid.Children.Add(MeasuredWeightPolyline2);
+
+            //проверяем при старте наличие щика на платформе и устанавливаем активные кнопки
+            if (model != null)
+            {
+                bool isBin = model.ChekBinOnPlatform();
+                TakeAwaySemiAutoButton.IsEnabled = isBin;
+                BringSemiAutoButton.IsEnabled = !isBin;
+                BringAutoButton.IsEnabled = !isBin;
+                //Кнопка "увезти" активируется только при работе с заявкой
+                TakeAwayAutoButton.IsEnabled = false;
+                //Кнопка "отмена" активируется при выборе заявки
+                CancelAutoButton.IsEnabled = false;
+            }
         }
 
         //Настройки вида списка заявок
@@ -230,6 +240,7 @@ namespace Stacker
         private void ButtonsAndBins()
         {
             Dispatcher.Invoke(() => SPLabel.IsEnabled = model.IsStartPosiotion);
+            
         }
 
         //При изменении адреса ячеек перечитываем координаты
@@ -611,6 +622,7 @@ namespace Stacker
             //Если элемент выбран, удаляем его, иначе выходим
             if (model.SelectOrder(i)) model.FinishOrder(false);
             OrdersLitsView.Items.Refresh();
+            CancelAutoButton.IsEnabled = false;
         }
 
         //нажатие кнопки "взвесить"
@@ -668,6 +680,8 @@ namespace Stacker
             c = 0;
         }
 
+        //при выборе какой-либо заявки в списке активируем кнопку "отменить"
+        private void OrdersLitsView_SelectionChanged(object sender, SelectionChangedEventArgs e) => CancelAutoButton.IsEnabled = true;
     }
 }
 

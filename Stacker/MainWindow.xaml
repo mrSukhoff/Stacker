@@ -242,7 +242,7 @@
                     <Button x:Name="BringAutoButton" Content="_Привезти" HorizontalAlignment="Right" Height="50" Width="150" Margin="0,0,146,10"         VerticalAlignment="Bottom" Grid.Row="1" FontSize="24" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Bold" Click="BringAutoButton_Click"  />
                     <Button x:Name="TakeAwayAutoButton" Content="_Увезти" HorizontalAlignment="Left" Margin="147,0,0,10"  FontWeight="Bold" Grid.Row="1" MinHeight="50" VerticalAlignment="Bottom" FontSize="24" Height="50" Width="150" Background="#FF91AAB4" Grid.Column="1" BorderBrush="#FFCBDBD7" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="TakeAwayAutoButton_Click" />
                     <Button x:Name="CancelAutoButton" Content="_Отменить" HorizontalAlignment="Center" Width="150" Margin="365,0,363,10"     FontWeight="Bold" Grid.Row="1" Height="50" VerticalAlignment="Bottom" FontSize="24" Background="#FF91AAB4" Grid.ColumnSpan="2" BorderBrush="#FFCBDBD7"  VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="CancelAutoButton_Click" />
-                    <ListView x:Name="OrdersLitsView" Grid.ColumnSpan="2" FontSize="24" Background="#FF91AAB4" BorderBrush="#FF3E606F" Margin="0" Foreground="Black">
+                    <ListView x:Name="OrdersLitsView" Grid.ColumnSpan="2" FontSize="24" Background="#FF91AAB4" BorderBrush="#FF3E606F" Margin="0" Foreground="Black" SelectionChanged="OrdersLitsView_SelectionChanged">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn/>
