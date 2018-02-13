@@ -528,6 +528,7 @@ namespace Stacker
         }
         private void DownButton_NextLine(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            
             model.NextLineDownCommand();
             bt.Add((Button)sender);
             (sender as Button).IsEnabled = false;
@@ -555,13 +556,21 @@ namespace Stacker
             //CloserButton.PreviewMouseLeftButtonDown += CloserButton_NextLine;
             //UpButton.PreviewMouseLeftButtonDown += UpButton_NextLine;
             //DownButton.PreviewMouseLeftButtonDown += DownButton_NextLine;
+
+            FartherButton.Foreground = new SolidColorBrush(Colors.Black);
+            CloserButton.Foreground = new SolidColorBrush(Colors.Black);
+            UpButton.Foreground = new SolidColorBrush(Colors.Black);
+            DownButton.Foreground = new SolidColorBrush(Colors.Black);
         }
         private void LineMotionCheckbox_Unchecked(object sender, RoutedEventArgs e)
         {
             FartherButton.PreviewMouseLeftButtonDown -= FartherButton_NextLine;
-            CloserButton.PreviewMouseLeftButtonDown -= CloserButton_NextLine;
-            UpButton.PreviewMouseLeftButtonDown -= UpButton_NextLine;
-            DownButton.PreviewMouseLeftButtonDown -= DownButton_NextLine;
+            CloserButton.PreviewMouseLeftButtonDown -= FartherButton_NextLine;
+            UpButton.PreviewMouseLeftButtonDown -= FartherButton_NextLine;
+            DownButton.PreviewMouseLeftButtonDown -= FartherButton_NextLine;
+            //CloserButton.PreviewMouseLeftButtonDown -= CloserButton_NextLine;
+            //UpButton.PreviewMouseLeftButtonDown -= UpButton_NextLine;
+            //DownButton.PreviewMouseLeftButtonDown -= DownButton_NextLine;
 
             FartherButton.PreviewMouseLeftButtonUp += FartherButton_PreviewMouseLeftButtonUp;
             FartherButton.PreviewMouseLeftButtonDown += FartherButton_PreviewMouseLeftButtonDown;
@@ -574,6 +583,11 @@ namespace Stacker
 
             DownButton.PreviewMouseLeftButtonUp += DownButton_PreviewMouseLeftButtonUp;
             DownButton.PreviewMouseLeftButtonDown += DownButton_PreviewMouseLeftButtonDown;
+
+            FartherButton.Foreground = new SolidColorBrush(Color.FromArgb(0xFF,0xFC,0xFF,0xF5));
+            CloserButton.Foreground = new SolidColorBrush(Color.FromArgb(0xFF, 0xFC, 0xFF, 0xF5));
+            UpButton.Foreground = new SolidColorBrush(Color.FromArgb(0xFF, 0xFC, 0xFF, 0xF5));
+            DownButton.Foreground = new SolidColorBrush(Color.FromArgb(0xFF, 0xFC, 0xFF, 0xF5));
 
             FartherButton.IsEnabled = true;
             CloserButton.IsEnabled = true;
