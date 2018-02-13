@@ -58,13 +58,16 @@ namespace Stacker
                 model.CommandDone += CommandDone;
                 model.ErrorAppeared += ErrorAppeared;
                 model.CoordinateReaded += UpdateCoordinate;
-                model.SomethingChanged +=ButtonsAndBins;
+                model.SomethingChanged +=SomthingChanged;
 
                 //Настраиваем визуальные компоненты
                 SetUpComponents();
 
                 //Настраиваем вид списка заявок
                 GridSetUp();
+
+                //прописываем обработчики для кнопок
+                SetEventHandlers();
             }
         }
 
@@ -101,36 +104,8 @@ namespace Stacker
             RackSemiAutoComboBox.Items.Add(model.RightRackName);
             RackSemiAutoComboBox.SelectedIndex = 0;
 
-            //присваеваем обработчики тут, а не статически, чтобы они не вызывались 
-            //во время первоначальных настроек
-            //полуавтомат
-            RackSemiAutoComboBox.SelectionChanged += SemiAutoComboBox_SelectionChanged;
-            RowSemiAutoComboBox.SelectionChanged += SemiAutoComboBox_SelectionChanged;
-            FloorSemiAutoCombobox.SelectionChanged += SemiAutoComboBox_SelectionChanged;
-
-            //ручной режим
-            RackComboBox.SelectionChanged += CellChanged;
-            RowComboBox.SelectionChanged += CellChanged;
-            FloorComboBox.SelectionChanged += CellChanged;
-            CoordinateXTextBox.TextChanged += CoordinateChanged;
-            CoordinateYTextBox.TextChanged += CoordinateChanged;
-            IsNOTAvailableCheckBox.Click += IsNOTAvailableCheckBox_Click;
-
-            //дефолтные методы обработки нажатия кнопок перемещения манипулятора в ручном режиме
-            FartherButton.PreviewMouseLeftButtonUp += FartherButton_PreviewMouseLeftButtonUp;
-            FartherButton.PreviewMouseLeftButtonDown += FartherButton_PreviewMouseLeftButtonDown;
-            CloserButton.PreviewMouseLeftButtonUp += CloserButton_PreviewMouseLeftButtonUp;
-            CloserButton.PreviewMouseLeftButtonDown += CloserButton_PreviewMouseLeftButtonDown;
-            UpButton.PreviewMouseLeftButtonUp += UpButton_PreviewMouseLeftButtonUp;
-            UpButton.PreviewMouseLeftButtonDown += UpButton_PreviewMouseLeftButtonDown;
-            DownButton.PreviewMouseLeftButtonUp += DownButton_PreviewMouseLeftButtonUp;
-            DownButton.PreviewMouseLeftButtonDown += DownButton_PreviewMouseLeftButtonDown;
-
             //источник данных для списка ошибок
             ErrorListBox.ItemsSource = model.ErrorList;
-
-            //считываем координаты
-            CellChanged(null,null);
 
             //настройка графика веса
             WeightPolyline.Stroke = Brushes.AliceBlue;
@@ -151,7 +126,7 @@ namespace Stacker
             MeasuredWeightPolyline2.Points = MeasuredWeight2PointCollection;
             WeightGrid.Children.Add(MeasuredWeightPolyline2);
 
-            //проверяем при старте наличие щика на платформе и устанавливаем активные кнопки
+            //проверяем при старте наличие ящика на платформе и устанавливаем активные кнопки
             if (model != null)
             {
                 bool isBin = model.ChekBinOnPlatform();
@@ -197,6 +172,38 @@ namespace Stacker
             OrdersLitsView.ItemsSource = model.Orders;
         }
 
+        //прописываем обработчики событий
+        private void SetEventHandlers()
+        {
+            //присваеваем обработчики тут, а не статически, чтобы они не вызывались 
+            //во время первоначальных настроек
+            //полуавтомат
+            RackSemiAutoComboBox.SelectionChanged += SemiAutoComboBox_SelectionChanged;
+            RowSemiAutoComboBox.SelectionChanged += SemiAutoComboBox_SelectionChanged;
+            FloorSemiAutoCombobox.SelectionChanged += SemiAutoComboBox_SelectionChanged;
+
+            //ручной режим
+            RackComboBox.SelectionChanged += CellChanged;
+            RowComboBox.SelectionChanged += CellChanged;
+            FloorComboBox.SelectionChanged += CellChanged;
+            CoordinateXTextBox.TextChanged += CoordinateChanged;
+            CoordinateYTextBox.TextChanged += CoordinateChanged;
+            IsNOTAvailableCheckBox.Click += IsNOTAvailableCheckBox_Click;
+
+            //дефолтные методы обработки нажатия кнопок перемещения манипулятора в ручном режиме
+            FartherButton.PreviewMouseLeftButtonUp += FartherButton_PreviewMouseLeftButtonUp;
+            FartherButton.PreviewMouseLeftButtonDown += FartherButton_PreviewMouseLeftButtonDown;
+            CloserButton.PreviewMouseLeftButtonUp += CloserButton_PreviewMouseLeftButtonUp;
+            CloserButton.PreviewMouseLeftButtonDown += CloserButton_PreviewMouseLeftButtonDown;
+            UpButton.PreviewMouseLeftButtonUp += UpButton_PreviewMouseLeftButtonUp;
+            UpButton.PreviewMouseLeftButtonDown += UpButton_PreviewMouseLeftButtonDown;
+            DownButton.PreviewMouseLeftButtonUp += DownButton_PreviewMouseLeftButtonUp;
+            DownButton.PreviewMouseLeftButtonDown += DownButton_PreviewMouseLeftButtonDown;
+
+            //считываем координаты первоначально
+            CellChanged(null, null);
+        }
+
         //обработчик события "команда выполнена"
         private void CommandDone()
         {
@@ -206,6 +213,10 @@ namespace Stacker
                 Dispatcher.Invoke(() => (b.IsEnabled = true));
             }
             bt.Clear();
+
+            //кнопки привезти/увезти устанавливаем в зависиомсти от наличия корзины
+            BringSemiAutoButton.IsEnabled = !model.IsBinOnPlatform;
+            TakeAwaySemiAutoButton.IsEnabled = model.IsBinOnPlatform;
         }
 
         //обработчик события "ошибка"
@@ -233,14 +244,13 @@ namespace Stacker
             string y = model.ActualY.ToString();
             while (y.Length < 5) y = "0" + y;
             Dispatcher.Invoke( () => YLabel.Content = "Y : " + y );
-
         }
         
-        //
-        private void ButtonsAndBins()
+        //обработка изменений в слове состояния контроллера крана
+        private void SomthingChanged()
         {
+            //устанавливаем индикатор начальной позиции
             Dispatcher.Invoke(() => SPLabel.IsEnabled = model.IsStartPosiotion);
-            
         }
 
         //При изменении адреса ячеек перечитываем координаты
@@ -366,6 +376,7 @@ namespace Stacker
             }
         }
 
+        //в разделе "движение по координатам" при выборе ячейки записываем её координаты в поля ввода
         private void XYComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             int r = RowXComboBox.SelectedIndex + 1;
@@ -382,21 +393,17 @@ namespace Stacker
             if (model != null) model.Dispose();
         }
 
-        //Обработчик нажатия кнопки подтверждения ошибки
+        //Обработчик нажатия кнопки подтверждения ошибок
         private void SubmitErrorButton_Click(object sender, RoutedEventArgs e)
         {
+            //даем команду на сброс ошибки
             model.SubmitError();
-            ErrorListBox.Items.Refresh();
-            ManPlatformLeftButton.IsEnabled = true;
-            ManPlatformRightButton.IsEnabled = true;
-            GotoButton.IsEnabled = true;
-            BringSemiAutoButton.IsEnabled = true;
-            TakeAwaySemiAutoButton.IsEnabled = true;
-            BringAutoButton.IsEnabled = true;
+            //восстанавливаем цвет строки состояния и закладки
             StatusPlane.Background = new SolidColorBrush(Color.FromArgb(0xFF, 0x3E, 0x60, 0x6F));
             ErrorTabItem.Background = new SolidColorBrush(Color.FromArgb(0xFF, 0xCB, 0xDB, 0xD7));
-            //возможны проблемы при возникновении ошибки во время возврата контейнера на место
-            //TakeAwayAutoButton.IsEnabled = true;
+
+            //разблокируем кнопки
+            CommandDone();
         }
 
         //Обработчик нажатия кнопки "ближе"
@@ -488,7 +495,22 @@ namespace Stacker
         //При клике по кнопке движение до следующего ряда
         private void FartherButton_NextLine(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            model.NextLineFartherCommand();
+            switch ( ((Button)sender).Name )
+            {
+                case "FartherButton":
+                    model.NextLineFartherCommand();
+                    break;
+                case "CloserButton":
+                    model.NextLineCloserCommand();
+                    break;
+                case "UpButton":
+                    model.NextLineUpCommand();
+                    break;
+                case "DownButton":
+                    model.NextLineDownCommand();
+                    break;
+                default: return;
+            }
             bt.Add((Button)sender);
             (sender as Button).IsEnabled = false;
         }
@@ -527,9 +549,12 @@ namespace Stacker
             DownButton.PreviewMouseLeftButtonDown -= DownButton_PreviewMouseLeftButtonDown;
 
             FartherButton.PreviewMouseLeftButtonDown += FartherButton_NextLine;
-            CloserButton.PreviewMouseLeftButtonDown += CloserButton_NextLine;
-            UpButton.PreviewMouseLeftButtonDown += UpButton_NextLine;
-            DownButton.PreviewMouseLeftButtonDown += DownButton_NextLine;
+            CloserButton.PreviewMouseLeftButtonDown += FartherButton_NextLine;
+            UpButton.PreviewMouseLeftButtonDown += FartherButton_NextLine;
+            DownButton.PreviewMouseLeftButtonDown += FartherButton_NextLine;
+            //CloserButton.PreviewMouseLeftButtonDown += CloserButton_NextLine;
+            //UpButton.PreviewMouseLeftButtonDown += UpButton_NextLine;
+            //DownButton.PreviewMouseLeftButtonDown += DownButton_NextLine;
         }
         private void LineMotionCheckbox_Unchecked(object sender, RoutedEventArgs e)
         {
@@ -565,7 +590,7 @@ namespace Stacker
             //если была нажата кнопка привезти устанавливае переменную в true
             bool bring = sender == BringSemiAutoButton ? true : false;
             model.BringOrTakeAway(stack,r,f,bring);           
-            bt.Add(sender as Button);
+            //bt.Add(sender as Button);
             (sender as Button).IsEnabled = false; 
         }
 

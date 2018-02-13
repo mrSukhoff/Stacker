@@ -374,52 +374,49 @@ namespace Stacker
         //По таймеру читаем слово состояния контроллера
         private void ReadStateWord(object ob)
         {
-            if (PLC != null)
+            if (PLC == null) return;
+            try
             {
-                try
+                //читаем оптом из ПЛК актуальные координаты крана
+                ushort[] word = PLC.ReadHoldingRegisters(1, 0x1198, 8);
+
+                //и записываем их значения
+                ActualX = word[0] + 0x10000 * word[1];
+                ActualY = word[2] + 0x10000 * word[3];
+                ActualRow = word[4];
+                ActualFloor = word[6];
+
+                //читаем слово состояния ПЛК
+                word = PLC.ReadHoldingRegisters(1, 0x1064, 8);
+
+                int stateWord = word[0];
+                Weight = word[2] > 32767 ? 0 : word[2];
+                MeasuredWeight = word[4];
+                MeasuredWeight2 = word[6];
+
+                //вызываем событие по чтению координат
+                CoordinateReaded();
+
+                //если поменялось слово состояния
+                if (stateWord != StateWord)
                 {
-                    
-                    //читаем оптом из ПЛК актуальные координаты крана
-                    ushort[] word = PLC.ReadHoldingRegisters(1, 0x1198, 8);
-                    
-                    //и записываем их значения
-                    ActualX = word[0] + 0x10000 * word[1];
-                    ActualY = word[2] + 0x10000 * word[3];
-                    ActualRow = word[4];
-                    ActualFloor = word[6];
-
-                    //читаем слово состояния ПЛК
-                    word = PLC.ReadHoldingRegisters(1, 0x1064, 8);
-
-                    int stateWord = word[0];
-                    Weight = word[2] > 32767 ? 0 : word[2];
-                    MeasuredWeight = word[4];
-                    MeasuredWeight2 = word[6];
-                    
-                    //вызываем событие по чтению координат
-                    CoordinateReaded();
-
-                    //если поменялось слово состояния
-                    if (stateWord != StateWord)
-                    {
-                        IsStartPosiotion = GetBitState(stateWord, 0);
-                        IsBinOnPlatform = GetBitState(stateWord, 10);
-                        SomethingChanged();
-                    }
-
-                    //если появился флаг завершения
-                    if (GetBitState(stateWord, 15) && !GetBitState(StateWord, 15)) CommandDone();
-                    
-                    //если появился флаг ошибки вызываем обрабочик ошибок
-                    if (GetBitState(stateWord, 13) && !GetBitState(StateWord, 13)) ErrorHandler();
-
-                    StateWord = stateWord;
+                    IsStartPosiotion = GetBitState(stateWord, 0);
+                    IsBinOnPlatform = GetBitState(stateWord, 10);
+                    SomethingChanged();
                 }
-                catch (Exception ex)
-                {
-                    PlcTimer.Dispose();
-                    MessageBox.Show(ex.Message, caption: "ReadStateWord");
-                }
+
+                //если появился флаг завершения
+                if (GetBitState(stateWord, 15) && !GetBitState(StateWord, 15)) CommandDone();
+
+                //если появился флаг ошибки вызываем обрабочик ошибок
+                if (GetBitState(stateWord, 13) && !GetBitState(StateWord, 13)) ErrorHandler();
+
+                StateWord = stateWord;
+            }
+            catch (Exception ex)
+            {
+                PlcTimer.Dispose();
+                MessageBox.Show(ex.Message, caption: "ReadStateWord");
             }
         }
 
