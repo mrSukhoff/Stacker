@@ -21,22 +21,25 @@ namespace Stacker
         }
 
         //формат ввода координат в textbox'ы
-        Regex CoordinateRegex = new Regex(@"\d");
+        private Regex CoordinateRegex = new Regex(@"\d");
 
         //Список кнопок, выдавших задание и заблокированных
-        List<Button> bt = new List<Button>();
-               
+        private List<Button> bt = new List<Button>();
+
         //модель паттерна MVP(если это конечно он)
-        StackerModel model;
+        private StackerModel model;
 
         //для рисования графика веса
-        Polyline WeightPolyline = new Polyline();
-        PointCollection WeightPointCollection = new PointCollection();
-        int c = 0;
-        Polyline MeasuredWeightPolyline1 = new Polyline();
-        Polyline MeasuredWeightPolyline2 = new Polyline();
-        PointCollection MeasuredWeight1PointCollection = new PointCollection();
-        PointCollection MeasuredWeight2PointCollection = new PointCollection();
+        private Polyline WeightPolyline = new Polyline();
+        private PointCollection WeightPointCollection = new PointCollection();
+        private int c = 0;
+        private Polyline MeasuredWeightPolyline1 = new Polyline();
+        private Polyline MeasuredWeightPolyline2 = new Polyline();
+        private PointCollection MeasuredWeight1PointCollection = new PointCollection();
+        private PointCollection MeasuredWeight2PointCollection = new PointCollection();
+
+        //стиль оттображения списка заявок
+        GridView OrdersGridView = new GridView();
 
         //#####################################################################################################
         //Основная точка входа -------------------------------------------------------------------------------!
@@ -151,7 +154,6 @@ namespace Stacker
         //Настройки вида списка заявок
         private void GridSetUp()
         {
-            GridView OrdersGridView = new GridView();
             GridViewColumn gvc1 = new GridViewColumn();
             GridViewColumn gvc2 = new GridViewColumn();
             GridViewColumn gvc3 = new GridViewColumn();
@@ -678,6 +680,7 @@ namespace Stacker
         {
             if (model != null) model.Dispose();
         }
+
     }
 }
 
