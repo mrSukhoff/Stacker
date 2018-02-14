@@ -13,7 +13,7 @@ namespace Stacker
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window 
+    public partial class MainWindow : Window, IDisposable
     {
         public MainWindow()
         {
@@ -49,16 +49,17 @@ namespace Stacker
             }
             catch (NullReferenceException)
             {
+                model?.Dispose();
                 Application.Current.Shutdown();
             }
 
             if (model != null)
             {
-                //подписываемся на события
+                //подписываемся на события модели
                 model.CommandDone += CommandDone;
                 model.ErrorAppeared += ErrorAppeared;
                 model.CoordinateReaded += UpdateCoordinate;
-                model.SomethingChanged +=SomthingChanged;
+                model.StateWordChanged +=SomethingChanged;
 
                 //Настраиваем визуальные компоненты
                 SetUpComponents();
@@ -69,6 +70,12 @@ namespace Stacker
                 //прописываем обработчики для кнопок
                 SetEventHandlers();
             }
+        }
+
+        //завершение работы программы
+        private void Stacker_Closed(object sender, EventArgs e)
+        {
+            if (model != null) model.Dispose();
         }
 
         //Настраиваем визуальные компоненты
@@ -107,6 +114,7 @@ namespace Stacker
             //источник данных для списка ошибок
             ErrorListBox.ItemsSource = model.ErrorList;
 
+            if (!model.ShowWeightTab) WeightTabItem.Visibility = System.Windows.Visibility.Hidden;
             //настройка графика веса
             WeightPolyline.Stroke = Brushes.AliceBlue;
             WeightPolyline.StrokeThickness = 2;
@@ -133,11 +141,11 @@ namespace Stacker
                 TakeAwaySemiAutoButton.IsEnabled = isBin;
                 BringSemiAutoButton.IsEnabled = !isBin;
                 BringAutoButton.IsEnabled = !isBin;
-                //Кнопка "увезти" активируется только при работе с заявкой
-                TakeAwayAutoButton.IsEnabled = false;
-                //Кнопка "отмена" активируется при выборе заявки
-                CancelAutoButton.IsEnabled = false;
             }
+            //Кнопка "увезти" активируется только при работе с заявкой
+            TakeAwayAutoButton.IsEnabled = false;
+            //Кнопка "отмена" активируется при выборе заявки
+            CancelAutoButton.IsEnabled = false;
         }
 
         //Настройки вида списка заявок
@@ -191,17 +199,18 @@ namespace Stacker
             IsNOTAvailableCheckBox.Click += IsNOTAvailableCheckBox_Click;
 
             //дефолтные методы обработки нажатия кнопок перемещения манипулятора в ручном режиме
-            FartherButton.PreviewMouseLeftButtonUp += FartherButton_PreviewMouseLeftButtonUp;
-            FartherButton.PreviewMouseLeftButtonDown += FartherButton_PreviewMouseLeftButtonDown;
-            CloserButton.PreviewMouseLeftButtonUp += CloserButton_PreviewMouseLeftButtonUp;
-            CloserButton.PreviewMouseLeftButtonDown += CloserButton_PreviewMouseLeftButtonDown;
-            UpButton.PreviewMouseLeftButtonUp += UpButton_PreviewMouseLeftButtonUp;
-            UpButton.PreviewMouseLeftButtonDown += UpButton_PreviewMouseLeftButtonDown;
-            DownButton.PreviewMouseLeftButtonUp += DownButton_PreviewMouseLeftButtonUp;
-            DownButton.PreviewMouseLeftButtonDown += DownButton_PreviewMouseLeftButtonDown;
+            FartherButton.PreviewMouseLeftButtonUp += DirectButtonControl;
+            FartherButton.PreviewMouseLeftButtonDown += DirectButtonControl;
+            CloserButton.PreviewMouseLeftButtonUp += DirectButtonControl;
+            CloserButton.PreviewMouseLeftButtonDown += DirectButtonControl;
+            UpButton.PreviewMouseLeftButtonUp += DirectButtonControl;
+            UpButton.PreviewMouseLeftButtonDown += DirectButtonControl;
+            DownButton.PreviewMouseLeftButtonUp += DirectButtonControl;
+            DownButton.PreviewMouseLeftButtonDown += DirectButtonControl;
 
             //считываем координаты первоначально
             CellChanged(null, null);
+            SemiAutoComboBox_SelectionChanged(null,null);
         }
 
         //обработчик события "команда выполнена"
@@ -215,8 +224,8 @@ namespace Stacker
             bt.Clear();
 
             //кнопки привезти/увезти устанавливаем в зависиомсти от наличия корзины
-            BringSemiAutoButton.IsEnabled = !model.IsBinOnPlatform;
-            TakeAwaySemiAutoButton.IsEnabled = model.IsBinOnPlatform;
+            Dispatcher.Invoke(() => BringSemiAutoButton.IsEnabled = !model.IsBinOnPlatform);
+            Dispatcher.Invoke(() => TakeAwaySemiAutoButton.IsEnabled = model.IsBinOnPlatform);
         }
 
         //обработчик события "ошибка"
@@ -247,10 +256,32 @@ namespace Stacker
         }
         
         //обработка изменений в слове состояния контроллера крана
-        private void SomthingChanged()
+        private void SomethingChanged()
         {
             //устанавливаем индикатор начальной позиции
             Dispatcher.Invoke(() => SPLabel.IsEnabled = model.IsStartPosiotion);
+        }
+
+        //Обработчик нажатия кнопки STOP
+        private void StopButton_Click(object sender, RoutedEventArgs e)
+        {
+            model.StopButton();
+        }
+
+        //Обработчик нажатия кнопки подтверждения ошибок
+        private void SubmitErrorButton_Click(object sender, RoutedEventArgs e)
+        {
+            //даем команду на сброс ошибки
+            model.SubmitError();
+            //восстанавливаем цвет строки состояния и закладки
+            StatusPlane.Background = new SolidColorBrush(Color.FromArgb(0xFF, 0x3E, 0x60, 0x6F));
+            ErrorTabItem.Background = new SolidColorBrush(Color.FromArgb(0xFF, 0xCB, 0xDB, 0xD7));
+            //разблокируем кнопки
+            CommandDone();
+            ErrorListBox.Items.Refresh();
+            model.CommandDone -= TakeAwayDone;
+            BringAutoButton.IsEnabled = !model.IsBinOnPlatform;
+            TakeAwayAutoButton.IsEnabled = false;
         }
 
         //При изменении адреса ячеек перечитываем координаты
@@ -355,25 +386,20 @@ namespace Stacker
         //в зависимости от доступности ячейки и формируем строку адреса выбранной ячейки
         private void SemiAutoComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            try
-            {
-                bool stacker = RackSemiAutoComboBox.SelectedIndex == 1;
-                int r = RowSemiAutoComboBox.SelectedIndex + 1;
-                int f = FloorSemiAutoCombobox.SelectedIndex + 1;
+            //получаем из базы координаты и доступность ячеек
+            bool stack = RackSemiAutoComboBox.SelectedIndex == 1;
+            int r = RowSemiAutoComboBox.SelectedIndex + 1;
+            int f = FloorSemiAutoCombobox.SelectedIndex + 1;
+            model.GetCell(stack, r, f,out int x,out int y,out bool isNotAvailable);
 
-                model.GetCell(stacker, r, f,out int x,out int y,out bool isNotAvailable);
+            //устанавливаем доступность кнопок в зависимости от состояния ячейки
+            bool state = model.IsBinOnPlatform;
+            BringSemiAutoButton.IsEnabled = !isNotAvailable & !state;
+            TakeAwaySemiAutoButton.IsEnabled &= !isNotAvailable & state;
 
-                BringSemiAutoButton.IsEnabled = !isNotAvailable;
-                TakeAwaySemiAutoButton.IsEnabled = !isNotAvailable;
-                SemiAutoAddressLabel.IsEnabled = !isNotAvailable;
-
-                char rack = RackSemiAutoComboBox.SelectedIndex == 0 ? model.LeftRackName : model.RightRackName;
-                SemiAutoAddressLabel.Content = rack + " - " + r.ToString() + " - " + f.ToString();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, caption: "SemiAutoComboBox_SelectionChanged");
-            }
+            //Формируем адрес ячейки для индикации
+            char rack = RackSemiAutoComboBox.SelectedIndex == 0 ? model.LeftRackName : model.RightRackName;
+            SemiAutoAddressLabel.Content = rack + " - " + r.ToString() + " - " + f.ToString();
         }
 
         //в разделе "движение по координатам" при выборе ячейки записываем её координаты в поля ввода
@@ -387,99 +413,6 @@ namespace Stacker
             GotoYTextBox.Text = y.ToString();
         }
 
-        //завершение работы программы
-        private void Stacker_Closed(object sender, EventArgs e)
-        {
-            if (model != null) model.Dispose();
-        }
-
-        //Обработчик нажатия кнопки подтверждения ошибок
-        private void SubmitErrorButton_Click(object sender, RoutedEventArgs e)
-        {
-            //даем команду на сброс ошибки
-            model.SubmitError();
-            //восстанавливаем цвет строки состояния и закладки
-            StatusPlane.Background = new SolidColorBrush(Color.FromArgb(0xFF, 0x3E, 0x60, 0x6F));
-            ErrorTabItem.Background = new SolidColorBrush(Color.FromArgb(0xFF, 0xCB, 0xDB, 0xD7));
-
-            //разблокируем кнопки
-            CommandDone();
-        }
-
-        //Обработчик нажатия кнопки "ближе"
-        private void CloserButton_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            model.CloserButton(true);
-        }
-        private void CloserButton_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            model.CloserButton(false);
-        }
-
-        //Обработчик нажатия кнопки "дальше"
-        private void FartherButton_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            model.FartherButton(true);
-        }
-        private void FartherButton_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            model.FartherButton(false);
-        }
-
-        //Обработчик нажатия кнопки "вверх"
-        private void UpButton_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            model.UpButton(true);
-        }
-        private void UpButton_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            model.UpButton(false);
-        }
-
-        //Обработчик нажатия кнопки "вниз"
-        private void DownButton_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            model.DownButton(true);
-        }
-        private void DownButton_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            model.DownButton(state: false);
-        }
-
-        //Обработчик нажатия кнопки "платформа влево"
-        private void ManPlatformLeftButton_Checked(object sender, RoutedEventArgs e)
-        {
-            model.PlatformToRight();   
-            bt.Add( sender as Button);
-            (sender as Button).IsEnabled = false;
-        }
-
-        //Обработчик нажатия кнопки платформа "вправо вправо"
-        private void ManPlatformRightButton_Checked(object sender, RoutedEventArgs e)
-        {
-            model.PlatformToLeft();
-            bt.Add(sender as Button);
-            (sender as Button).IsEnabled = false;
-        }
-
-        //Обработчик нажатия кнопки STOP
-        private void StopButton_Click(object sender, RoutedEventArgs e)
-        {
-            model.StopButton();
-        }
-
-        //Обработчик нажатия кнопки "Перейти на координаты"
-        private void GotoButton_Click(object sender, RoutedEventArgs e)
-        {
-            int x = Convert.ToUInt16(GotoXTextBox.Text);
-            int y = Convert.ToUInt16(GotoYTextBox.Text);
-            x = x > model.MaxX ? model.MaxX : x;
-            y = y > model.MaxY ? model.MaxY : y;
-            model.GotoXY(x, y);
-            bt.Add((Button)sender);
-            (sender as Button).IsEnabled = false;
-        }
-       
         //кнопки сброса значений в TextBox на ноль
         private void XResButton_Click(object sender, RoutedEventArgs e)
         {
@@ -491,9 +424,102 @@ namespace Stacker
             GotoYTextBox.Text = "0";
             FloorYComboBox.SelectedIndex = -1;
         }
+        
+        //Обработчик нажатия кнопки "платформа влево"
+        private void ManPlatformLeftButton_Checked(object sender, RoutedEventArgs e)
+        {
+            model.PlatformToRight();
+            bt.Add(sender as Button);
+            (sender as Button).IsEnabled = false;
+        }
 
-        //При клике по кнопке движение до следующего ряда
-        private void FartherButton_NextLine(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        //Обработчик нажатия кнопки платформа "вправо вправо"
+        private void ManPlatformRightButton_Checked(object sender, RoutedEventArgs e)
+        {
+            model.PlatformToLeft();
+            bt.Add(sender as Button);
+            (sender as Button).IsEnabled = false;
+        }
+
+        //В зависимости от состояния чекбокса выбираем действия кнопок
+        private void LineMotionCheckbox_Checked(object sender, RoutedEventArgs e)
+        {
+            //
+            FartherButton.PreviewMouseLeftButtonUp -= DirectButtonControl;
+            FartherButton.PreviewMouseLeftButtonDown -= DirectButtonControl;
+
+            CloserButton.PreviewMouseLeftButtonUp -= DirectButtonControl;
+            CloserButton.PreviewMouseLeftButtonDown -= DirectButtonControl;
+
+            UpButton.PreviewMouseLeftButtonUp -= DirectButtonControl;
+            UpButton.PreviewMouseLeftButtonDown -= DirectButtonControl;
+
+            DownButton.PreviewMouseLeftButtonUp -= DirectButtonControl;
+            DownButton.PreviewMouseLeftButtonDown -= DirectButtonControl;
+            
+            //
+            FartherButton.PreviewMouseLeftButtonDown += NextLineButtonControl;
+            CloserButton.PreviewMouseLeftButtonDown += NextLineButtonControl;
+            UpButton.PreviewMouseLeftButtonDown += NextLineButtonControl;
+            DownButton.PreviewMouseLeftButtonDown += NextLineButtonControl;
+
+            //закрашиваем надписи черным
+            FartherButton.Foreground = new SolidColorBrush(Colors.Black);
+            CloserButton.Foreground = new SolidColorBrush(Colors.Black);
+            UpButton.Foreground = new SolidColorBrush(Colors.Black);
+            DownButton.Foreground = new SolidColorBrush(Colors.Black);
+        }
+        private void LineMotionCheckbox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            //
+            FartherButton.PreviewMouseLeftButtonDown -= NextLineButtonControl;
+            CloserButton.PreviewMouseLeftButtonDown -= NextLineButtonControl;
+            UpButton.PreviewMouseLeftButtonDown -= NextLineButtonControl;
+            DownButton.PreviewMouseLeftButtonDown -= NextLineButtonControl;
+
+            FartherButton.PreviewMouseLeftButtonUp += DirectButtonControl;
+            FartherButton.PreviewMouseLeftButtonDown += DirectButtonControl;
+
+            CloserButton.PreviewMouseLeftButtonUp += DirectButtonControl;
+            CloserButton.PreviewMouseLeftButtonDown += DirectButtonControl;
+
+            UpButton.PreviewMouseLeftButtonUp += DirectButtonControl;
+            UpButton.PreviewMouseLeftButtonDown += DirectButtonControl;
+
+            DownButton.PreviewMouseLeftButtonUp += DirectButtonControl;
+            DownButton.PreviewMouseLeftButtonDown += DirectButtonControl;
+            
+            //закрашиваем надписи белым
+            FartherButton.Foreground = new SolidColorBrush(Color.FromArgb(0xFF, 0xFC, 0xFF, 0xF5));
+            CloserButton.Foreground = new SolidColorBrush(Color.FromArgb(0xFF, 0xFC, 0xFF, 0xF5));
+            UpButton.Foreground = new SolidColorBrush(Color.FromArgb(0xFF, 0xFC, 0xFF, 0xF5));
+            DownButton.Foreground = new SolidColorBrush(Color.FromArgb(0xFF, 0xFC, 0xFF, 0xF5));
+        }
+
+        //Обработчик нажатия кнопки "ближе"
+        private void DirectButtonControl(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            bool state = e.ButtonState == System.Windows.Input.MouseButtonState.Pressed ? true : false;
+            switch (((Button)sender).Name)
+            {
+                case "FartherButton":
+                    model.FartherButton(state);
+                    break;
+                case "CloserButton":
+                    model.CloserButton(state);
+                    break;
+                case "UpButton":
+                    model.UpButton(state);
+                    break;
+                case "DownButton":
+                    model.DownButton(state);
+                    break;
+                default: return;
+            }
+        }
+
+        //При клике по кнопке даем команду "движение до следующего ряда/этажа"
+        private void NextLineButtonControl(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             switch ( ((Button)sender).Name )
             {
@@ -514,85 +540,17 @@ namespace Stacker
             bt.Add((Button)sender);
             (sender as Button).IsEnabled = false;
         }
-        private void CloserButton_NextLine(object sender, System.Windows.Input.MouseButtonEventArgs e)
+
+        //Обработчик нажатия кнопки "Перейти на координаты"
+        private void GotoButton_Click(object sender, RoutedEventArgs e)
         {
-            model.NextLineCloserCommand();
+            int x = Convert.ToUInt16(GotoXTextBox.Text);
+            int y = Convert.ToUInt16(GotoYTextBox.Text);
+            x = x > model.MaxX ? model.MaxX : x;
+            y = y > model.MaxY ? model.MaxY : y;
+            model.GotoXY(x, y);
             bt.Add((Button)sender);
             (sender as Button).IsEnabled = false;
-        }
-        private void UpButton_NextLine(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            model.NextLineUpCommand();
-            bt.Add((Button)sender);
-            (sender as Button).IsEnabled = false;
-        }
-        private void DownButton_NextLine(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            
-            model.NextLineDownCommand();
-            bt.Add((Button)sender);
-            (sender as Button).IsEnabled = false;
-        }
-
-        //В зависимости от состояния чекбокса выбираем действия кнопок
-        private void LineMotionCheckbox_Checked(object sender, RoutedEventArgs e)
-        {
-            FartherButton.PreviewMouseLeftButtonUp -= FartherButton_PreviewMouseLeftButtonUp;
-            FartherButton.PreviewMouseLeftButtonDown -= FartherButton_PreviewMouseLeftButtonDown;
-
-            CloserButton.PreviewMouseLeftButtonUp -= CloserButton_PreviewMouseLeftButtonUp;
-            CloserButton.PreviewMouseLeftButtonDown -= CloserButton_PreviewMouseLeftButtonDown;
-
-            UpButton.PreviewMouseLeftButtonUp -= UpButton_PreviewMouseLeftButtonUp;
-            UpButton.PreviewMouseLeftButtonDown -= UpButton_PreviewMouseLeftButtonDown;
-
-            DownButton.PreviewMouseLeftButtonUp -= DownButton_PreviewMouseLeftButtonUp;
-            DownButton.PreviewMouseLeftButtonDown -= DownButton_PreviewMouseLeftButtonDown;
-
-            FartherButton.PreviewMouseLeftButtonDown += FartherButton_NextLine;
-            CloserButton.PreviewMouseLeftButtonDown += FartherButton_NextLine;
-            UpButton.PreviewMouseLeftButtonDown += FartherButton_NextLine;
-            DownButton.PreviewMouseLeftButtonDown += FartherButton_NextLine;
-            //CloserButton.PreviewMouseLeftButtonDown += CloserButton_NextLine;
-            //UpButton.PreviewMouseLeftButtonDown += UpButton_NextLine;
-            //DownButton.PreviewMouseLeftButtonDown += DownButton_NextLine;
-
-            FartherButton.Foreground = new SolidColorBrush(Colors.Black);
-            CloserButton.Foreground = new SolidColorBrush(Colors.Black);
-            UpButton.Foreground = new SolidColorBrush(Colors.Black);
-            DownButton.Foreground = new SolidColorBrush(Colors.Black);
-        }
-        private void LineMotionCheckbox_Unchecked(object sender, RoutedEventArgs e)
-        {
-            FartherButton.PreviewMouseLeftButtonDown -= FartherButton_NextLine;
-            CloserButton.PreviewMouseLeftButtonDown -= FartherButton_NextLine;
-            UpButton.PreviewMouseLeftButtonDown -= FartherButton_NextLine;
-            DownButton.PreviewMouseLeftButtonDown -= FartherButton_NextLine;
-            //CloserButton.PreviewMouseLeftButtonDown -= CloserButton_NextLine;
-            //UpButton.PreviewMouseLeftButtonDown -= UpButton_NextLine;
-            //DownButton.PreviewMouseLeftButtonDown -= DownButton_NextLine;
-
-            FartherButton.PreviewMouseLeftButtonUp += FartherButton_PreviewMouseLeftButtonUp;
-            FartherButton.PreviewMouseLeftButtonDown += FartherButton_PreviewMouseLeftButtonDown;
-
-            CloserButton.PreviewMouseLeftButtonUp += CloserButton_PreviewMouseLeftButtonUp;
-            CloserButton.PreviewMouseLeftButtonDown += CloserButton_PreviewMouseLeftButtonDown;
-
-            UpButton.PreviewMouseLeftButtonUp += UpButton_PreviewMouseLeftButtonUp;
-            UpButton.PreviewMouseLeftButtonDown += UpButton_PreviewMouseLeftButtonDown;
-
-            DownButton.PreviewMouseLeftButtonUp += DownButton_PreviewMouseLeftButtonUp;
-            DownButton.PreviewMouseLeftButtonDown += DownButton_PreviewMouseLeftButtonDown;
-
-            FartherButton.Foreground = new SolidColorBrush(Color.FromArgb(0xFF,0xFC,0xFF,0xF5));
-            CloserButton.Foreground = new SolidColorBrush(Color.FromArgb(0xFF, 0xFC, 0xFF, 0xF5));
-            UpButton.Foreground = new SolidColorBrush(Color.FromArgb(0xFF, 0xFC, 0xFF, 0xF5));
-            DownButton.Foreground = new SolidColorBrush(Color.FromArgb(0xFF, 0xFC, 0xFF, 0xF5));
-
-            FartherButton.IsEnabled = true;
-            CloserButton.IsEnabled = true;
-            UpButton.IsEnabled = true;
-            DownButton.IsEnabled = true;
         }
 
         //обрабатывает нажатие кнопок "привезти" и "увезти" в полуавтоматическом режиме
@@ -616,40 +574,31 @@ namespace Stacker
             {
                 //Даем команду привезти
                 model.BringOrTakeAway(true);
-                //Выключаем кнопку
+                //Выключаем кнопку "привезти"
                 BringAutoButton.IsEnabled = false;
-                //Заменяем обработчик события "команда выполена"
-                model.CommandDone -= CommandDone;
-                model.CommandDone += BringDone;
+                //и добавляем в список нажатых кнопок кнопку "увезти"
+                bt.Add(TakeAwayAutoButton);
             }
         }
-         
-        //после доставки разрешаем кнопку "увезти"
-        private void BringDone()
-        {
-            TakeAwayAutoButton.IsEnabled = true;
-        }
-
+        
         //увозим контейнер на место
         private void TakeAwayAutoButton_Click(object sender, RoutedEventArgs e)
         {
             //Даем команду привезти
             model.BringOrTakeAway(false);
-            //Выключаем кнопку
+            //Выключаем кнопку "увезти"
             TakeAwayAutoButton.IsEnabled = false;
-            //Заменяем обработчик события "команда выполена"
-            model.CommandDone -= BringDone;
+            //и добавляем в список нажатых кнопок кнопку "привезти"
+            bt.Add(BringAutoButton);
+            //к обработчику завершения команды добавляем метод.
             model.CommandDone += TakeAwayDone;
         }
 
         //после доставки  на место разрешаем кнопкку "привезти"
         private void TakeAwayDone()
         {
-            //отжимаем кнопку
-            BringAutoButton.IsEnabled = true;
             //возвращаем обработчик события
             model.CommandDone -= TakeAwayDone;
-            model.CommandDone += CommandDone;
             //завершаем заявку
             model.FinishOrder(true);
         }
@@ -720,7 +669,15 @@ namespace Stacker
         }
 
         //при выборе какой-либо заявки в списке активируем кнопку "отменить"
-        private void OrdersLitsView_SelectionChanged(object sender, SelectionChangedEventArgs e) => CancelAutoButton.IsEnabled = true;
+        private void OrdersLitsView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            CancelAutoButton.IsEnabled = true;
+        }
+
+        public void Dispose()
+        {
+            if (model != null) model.Dispose();
+        }
     }
 }
 

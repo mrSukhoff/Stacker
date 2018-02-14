@@ -46,7 +46,7 @@ namespace Stacker
         //происходит после очередного считывания текущих координат крана
         public event StackerModelEventHandler CoordinateReaded = (() => { });
         //изменилось слово состояния контроллера
-        public event StackerModelEventHandler SomethingChanged = (() => { });
+        public event StackerModelEventHandler StateWordChanged = (() => { });
 
         //Актуальные координаты крана
         public int ActualX { get; private set; }
@@ -79,6 +79,9 @@ namespace Stacker
         public int WeightBeta1;
         public int WeightAlpha2;
         public int WeightBeta2;
+
+        //сообщаем вью, надо ли показывать вкладку взвешивания
+        public bool ShowWeightTab = false;
 
         //внутренние поля класса ******************************************************************************
 
@@ -162,6 +165,7 @@ namespace Stacker
         public void Dispose()
         {
             if (FileTimer != null) FileTimer.Dispose();
+            if (PlcTimer != null) PlcTimer.Dispose();
             if (PLC != null) PLC.Dispose();
             if (ComPort != null) ComPort.Dispose();
         }
@@ -173,15 +177,20 @@ namespace Stacker
             try
             {
                 INIManager manager = new INIManager(path);
+                //общие
                 OrdersFile = manager.GetPrivateString("General", "OrderFile");
                 ArchiveFile = manager.GetPrivateString("General", "ArchiveFile");
+                CloseOrInform = Convert.ToBoolean(manager.GetPrivateString("General", "CloseOrInform"));
+                ShowWeightTab = Convert.ToBoolean(manager.GetPrivateString("General", "ShowWeightTab"));
+                //свойства стеллажей
                 LeftRackName = Convert.ToChar(manager.GetPrivateString("Stacker", "LeftRackName"));
                 LeftRackNumber = Convert.ToInt16(manager.GetPrivateString("Stacker", "LeftRackNumber"));
                 RightRackName = Convert.ToChar(manager.GetPrivateString("Stacker", "RightRackName"));
                 RightRackNumber = Convert.ToInt16(manager.GetPrivateString("Stacker", "RightRackNumber"));
-                CloseOrInform = Convert.ToBoolean(manager.GetPrivateString("General","CloseOrInform"));
+                //настройки порта
                 string port = manager.GetPrivateString("PLC", "ComPort");
                 ComPort = new SerialPort(port, 115200, Parity.Even, 7, StopBits.One);
+                //настройка весов
                 WeightAlpha1 = Convert.ToInt16(manager.GetPrivateString("Weigh", "alfa1"));
                 WeightBeta1 = Convert.ToInt16(manager.GetPrivateString("Weigh", "beta1"));
                 WeightAlpha2 = Convert.ToInt16(manager.GetPrivateString("Weigh", "alfa2"));
@@ -402,7 +411,7 @@ namespace Stacker
                 {
                     IsStartPosiotion = GetBitState(stateWord, 0);
                     IsBinOnPlatform = GetBitState(stateWord, 10);
-                    SomethingChanged();
+                    StateWordChanged();
                 }
 
                 //если появился флаг завершения
