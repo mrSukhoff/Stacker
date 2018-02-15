@@ -136,6 +136,8 @@
             <Label x:Name="XLabel" Content="X : 000000"/>
             <Label x:Name="YLabel" Content="Y : 000000"/>
             <Label x:Name="SPLabel" Content="Нач.Поз." IsEnabled="False"/>
+            <Label x:Name="RLabel" Content="Ряд"/>
+            <Label x:Name="FLabel" Content="Этаж"/>
         </StatusBar>
         <TabControl x:Name="Tabs" Margin="1" FontSize="16" Background="#FF193441" BorderBrush="{x:Null}">
             <TabItem x:Name="AutoTabItrm" Header="_Автоматический режим " Margin="0" BorderBrush="#FF91AAB4" Background="#FFCBDBD7" Height="30">
@@ -287,7 +289,7 @@
                         <RowDefinition Height="70"/>
                     </Grid.RowDefinitions>
                     <ListBox x:Name="ErrorListBox" Margin="3" Background="#FF91AAB4" Foreground="#FFCF3D3D" FontSize="24"/>
-                    <Button x:Name="SubmitErrorButton" Content="Подтвердить" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="286,0,285,10" Grid.Row="1" FontSize="24" FontWeight="Bold" BorderBrush="#FFCBDBD7" Background="#FF91AAB4" UseLayoutRounding="False" BorderThickness="3,0" MinWidth="175" MinHeight="50" MaxWidth="175" MaxHeight="50" Click="SubmitErrorButton_Click" Foreground="#FFFCFFF5"/>
+                    <Button x:Name="SubmitErrorButton" Content="Сбросить" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="286,0,285,10" Grid.Row="1" FontSize="24" FontWeight="Bold" BorderBrush="#FFCBDBD7" Background="#FF91AAB4" UseLayoutRounding="False" BorderThickness="3,0" MinWidth="175" MinHeight="50" MaxWidth="175" MaxHeight="50" Click="SubmitErrorButton_Click" Foreground="#FFFCFFF5"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="WeightTabItem" Header="Взвешивание" BorderBrush="#FF91AAB4" Foreground="Black" Background="#FFCBDBD7" Height="30" Width="116" Margin="0">

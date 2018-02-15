@@ -74,6 +74,12 @@ namespace Stacker
         //флаг нахождения крана на начальной позиции
         public bool IsStartPosiotion;
 
+        //флаг нахождения крана на метке ряда
+        public bool IsRowMark;
+        
+        //флаг нахождения крана на начальной позиции
+        public bool IsFloorMark;
+
         //коэффициенты для пересчета тока ПЧ в вес
         public int WeightAlpha1;
         public int WeightBeta1;
@@ -410,6 +416,8 @@ namespace Stacker
                 if (stateWord != StateWord)
                 {
                     IsStartPosiotion = GetBitState(stateWord, 0);
+                    IsRowMark = GetBitState(stateWord, 8);
+                    IsFloorMark = GetBitState(stateWord, 9);
                     IsBinOnPlatform = GetBitState(stateWord, 10);
                     StateWordChanged();
                 }
@@ -682,7 +690,7 @@ namespace Stacker
             if (SelectedOrderNumber == -1) throw new Exception("Не установлен номер заявки");
             if (PLC != null)
             {
-                bool rack = Orders[SelectedOrderNumber].StackerNumber == LeftRackNumber;
+                bool rack = Orders[SelectedOrderNumber].StackerNumber == RightRackNumber;
                 int row = Orders[SelectedOrderNumber].Row;
                 int floor = Orders[SelectedOrderNumber].Floor;
 

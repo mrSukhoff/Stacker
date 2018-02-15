@@ -262,6 +262,8 @@ namespace Stacker
         {
             //устанавливаем индикатор начальной позиции
             Dispatcher.Invoke(() => SPLabel.IsEnabled = model.IsStartPosiotion);
+            Dispatcher.Invoke(() => RLabel.IsEnabled = model.IsRowMark);
+            Dispatcher.Invoke(() => FLabel.IsEnabled = model.IsFloorMark);
         }
 
         //Обработчик нажатия кнопки STOP
@@ -561,10 +563,12 @@ namespace Stacker
             bool stack = RackSemiAutoComboBox.SelectedIndex == 1;
             int r = RowSemiAutoComboBox.SelectedIndex + 1;
             int f = FloorSemiAutoCombobox.SelectedIndex + 1;
+            
             //если была нажата кнопка привезти устанавливае переменную в true
             bool bring = sender == BringSemiAutoButton ? true : false;
+
             model.BringOrTakeAway(stack,r,f,bring);           
-            //bt.Add(sender as Button);
+            
             (sender as Button).IsEnabled = false; 
         }
 
@@ -603,6 +607,7 @@ namespace Stacker
             model.CommandDone -= TakeAwayDone;
             //завершаем заявку
             model.FinishOrder(true);
+            Dispatcher.Invoke( () => OrdersLitsView.Items.Refresh());
         }
         
         //нажатие кнопки "отменить заявку"
