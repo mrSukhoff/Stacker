@@ -23,9 +23,8 @@ namespace Stacker
         public int StackerDepth { get; } = 29;
         public int StackerHight { get; } = 16;
         public char LeftRackName { get; private set; }
-        public int LeftRackNumber { get; private set; }
         public char RightRackName { get; private set; }
-        public int RightRackNumber { get; private set; }
+
         
         //Максимальные значения координат
         public int MaxX { get; } = 55000;
@@ -126,10 +125,8 @@ namespace Stacker
             
             //Записываем в класс заявок имена и названия штабелеров для идентификации заявок
             Order.LeftStackerName = LeftRackName;
-            Order.LeftStackerNumber = LeftRackNumber;
             Order.RightStackerName = RightRackName;
-            Order.RightStackerNumber = RightRackNumber;
-
+            
             //Запускаем таймер для проверки изменений списка заявок
             FileTimer = new Timer(ReadOrdersFile, null, 0, 10000);
 
@@ -190,9 +187,7 @@ namespace Stacker
                 ShowWeightTab = Convert.ToBoolean(manager.GetPrivateString("General", "ShowWeightTab"));
                 //свойства стеллажей
                 LeftRackName = Convert.ToChar(manager.GetPrivateString("Stacker", "LeftRackName"));
-                LeftRackNumber = Convert.ToInt16(manager.GetPrivateString("Stacker", "LeftRackNumber"));
                 RightRackName = Convert.ToChar(manager.GetPrivateString("Stacker", "RightRackName"));
-                RightRackNumber = Convert.ToInt16(manager.GetPrivateString("Stacker", "RightRackNumber"));
                 //настройки порта
                 string port = manager.GetPrivateString("PLC", "ComPort");
                 ComPort = new SerialPort(port, 115200, Parity.Even, 7, StopBits.One);
@@ -242,13 +237,13 @@ namespace Stacker
             }
             catch (ArgumentException ae)
             {
-                FileTimer.Dispose();
+                //FileTimer.Dispose();
                 MessageBox.Show(messageBoxText: "Найдена некорректная заявка! Чтения заявок прекращено"
                     + ae.Message, caption: "ReadOrdersFile");
             }
             catch (Exception ex)
             {
-                FileTimer.Dispose();
+                //FileTimer.Dispose();
                 MessageBox.Show(ex.Message, caption: "ReadOrdersFile");
             }
         }
@@ -469,7 +464,7 @@ namespace Stacker
                 { MessageBox.Show(ex.Message, caption: "ErrorHandler"); }
             }
         }
-
+       
         //метод возвращает состояния указанного бита
         private bool GetBitState(int b, int num)
         {
@@ -690,7 +685,7 @@ namespace Stacker
             if (SelectedOrderNumber == -1) throw new Exception("Не установлен номер заявки");
             if (PLC != null)
             {
-                bool rack = Orders[SelectedOrderNumber].StackerNumber == RightRackNumber;
+                bool rack = Orders[SelectedOrderNumber].StackerName == RightRackName;
                 int row = Orders[SelectedOrderNumber].Row;
                 int floor = Orders[SelectedOrderNumber].Floor;
 
