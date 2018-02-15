@@ -20,8 +20,8 @@ namespace Stacker
         public string Amount { get; }
         public string Unit { get; }
         public char   StackerName { get; }
-        public int    Row { get; }
-        public int    Floor { get; }
+        public UInt16 Row { get; }
+        public UInt16 Floor { get; }
         public string Cell { get; } // уточнить что за сущность
         public string OriginalString { get; }
         public string Address { get; }
@@ -38,7 +38,7 @@ namespace Stacker
                 if (str[i]=='~')  z++; 
             }
             //если количество полей в строке отличается от 11 кидаем исключение
-            if (z!=13) throw new ArgumentException("Неправильный формат заявки");
+            if (z!=13) throw new ArgumentException("Неправильный формат заявки" + str);
                         
             //разбиваем строку и заносим данные в соответсвтующие поля
             string[] strings = str.Split('~');
@@ -53,9 +53,13 @@ namespace Stacker
             ManufacturersBatchNumber = strings[7];
             Amount = strings[8];
             Unit = strings[9];
-            StackerName = strings[10][0];
-            Row = Convert.ToUInt16(strings[11]);
-            Floor = Convert.ToUInt16(strings[12]);
+            char sn = strings[10][0];
+            if (sn == LeftStackerName || sn == RightStackerName) StackerName = sn;
+            else StackerName='?';
+            if (UInt16.TryParse(strings[11], out UInt16 row)) Row = row;
+            else throw new ArgumentException("Неправильный формат заявки" + str);
+            if (UInt16.TryParse(strings[12], out UInt16 floor)) Floor = floor;
+            else throw new ArgumentException("Неправильный формат заявки" + str);
             Cell = strings[13];
             Address = StackerName +"-"+ Row + "-" + Floor;
         }

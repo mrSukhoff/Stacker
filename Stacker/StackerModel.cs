@@ -131,7 +131,6 @@ namespace Stacker
             FileTimer = new Timer(ReadOrdersFile, null, 0, 10000);
 
             //Открываем порт и создаем контроллер
-            
             try
             {
                 ComPort.Open();
@@ -217,34 +216,35 @@ namespace Stacker
         //Проверки изменений файла с заданиями и чтения заявок из него
         private void ReadOrdersFile(object ob)
         {
-            try
+            //проверяем не изменился ли файл с момента последнего чтения
+            if (File.GetLastWriteTime(OrdersFile) != LastOrdersFileAccessTime)
             {
-                //проверяем не изменился ли файл с момента последнего чтения
-                if (File.GetLastWriteTime(OrdersFile) != LastOrdersFileAccessTime)
+                //и если изменился читаем его
+                string[] lines = File.ReadAllLines(OrdersFile, System.Text.Encoding.Default);
+                Order order = null;
+                foreach (string str in lines)
                 {
 
-                    //и если изменился читаем его, находим новые приказы и добавляем их в список
-                    string[] lines = File.ReadAllLines(OrdersFile, System.Text.Encoding.Default);
-                    foreach (string str in lines)
+                    //пытаемся преобразовать каждую строку в заявку
+                    try
                     {
-                        Order o = new Order(str);
-                        if ((!Orders.Contains(o)) && (o.StackerName != '?')) Orders.Add(o);
+                        order = new Order(str);
                     }
-                    //и запоминаем время последнего чтения
-                    LastOrdersFileAccessTime = File.GetLastWriteTime(OrdersFile);
-                    
+                    //в случае ошибки выводим сообщение о неправильной строке
+                    catch (ArgumentException ae)
+                    {
+                        MessageBox.Show(ae.Message, caption: "ReadOrdersFile");
+                    }
+                    //в зависимости от результата добавляем строку или не добавляем
+                    finally
+                    {
+                        if (order != null && !Orders.Contains(order) && order.StackerName != '?')
+                            Orders.Add(order);
+                        order = null;
+                    }
                 }
-            }
-            catch (ArgumentException ae)
-            {
-                //FileTimer.Dispose();
-                MessageBox.Show(messageBoxText: "Найдена некорректная заявка! Чтения заявок прекращено"
-                    + ae.Message, caption: "ReadOrdersFile");
-            }
-            catch (Exception ex)
-            {
-                //FileTimer.Dispose();
-                MessageBox.Show(ex.Message, caption: "ReadOrdersFile");
+                //и запоминаем время последнего чтения
+                LastOrdersFileAccessTime = File.GetLastWriteTime(OrdersFile);
             }
         }
 
