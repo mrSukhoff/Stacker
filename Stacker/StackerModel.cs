@@ -226,38 +226,46 @@ namespace Stacker
             //проверяем не изменился ли файл с момента последнего чтения
             if (File.GetLastWriteTime(OrdersFile) != LastOrdersFileAccessTime)
             {
-                //MessageBox.Show(File.GetLastWriteTime(OrdersFile) + " " + LastOrdersFileAccessTime);
-                //и если изменился читаем его
-                string[] lines = File.ReadAllLines(OrdersFile, System.Text.Encoding.Default);
-                Order order = null;
-                foreach (string str in lines)
+                try
                 {
-
-                    //пытаемся преобразовать каждую строку в заявку
-                    try
+                    //MessageBox.Show(File.GetLastWriteTime(OrdersFile) + " " + LastOrdersFileAccessTime);
+                    //и если изменился читаем его
+                    string[] lines;
+                    lines = File.ReadAllLines(OrdersFile, System.Text.Encoding.Default);
+                    Order order = null;
+                    foreach (string str in lines)
                     {
-                        order = new Order(str);
+                        //пытаемся преобразовать каждую строку в заявку
+                        try
+                        {
+                            order = new Order(str);
+                        }
+                        //в случае ошибки выводим сообщение о неправильной строке
+                        catch (ArgumentException ae)
+                        {
+                            //MessageBox.Show(ae.Message, caption: "ReadOrdersFile");
+                            RemoveStringFromOrdersFile(str, WrongOrdersFile, ae.Message);
+                        }
+                        //в зависимости от результата добавляем строку или не добавляем
+                        finally
+                        {
+                            if (order != null && order.StackerName != '?' && !Orders.Contains(order))
+                            {
+                                Orders.Add(order);
+                                NewOrderAppeared();
+                            }
+                            order = null;
+                        }
                     }
-                    //в случае ошибки выводим сообщение о неправильной строке
-                    catch (ArgumentException ae)
-                    {
-                        //MessageBox.Show(ae.Message, caption: "ReadOrdersFile");
-                        RemoveStringFromOrdersFile(str,WrongOrdersFile,ae.Message);
-                    }
-                    //в зависимости от результата добавляем строку или не добавляем
-                    finally
-                    {
-                    if (order != null && order.StackerName != '?' && !Orders.Contains(order))
-                    {
-                        Orders.Add(order);
-                        NewOrderAppeared();
-                    }
-                        order = null;
-                        
-                    }
+                    //и запоминаем время последнего чтения
+                    LastOrdersFileAccessTime = File.GetLastWriteTime(OrdersFile);
                 }
-                //и запоминаем время последнего чтения
-                LastOrdersFileAccessTime = File.GetLastWriteTime(OrdersFile);
+                catch (Exception ex)
+                {
+                    FileTimer.Dispose();
+                    MessageBox.Show(ex.Message, "ReadOrdersFile");
+                }
+
             }
         }
 
