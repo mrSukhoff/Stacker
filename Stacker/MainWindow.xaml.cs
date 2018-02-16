@@ -59,6 +59,7 @@ namespace Stacker
             if (model != null)
             {
                 //подписываемся на события модели
+                model.NewOrderAppeared += UpdateOrderList;
                 model.CommandDone += CommandDone;
                 model.ErrorAppeared += ErrorAppeared;
                 model.CoordinateReaded += UpdateCoordinate;
@@ -213,6 +214,12 @@ namespace Stacker
             //считываем координаты первоначально
             CellChanged(null, null);
             SemiAutoComboBox_SelectionChanged(null,null);
+        }
+
+        //обработчик события "ошибка"
+        private void UpdateOrderList()
+        {
+            Dispatcher.Invoke(() => OrdersLitsView.Items.Refresh());
         }
 
         //обработчик события "команда выполнена"

@@ -17,6 +17,7 @@ namespace Stacker
         //места хранения файлов заявлок и архива
         private string OrdersFile;
         private string ArchiveFile;
+        private string WrongOrdersFile;
 
         //размеры, имена и номера штабелеров
         //нулевая позиция по горизонтали - место погрузки
@@ -38,6 +39,8 @@ namespace Stacker
         
         //События
         public delegate void StackerModelEventHandler();
+        //появилась новая заявка
+        public event StackerModelEventHandler NewOrderAppeared = (() => { });
         //появился флаг завершения выполнения команды
         public event StackerModelEventHandler CommandDone = (() => { });
         //флаг ошибки
@@ -182,14 +185,18 @@ namespace Stacker
                 //общие
                 OrdersFile = manager.GetPrivateString("General", "OrderFile");
                 ArchiveFile = manager.GetPrivateString("General", "ArchiveFile");
+                WrongOrdersFile = manager.GetPrivateString("General", "WrongOrdersFile"); 
                 CloseOrInform = Convert.ToBoolean(manager.GetPrivateString("General", "CloseOrInform"));
                 ShowWeightTab = Convert.ToBoolean(manager.GetPrivateString("General", "ShowWeightTab"));
+                
                 //свойства стеллажей
                 LeftRackName = Convert.ToChar(manager.GetPrivateString("Stacker", "LeftRackName"));
                 RightRackName = Convert.ToChar(manager.GetPrivateString("Stacker", "RightRackName"));
+                
                 //настройки порта
                 string port = manager.GetPrivateString("PLC", "ComPort");
                 ComPort = new SerialPort(port, 115200, Parity.Even, 7, StopBits.One);
+                
                 //настройка весов
                 WeightAlpha1 = Convert.ToInt16(manager.GetPrivateString("Weigh", "alfa1"));
                 WeightBeta1 = Convert.ToInt16(manager.GetPrivateString("Weigh", "beta1"));
@@ -219,6 +226,7 @@ namespace Stacker
             //проверяем не изменился ли файл с момента последнего чтения
             if (File.GetLastWriteTime(OrdersFile) != LastOrdersFileAccessTime)
             {
+                //MessageBox.Show(File.GetLastWriteTime(OrdersFile) + " " + LastOrdersFileAccessTime);
                 //и если изменился читаем его
                 string[] lines = File.ReadAllLines(OrdersFile, System.Text.Encoding.Default);
                 Order order = null;
@@ -233,14 +241,19 @@ namespace Stacker
                     //в случае ошибки выводим сообщение о неправильной строке
                     catch (ArgumentException ae)
                     {
-                        MessageBox.Show(ae.Message, caption: "ReadOrdersFile");
+                        //MessageBox.Show(ae.Message, caption: "ReadOrdersFile");
+                        RemoveStringFromOrdersFile(str,WrongOrdersFile,ae.Message);
                     }
                     //в зависимости от результата добавляем строку или не добавляем
                     finally
                     {
-                        if (order != null && !Orders.Contains(order) && order.StackerName != '?')
-                            Orders.Add(order);
+                    if (order != null && order.StackerName != '?' && !Orders.Contains(order))
+                    {
+                        Orders.Add(order);
+                        NewOrderAppeared();
+                    }
                         order = null;
+                        
                     }
                 }
                 //и запоминаем время последнего чтения
@@ -248,38 +261,44 @@ namespace Stacker
             }
         }
 
+        //метод удаляет строку из файла заявок и записывает в указаный файл с заданным результатом
+        public void RemoveStringFromOrdersFile(string str, string filePath, string res)
+        {
+            try
+            {
+                //записываем в архив строку заявки, время и результат
+                File.AppendAllText(filePath,
+                    DateTime.Now.ToString() + " : " + str + " - " + res + '\r' + '\n',
+                        System.Text.Encoding.Default);
+
+                //читаем файл заявок и удаляем из него строку с нашей заявкой
+                string[] strings = File.ReadAllLines(OrdersFile, System.Text.Encoding.Default).
+                    Where(v => v.TrimEnd('\r', '\n').IndexOf(str) == -1).ToArray();
+
+                //записываем его обратно
+                File.WriteAllLines(OrdersFile, strings, System.Text.Encoding.Default);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "RemoveStringFromOrdersFile");
+            }
+        }
+        
         //завершение заявки с удалением ее из файла заявок и запись в файл архива с временем
         //и результатом выополнения
         public void FinishOrder(bool succesed)
         {
             if (SelectedOrderNumber == -1) throw new Exception("Не установлен номер заявки");
             string res = succesed ? " succeeded" : " canceled";
+
+            //удаляем строку из файла заявок и записываем в архив
+            RemoveStringFromOrdersFile(Orders[SelectedOrderNumber].OriginalString, ArchiveFile, res);
             
-            //получаем оригинальную строку из файла
-            string orderString = Orders[SelectedOrderNumber].OriginalString;
-            try
-            {
-                //записываем в архив строку заявки, время и результат
-                File.AppendAllText(ArchiveFile,
-                    DateTime.Now.ToString() + " : " + orderString + " - " + res + '\r' + '\n',
-                        System.Text.Encoding.Default);
-
-                //читаем файл заявок и удаляем из него строку с нашей заявкой
-                string[] strings = File.ReadAllLines(OrdersFile, System.Text.Encoding.Default).
-                    Where(v => v.TrimEnd('\r', '\n').IndexOf(orderString) == -1).ToArray();
-
-                //записываем его обратно
-                File.WriteAllLines(OrdersFile, strings, System.Text.Encoding.Default);
-
-                //удаляем заявку из коллекции
-                Orders.RemoveAt(SelectedOrderNumber);
-                //сбрасываем указатель
-                SelectedOrderNumber = -1;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "FinishOrder");
-            }
+            //удаляем заявку из коллекции
+            Orders.RemoveAt(SelectedOrderNumber);
+                
+            //сбрасываем указатель
+            SelectedOrderNumber = -1;
         }
 
         //выбор заявки для последующей работы с ней
