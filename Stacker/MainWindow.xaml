@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Stacker"
         mc:Ignorable="d"
-        Title="Штабелёр" MinWidth="900" MinHeight="600" Background="#FF91AAB4" Loaded="Window_Loaded" FontSize="20" Closed="Stacker_Closed" d:DesignWidth="900" d:DesignHeight="600">
+        Title="Штабелёр" MinWidth="900" MinHeight="600" Background="#FF91AAB4" Loaded="Window_Loaded" FontSize="20" d:DesignWidth="900" d:DesignHeight="600">
 
     <Window.Resources>
         <!-- Убираем подсветку фокуса-->

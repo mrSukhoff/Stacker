@@ -115,7 +115,11 @@ namespace Stacker
         //хранит номер выбранной заявки в автоматическом режиме
         int SelectedOrderNumber = -1;
 
+        //флаг необходимости закрытия приложения при ошибке открытия порта
         private bool CloseOrInform;
+
+        //
+        private bool disposed = false;
 
         //Конструктор класса **********************************************************************************
         public StackerModel()
@@ -163,18 +167,33 @@ namespace Stacker
         //завершение работы программы  - нужно поправить по Микрософту!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
          ~StackerModel()
         {
-            Dispose();
+            Dispose(false);
         }
 
         //закрываем неуправляемые ресурсы
         public void Dispose()
         {
-            if (FileTimer != null) FileTimer.Dispose();
-            if (PlcTimer != null) PlcTimer.Dispose();
-            if (PLC != null) PLC.Dispose();
-            if (ComPort != null) ComPort.Dispose();
+            Dispose(true);
+            // подавляем финализацию
+            GC.SuppressFinalize(this);
         }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing)
+                {
+                    // Освобождаем управляемые ресурсы
+                    if (FileTimer != null) FileTimer.Dispose();
+                    if (PlcTimer != null) PlcTimer.Dispose();
+                    if (PLC != null) PLC.Dispose();
+                    if (ComPort != null) ComPort.Dispose();
+                }
+                // освобождаем неуправляемые объекты
+                disposed = true;
+            }
+        }
         //Читаем первоначальные настройки
         private void ReadINISettings()
         {

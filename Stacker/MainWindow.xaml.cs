@@ -41,6 +41,9 @@ namespace Stacker
         //стиль оттображения списка заявок
         GridView OrdersGridView = new GridView();
 
+        //
+        private bool disposed = false;
+
         //#####################################################################################################
         //Основная точка входа -------------------------------------------------------------------------------!
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -74,12 +77,6 @@ namespace Stacker
                 //прописываем обработчики для кнопок
                 SetEventHandlers();
             }
-        }
-
-        //завершение работы программы
-        private void Stacker_Closed(object sender, EventArgs e)
-        {
-            if (model != null) model.Dispose();
         }
 
         //Настраиваем визуальные компоненты
@@ -688,11 +685,27 @@ namespace Stacker
             CancelAutoButton.IsEnabled = true;
         }
 
+        //закрываем неуправляемые ресурсы
         public void Dispose()
         {
-            if (model != null) model.Dispose();
+            Dispose(true);
+            // подавляем финализацию
+            GC.SuppressFinalize(this);
         }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing)
+                {
+                    // Освобождаем управляемые ресурсы
+                    if (model != null) model.Dispose();
+                }
+                // освобождаем неуправляемые объекты
+                disposed = true;
+            }
+        }
     }
 }
 
