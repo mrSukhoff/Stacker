@@ -177,7 +177,6 @@ namespace Stacker
             // подавляем финализацию
             GC.SuppressFinalize(this);
         }
-
         protected virtual void Dispose(bool disposing)
         {
             if (!disposed)
@@ -194,6 +193,7 @@ namespace Stacker
                 disposed = true;
             }
         }
+        
         //Читаем первоначальные настройки
         private void ReadINISettings()
         {
