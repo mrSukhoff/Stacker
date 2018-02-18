@@ -72,7 +72,7 @@ namespace Stacker
                 SetUpComponents();
 
                 //Настраиваем вид списка заявок
-                GridSetUp();
+                ListViewSetUp();
 
                 //прописываем обработчики для кнопок
                 SetEventHandlers();
@@ -115,7 +115,9 @@ namespace Stacker
             //источник данных для списка ошибок
             ErrorListBox.ItemsSource = model.ErrorList;
 
+            //при необходимости прячем вкладку "взвесить"
             if (!model.ShowWeightTab) WeightTabItem.Visibility = System.Windows.Visibility.Hidden;
+            
             //настройка графика веса
             WeightPolyline.Stroke = Brushes.AliceBlue;
             WeightPolyline.StrokeThickness = 2;
@@ -143,6 +145,7 @@ namespace Stacker
                 BringSemiAutoButton.IsEnabled = !isBin;
                 BringAutoButton.IsEnabled = !isBin;
             }
+            
             //Кнопка "увезти" активируется только при работе с заявкой
             TakeAwayAutoButton.IsEnabled = false;
             //Кнопка "отмена" активируется при выборе заявки
@@ -150,32 +153,40 @@ namespace Stacker
         }
 
         //Настройки вида списка заявок
-        private void GridSetUp()
+        private void ListViewSetUp()
         {
+            GridViewColumn gvc0 = new GridViewColumn();
             GridViewColumn gvc1 = new GridViewColumn();
             GridViewColumn gvc2 = new GridViewColumn();
             GridViewColumn gvc3 = new GridViewColumn();
             GridViewColumn gvc4 = new GridViewColumn();
             GridViewColumn gvc5 = new GridViewColumn();
-            GridViewColumn gvc6 = new GridViewColumn();
-            gvc1.Header = " Тип ";
-            gvc1.DisplayMemberBinding = new Binding("OrderType");
-            gvc2.Header = " Номер заказа ";
-            gvc2.DisplayMemberBinding = new Binding("OrderNumber");
-            gvc3.Header = " Кодовое обозначение ";
-            gvc3.DisplayMemberBinding = new Binding("ProductCode");
-            gvc4.Header = " Описание ";
-            gvc4.DisplayMemberBinding = new Binding("ProductDescription");
-            gvc5.Header = " Кол-во ";
-            gvc5.DisplayMemberBinding = new Binding("Amount");
-            gvc6.Header = " Ячейка ";
-            gvc6.DisplayMemberBinding = new Binding("Address");
+            
+            gvc0.Header = " Тип ";
+            gvc0.DisplayMemberBinding = new Binding("OrderType");
+            
+            gvc1.Header = " Номер заказа ";
+            gvc1.DisplayMemberBinding = new Binding("OrderNumber");
+
+            gvc2.Header = " Кодовое обозначение ";
+            gvc2.DisplayMemberBinding = new Binding("ProductCode");
+                        
+            gvc3.Header = " Описание ";
+            gvc3.DisplayMemberBinding = new Binding("ProductDescription");
+
+            gvc4.Header = " Кол-во ";
+            gvc4.DisplayMemberBinding = new Binding("Amount");
+
+            gvc5.Header = " Ячейка ";
+            gvc5.DisplayMemberBinding = new Binding("Address");
+
+            OrdersGridView.Columns.Add(gvc0);
             OrdersGridView.Columns.Add(gvc1);
             OrdersGridView.Columns.Add(gvc2);
             OrdersGridView.Columns.Add(gvc3);
             OrdersGridView.Columns.Add(gvc4);
             OrdersGridView.Columns.Add(gvc5);
-            OrdersGridView.Columns.Add(gvc6);
+
             OrdersLitsView.View = OrdersGridView;
             OrdersLitsView.ItemsSource = model.Orders;
         }
@@ -270,10 +281,29 @@ namespace Stacker
             Dispatcher.Invoke(() => FLabel.IsEnabled = model.IsFloorMark);
         }
 
+        //при изменении размеров окна меняем размеры колонок
+        private void OrdersLitsView_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (OrdersGridView.Columns.Count < 6) return;
+            double s = 0;
+            for (ushort i = 0; i < 5; i++)
+            {
+                if (i == 3) continue;
+                s = s + OrdersGridView.Columns[i].ActualWidth;
+            }
+            OrdersGridView.Columns[3].Width = OrdersLitsView.ActualWidth - s - 100;
+        }
+
         //Обработчик нажатия кнопки STOP
         private void StopButton_Click(object sender, RoutedEventArgs e)
         {
             model.StopButton();
+            string s = "";
+            for (int i = 0; i < 5; i++)
+            {
+                s = s + i + " - " + OrdersGridView.Columns[i].ActualWidth + '\n';
+            }
+            MessageBox.Show(s);
         }
 
         //Обработчик нажатия кнопки подтверждения ошибок
@@ -692,7 +722,6 @@ namespace Stacker
             // подавляем финализацию
             GC.SuppressFinalize(this);
         }
-
         protected virtual void Dispose(bool disposing)
         {
             if (!disposed)

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Stacker"
         mc:Ignorable="d"
-        Title="Штабелёр" MinWidth="900" MinHeight="600" Background="#FF91AAB4" Loaded="Window_Loaded" FontSize="20" d:DesignWidth="900" d:DesignHeight="600">
+        Title="Штабелёр" MinWidth="900" MinHeight="600" Background="#FF91AAB4" Loaded="Window_Loaded" FontSize="20" d:DesignWidth="900" d:DesignHeight="600" Width="900" Height="600">
 
     <Window.Resources>
         <!-- Убираем подсветку фокуса-->
@@ -153,7 +153,7 @@
                     <Button x:Name="BringAutoButton" Content="_Привезти" HorizontalAlignment="Right" Height="50" Width="150" Margin="0,0,146,10"         VerticalAlignment="Bottom" Grid.Row="1" FontSize="24" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Bold" Click="BringAutoButton_Click" Foreground="#FFFCFFF5"  />
                     <Button x:Name="TakeAwayAutoButton" Content="_Увезти" HorizontalAlignment="Left" Margin="147,0,0,10"  FontWeight="Bold" Grid.Row="1" MinHeight="50" VerticalAlignment="Bottom" FontSize="24" Height="50" Width="150" Background="#FF91AAB4" Grid.Column="1" BorderBrush="#FFCBDBD7" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="TakeAwayAutoButton_Click" Foreground="#FFFCFFF5" />
                     <Button x:Name="CancelAutoButton" Content="_Отменить" HorizontalAlignment="Center" Width="150" Margin="365,0,363,10"     FontWeight="Bold" Grid.Row="1" Height="50" VerticalAlignment="Bottom" FontSize="24" Background="#FF91AAB4" Grid.ColumnSpan="2" BorderBrush="#FFCBDBD7"  VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="CancelAutoButton_Click" Foreground="#FFFCFFF5" />
-                    <ListView x:Name="OrdersLitsView" Grid.ColumnSpan="2" FontSize="24" Background="#FF91AAB4" BorderBrush="#FF3E606F" Margin="0" Foreground="Black" SelectionChanged="OrdersLitsView_SelectionChanged">
+                    <ListView x:Name="OrdersLitsView" Grid.ColumnSpan="2" FontSize="24" Background="#FF91AAB4" BorderBrush="#FF3E606F" Margin="0" Foreground="Black" SelectionChanged="OrdersLitsView_SelectionChanged" SizeChanged="OrdersLitsView_SizeChanged">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn/>
