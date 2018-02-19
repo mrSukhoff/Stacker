@@ -221,7 +221,7 @@ namespace Stacker
                 WeightBeta1 = Convert.ToInt16(manager.GetPrivateString("Weigh", "beta1"));
                 WeightAlpha2 = Convert.ToInt16(manager.GetPrivateString("Weigh", "alfa2"));
                 WeightBeta2 = Convert.ToInt16(manager.GetPrivateString("Weigh", "beta2"));
-                MaxWeight =(UInt16) (Convert.ToUInt16(manager.GetPrivateString("Weigh", "MaxWeight"))/100*WeightAlpha1+WeightBeta1);
+                MaxWeight =(UInt16) (Convert.ToUInt16(manager.GetPrivateString("Weigh", "MaxWeight"))/100*WeightBeta1+WeightAlpha1);
             }
             catch (Exception ex)
             {
