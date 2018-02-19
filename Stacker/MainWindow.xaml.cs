@@ -298,12 +298,6 @@ namespace Stacker
         private void StopButton_Click(object sender, RoutedEventArgs e)
         {
             model.StopButton();
-            string s = "";
-            for (int i = 0; i < 5; i++)
-            {
-                s = s + i + " - " + OrdersGridView.Columns[i].ActualWidth + '\n';
-            }
-            MessageBox.Show(s);
         }
 
         //Обработчик нажатия кнопки подтверждения ошибок

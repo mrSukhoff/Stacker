@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Stacker"
         mc:Ignorable="d"
-        Title="Штабелёр" MinWidth="900" MinHeight="600" Background="#FF91AAB4" Loaded="Window_Loaded" FontSize="20" d:DesignWidth="900" d:DesignHeight="600" Width="900" Height="600">
+        Title="Штабелёр" MinWidth="900" MinHeight="600" Background="#FF91AAB4" Loaded="Window_Loaded" FontSize="20" d:DesignWidth="900" d:DesignHeight="600">
 
     <Window.Resources>
         <!-- Убираем подсветку фокуса-->
@@ -184,7 +184,7 @@
                     <Button x:Name="BringSemiAutoButton" Content="_Привезти" Height="50" Margin="0,0,146,10" Grid.Row="2" VerticalAlignment="Bottom" FontSize="24" FontWeight="Bold" Background="#FF91AAB4" HorizontalAlignment="Right" Width="150" BorderBrush="#FFCBDBD7"  HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="BringOrTakeAwaySemiAutoButton_Click" Grid.ColumnSpan="2" Foreground="#FFFCFFF5"/>
                     <Button x:Name="TakeAwaySemiAutoButton" Content="_Увезти" Grid.Column="2" Height="50" Margin="147,0,0,10" Grid.Row="2" VerticalAlignment="Bottom" FontSize="24" FontWeight="Bold" Background="#FF91AAB4" HorizontalAlignment="Left" Width="150" BorderBrush="#FFCBDBD7" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="BringOrTakeAwaySemiAutoButton_Click" Grid.ColumnSpan="2" Foreground="#FFFCFFF5"/>
                     <Button x:Name="SemiAutoStopButton" Content="_СТОП!" Grid.Column="3" HorizontalAlignment="Right" Height="50" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="100" BorderBrush="#FFCBDBD7" Background="#FF9E2E2E" FontSize="24" Grid.Row="2" Style="{DynamicResource StopButtonStyle}" Click="StopButton_Click"/>
-                    <Label x:Name="SemiAutoAddressLabel" Content="X-0-0" HorizontalAlignment="Center" Margin="130,42,131,64" Width="179" FontSize="36" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.ColumnSpan="2" FontWeight="Bold" Foreground="#FFFCFFF5" Grid.Column="1"/>
+                    <Label x:Name="SemiAutoAddressLabel" Content="X-0-0" HorizontalAlignment="Center" Margin="130,42,131,64" Width="220" FontSize="36" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.ColumnSpan="2" FontWeight="Bold" Foreground="#FFFCFFF5" Grid.Column="1"/>
                     <ComboBox x:Name="RackSemiAutoComboBox" Margin="0,65,170,0" FontSize="36" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsSynchronizedWithCurrentItem="False" BorderBrush="#FFFCFFF5" HorizontalAlignment="Right" Width="100" Background="#FFCBDBB7" BorderThickness="3" SnapsToDevicePixels="True" Grid.Row="1" Grid.ColumnSpan="2" Height="98" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
