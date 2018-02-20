@@ -533,6 +533,12 @@ namespace Stacker
             y = rack[row, floor].Y;
             isNotAvailable = rack[row, floor].IsNotAvailable;
         }
+        public void GetCell(char r, int row, int floor, out int x, out int y, out bool isNotAvailable)
+        {
+            if (r != LeftRackName & r != RightRackName) throw new ArgumentException("Неправильное имя стойки");
+            bool s = r == LeftRackName ? false : true;
+            GetCell(s, row, floor, out x, out y, out isNotAvailable);
+        }
 
         //устанавливает для ячейки её координаты и доступность
         //левый стеллаж r = false

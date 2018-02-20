@@ -428,6 +428,7 @@ namespace Stacker
             bool state = model.IsBinOnPlatform;
             BringSemiAutoButton.IsEnabled = !isNotAvailable & !state;
             TakeAwaySemiAutoButton.IsEnabled &= !isNotAvailable & state;
+            IsNotAvailableLabel.Content = isNotAvailable? "Ячейка отсутствует!":"";
 
             //Формируем адрес ячейки для индикации
             char rack = RackSemiAutoComboBox.SelectedIndex == 0 ? model.LeftRackName : model.RightRackName;
@@ -707,6 +708,11 @@ namespace Stacker
         private void OrdersLitsView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             CancelAutoButton.IsEnabled = true;
+            ushort r = model.Orders[OrdersLitsView.SelectedIndex].Row;
+            ushort f = model.Orders[OrdersLitsView.SelectedIndex].Floor;
+            char n = model.Orders[OrdersLitsView.SelectedIndex].StackerName;
+            model.GetCell(n, r, f, out int x, out int y, out bool isNotAvailable);
+            BringAutoButton.IsEnabled = !isNotAvailable & !model.IsBinOnPlatform;
         }
 
         //закрываем неуправляемые ресурсы
