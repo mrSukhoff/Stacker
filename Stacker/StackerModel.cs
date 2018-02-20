@@ -118,7 +118,7 @@ namespace Stacker
         //флаг необходимости закрытия приложения при ошибке открытия порта
         private bool CloseOrInform;
 
-        //
+        //флаг уничтожения объектов
         private bool disposed = false;
 
         //Конструктор класса **********************************************************************************
@@ -134,8 +134,7 @@ namespace Stacker
             Order.LeftStackerName = LeftRackName;
             Order.RightStackerName = RightRackName;
             
-            //Запускаем таймер для проверки изменений списка заявок
-            FileTimer = new Timer(ReadOrdersFile, null, 0, 10000);
+           
 
             //Открываем порт и создаем контроллер
             try
@@ -152,7 +151,6 @@ namespace Stacker
                 WriteDword(PLC, 16, 16);
                 //записываем максимальный вес
                 WriteDword(PLC, 18, MaxWeight);
-
                 //запускаем таймер на чтение сосотояния контроллера
                 PlcTimer = new Timer(ReadStateWord, null, 0, 500);
             }
@@ -164,10 +162,16 @@ namespace Stacker
             if (!ComPort.IsOpen && !CloseOrInform) throw new NullReferenceException("!");
         }
 
-        //завершение работы программы  - нужно поправить по Микрософту!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //завершение работы программы
          ~StackerModel()
         {
             Dispose(false);
+        }
+
+        //Запускаем таймер для проверки изменений списка заявок
+        public void TimerStart()
+        {
+            FileTimer = new Timer(ReadOrdersFile, null, 0, 10000);
         }
 
         //закрываем неуправляемые ресурсы
@@ -239,12 +243,13 @@ namespace Stacker
                     new CellsGrid(path + "\\RightStack.cell") : new CellsGrid(StackerDepth, StackerHight);
         }
 
-        //Проверки изменений файла с заданиями и чтения заявок из него
+        //*Проверки изменений файла с заданиями и чтения заявок из него
         private void ReadOrdersFile(object ob)
         {
             //проверяем не изменился ли файл с момента последнего чтения
             if (File.GetLastWriteTime(OrdersFile) != LastOrdersFileAccessTime)
             {
+                bool newOrderAdded = false;
                 try
                 {
                     //MessageBox.Show(File.GetLastWriteTime(OrdersFile) + " " + LastOrdersFileAccessTime);
@@ -270,13 +275,14 @@ namespace Stacker
                             if (order != null && order.StackerName != '?' && !Orders.Contains(order))
                             {
                                 Orders.Add(order);
-                                NewOrderAppeared();
+                                newOrderAdded = true;
                             }
                             order = null;
                         }
                     }
                     //и запоминаем время последнего чтения
                     LastOrdersFileAccessTime = File.GetLastWriteTime(OrdersFile);
+                    if (newOrderAdded) NewOrderAppeared();
                 }
                 catch (Exception ex)
                 {
@@ -287,7 +293,7 @@ namespace Stacker
             }
         }
 
-        //метод удаляет строку из файла заявок и записывает в указаный файл с заданным результатом
+        //*метод удаляет строку из файла заявок и записывает в указаный файл с заданным результатом
         public void RemoveStringFromOrdersFile(string str, string filePath, string res)
         {
             try
@@ -310,7 +316,7 @@ namespace Stacker
             }
         }
         
-        //завершение заявки с удалением ее из файла заявок и запись в файл архива с временем
+        //*завершение заявки с удалением ее из файла заявок и запись в файл архива с временем
         //и результатом выополнения
         public void FinishOrder(bool succesed)
         {
@@ -327,7 +333,7 @@ namespace Stacker
             SelectedOrderNumber = -1;
         }
 
-        //выбор заявки для последующей работы с ней
+        //*выбор заявки для последующей работы с ней
         public bool SelectOrder(int orderNumber)
         {
             if (orderNumber < 0 || orderNumber >= Orders.Count) return false;
@@ -525,18 +531,13 @@ namespace Stacker
 
         //выдает по адресу ячейки её координаты и доступность
         //левый стеллаж - false
-        public void GetCell(bool r, int row, int floor, out int x, out int y, out bool isNotAvailable)
-        {
-            CellsGrid rack = !r ? LeftStacker: RightStacker;
-            x = rack[row, floor].X;
-            y = rack[row, floor].Y;
-            isNotAvailable = rack[row, floor].IsNotAvailable;
-        }
         public void GetCell(char r, int row, int floor, out int x, out int y, out bool isNotAvailable)
         {
             if (r != LeftRackName & r != RightRackName) throw new ArgumentException("Неправильное имя стойки");
-            bool s = r == LeftRackName ? false : true;
-            GetCell(s, row, floor, out x, out y, out isNotAvailable);
+            CellsGrid rack = r == LeftRackName ? LeftStacker : RightStacker;
+            x = rack[row, floor].X;
+            y = rack[row, floor].Y;
+            isNotAvailable = rack[row, floor].IsNotAvailable;
         }
 
         //устанавливает для ячейки её координаты и доступность
@@ -734,33 +735,13 @@ namespace Stacker
         public void BringOrTakeAway(bool bring)
         {
             if (SelectedOrderNumber == -1) throw new Exception("Не установлен номер заявки");
-            if (PLC != null)
-            {
-                bool rack = Orders[SelectedOrderNumber].StackerName == RightRackName;
-                int row = Orders[SelectedOrderNumber].Row;
-                int floor = Orders[SelectedOrderNumber].Floor;
-
-                CellsGrid stacker = rack ? RightStacker : LeftStacker;
-                int x = stacker[row, floor].X;
-                int y = stacker[row, floor].Y;
-
-                //Включаем режим перемещения по координатам
-                WriteDword(PLC, 8, 2);
-                //Пишем координаты
-                WriteDword(PLC, 0, x);
-                WriteDword(PLC, 2, y);
-                //Пишем ряд и этаж
-                WriteDword(PLC, 4, row);
-                WriteDword(PLC, 6, floor);
-                //Устанваливаем сторону
-                SetMerker(PLC, 2, rack);
-                //Устанавливаем флаг в "привезти/увезти"
-                SetMerker(PLC, 3, bring);
-                //Даем команду на старт
-                SetMerker(PLC, 1, true);
-            }
+            bool rack = Orders[SelectedOrderNumber].StackerName == RightRackName;
+            int row = Orders[SelectedOrderNumber].Row;
+            int floor = Orders[SelectedOrderNumber].Floor;
+            BringOrTakeAway(rack, row, floor, bring);
         }
 
+        //Команда взвесить
         public void Weigh()
         {
             if (PLC != null)

@@ -59,6 +59,9 @@ namespace Stacker
                 Application.Current.Shutdown();
             }
 
+            //Настраиваем вид списка заявок
+            ListViewSetUp();
+
             if (model != null)
             {
                 //подписываемся на события модели
@@ -66,17 +69,20 @@ namespace Stacker
                 model.CommandDone += CommandDone;
                 model.ErrorAppeared += ErrorAppeared;
                 model.CoordinateReaded += UpdateCoordinate;
-                model.StateWordChanged +=SomethingChanged;
+                model.StateWordChanged += SomethingChanged;
+
+                OrdersLitsView.ItemsSource = model.Orders;
 
                 //Настраиваем визуальные компоненты
                 SetUpComponents();
 
-                //Настраиваем вид списка заявок
-                ListViewSetUp();
-
                 //прописываем обработчики для кнопок
                 SetEventHandlers();
-            }
+                
+                //запускаем чтение заявок
+                model.TimerStart();
+            }   
+            
         }
 
         //Настраиваем визуальные компоненты
@@ -188,7 +194,8 @@ namespace Stacker
             OrdersGridView.Columns.Add(gvc5);
 
             OrdersLitsView.View = OrdersGridView;
-            OrdersLitsView.ItemsSource = model.Orders;
+            
+
         }
 
         //прописываем обработчики событий
@@ -228,6 +235,7 @@ namespace Stacker
         private void UpdateOrderList()
         {
             Dispatcher.Invoke(() => OrdersLitsView.Items.Refresh());
+            Dispatcher.Invoke( ()=>OrdersLitsView_SizeChanged(null, null));
         }
 
         //обработчик события "команда выполнена"
@@ -322,12 +330,12 @@ namespace Stacker
             try
             {
                 //вычисляем адрес ячейки
-                bool stacker = RackComboBox.SelectedIndex != 0;
+                char stack = (char)RackComboBox.SelectedItem;
                 int row = RowComboBox.SelectedIndex+1;
                 int floor = FloorComboBox.SelectedIndex+1;
 
                 //получаем координаты
-                model.GetCell(stacker, row, floor, out int x, out int y, out bool isNOTAvailable);
+                model.GetCell(stack, row, floor, out int x, out int y, out bool isNOTAvailable);
 
                 //отключаем обработчики на изменение координат
                 CoordinateXTextBox.TextChanged -= CoordinateChanged;
@@ -419,10 +427,10 @@ namespace Stacker
         private void SemiAutoComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             //получаем из базы координаты и доступность ячеек
-            bool stack = RackSemiAutoComboBox.SelectedIndex == 1;
+            char stack = (char)RackComboBox.SelectedItem;
             int r = RowSemiAutoComboBox.SelectedIndex + 1;
             int f = FloorSemiAutoCombobox.SelectedIndex + 1;
-            model.GetCell(stack, r, f,out int x,out int y,out bool isNotAvailable);
+            model.GetCell(stack, r, f, out int x, out int y, out bool isNotAvailable);
 
             //устанавливаем доступность кнопок в зависимости от состояния ячейки
             bool state = model.IsBinOnPlatform;
@@ -441,7 +449,7 @@ namespace Stacker
             int r = RowXComboBox.SelectedIndex + 1;
             int f = FloorYComboBox.SelectedIndex + 1;
             if (r < 1 | f < 1) return;
-            model.GetCell(false, r, f, out int x, out int y, out bool z);
+            model.GetCell(model.LeftRackName, r, f, out int x, out int y, out bool z);
             GotoXTextBox.Text = x.ToString();
             GotoYTextBox.Text = y.ToString();
         }
@@ -728,10 +736,8 @@ namespace Stacker
             {
                 if (disposing)
                 {
-                    // Освобождаем управляемые ресурсы
                     if (model != null) model.Dispose();
                 }
-                // освобождаем неуправляемые объекты
                 disposed = true;
             }
         }

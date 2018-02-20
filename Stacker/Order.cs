@@ -37,7 +37,7 @@ namespace Stacker
             {
                 if (str[i]=='~')  z++; 
             }
-            //если количество полей в строке отличается от 11 кидаем исключение
+            //если количество полей в строке отличается от 13 кидаем исключение
             if (z!=13) throw new ArgumentException("Неправильный формат заявки");
                         
             //разбиваем строку и заносим данные в соответсвтующие поля
@@ -53,7 +53,8 @@ namespace Stacker
             ManufacturersBatchNumber = strings[7];
             Amount = strings[8];
             Unit = strings[9];
-            char sn = strings[10].Length>0? strings[10][0]:'?';
+            if (strings[10].Length==0) throw new ArgumentException("Неправильный формат заявки");
+            char sn = strings[10][0];
             if (sn == LeftStackerName || sn == RightStackerName) StackerName = sn;
             else StackerName='?';
             if (UInt16.TryParse(strings[11], out UInt16 row)) Row = row;
