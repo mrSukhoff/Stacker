@@ -259,10 +259,9 @@ namespace Stacker
                         {
                             order = new Order(str);
                         }
-                        //в случае ошибки выводим сообщение о неправильной строке
+                        //в случае ошибки строку переносим в файл с ошибками
                         catch (ArgumentException ae)
                         {
-                            //MessageBox.Show(ae.Message, caption: "ReadOrdersFile");
                             RemoveStringFromOrdersFile(str, WrongOrdersFile, ae.Message);
                         }
                         //в зависимости от результата добавляем строку или не добавляем

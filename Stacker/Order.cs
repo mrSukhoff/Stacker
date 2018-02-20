@@ -53,7 +53,7 @@ namespace Stacker
             ManufacturersBatchNumber = strings[7];
             Amount = strings[8];
             Unit = strings[9];
-            char sn = strings[10][0];
+            char sn = strings[10].Length>0? strings[10][0]:'?';
             if (sn == LeftStackerName || sn == RightStackerName) StackerName = sn;
             else StackerName='?';
             if (UInt16.TryParse(strings[11], out UInt16 row)) Row = row;
