@@ -38,7 +38,7 @@ namespace Stacker
                 if (str[i]=='~')  z++; 
             }
             //если количество полей в строке отличается от 13 кидаем исключение
-            if (z!=13) throw new ArgumentException("Неправильный формат заявки");
+            if (z!=13) throw new ArgumentException("Неверное количество полей");
                         
             //разбиваем строку и заносим данные в соответсвтующие поля
             string[] strings = str.Split('~');
@@ -53,19 +53,19 @@ namespace Stacker
             ManufacturersBatchNumber = strings[7];
             Amount = strings[8];
             Unit = strings[9];
-            if (strings[10].Length==0) throw new ArgumentException("Неправильный формат заявки");
+            if (strings[10].Length==0) throw new ArgumentException("Пустое поле имени стеллажа");
             char sn = strings[10][0];
             if (sn == LeftStackerName || sn == RightStackerName) StackerName = sn;
             else StackerName='?';
             if (UInt16.TryParse(strings[11], out UInt16 row)) Row = row;
-            else throw new ArgumentException("Неправильный формат заявки");
+            else throw new ArgumentException("Некорректный номер ряда");
             if (UInt16.TryParse(strings[12], out UInt16 floor)) Floor = floor;
-            else throw new ArgumentException("Неправильный формат заявки");
+            else throw new ArgumentException("Некорректный номер этажа");
             Cell = strings[13];
             Address = StackerName +"-"+ Row + "-" + Floor;
         }
 
         //для интерфейса IEquatable сравнение двух заявок
-        public bool Equals(Order other) => (ProductCode == other.ProductCode) & (Address == other.Address);
+        public bool Equals(Order other) => OriginalString == other.OriginalString;
     }
 }

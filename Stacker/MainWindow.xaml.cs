@@ -299,7 +299,8 @@ namespace Stacker
                 if (i == 3) continue;
                 s = s + OrdersGridView.Columns[i].ActualWidth;
             }
-            OrdersGridView.Columns[3].Width = OrdersLitsView.ActualWidth - s - 100;
+            //и не спрашивайте почему 107 :-)
+            OrdersGridView.Columns[3].Width = OrdersLitsView.ActualWidth - s - 107;
         }
 
         //Обработчик нажатия кнопки STOP
@@ -653,8 +654,9 @@ namespace Stacker
             int i = OrdersLitsView.SelectedIndex;
             //Если элемент выбран, удаляем его, иначе выходим
             if (model.SelectOrder(i)) model.FinishOrder(false);
+            OrdersLitsView.SelectedIndex = -1;
             OrdersLitsView.Items.Refresh();
-            CancelAutoButton.IsEnabled = false;
+            
         }
 
         //нажатие кнопки "взвесить"
@@ -716,11 +718,19 @@ namespace Stacker
         private void OrdersLitsView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             CancelAutoButton.IsEnabled = true;
-            ushort r = model.Orders[OrdersLitsView.SelectedIndex].Row;
-            ushort f = model.Orders[OrdersLitsView.SelectedIndex].Floor;
-            char n = model.Orders[OrdersLitsView.SelectedIndex].StackerName;
+            int index = OrdersLitsView.SelectedIndex;
+            if (index < 0)
+            {
+                BringAutoButton.IsEnabled = false;
+                CancelAutoButton.IsEnabled = false;
+                return;
+            }
+            int r = model.Orders[index].Row;
+            int f = model.Orders[index].Floor;
+            char n = model.Orders[index].StackerName;
             model.GetCell(n, r, f, out int x, out int y, out bool isNotAvailable);
             BringAutoButton.IsEnabled = !isNotAvailable & !model.IsBinOnPlatform;
+            CancelAutoButton.IsEnabled = true;
         }
 
         //закрываем неуправляемые ресурсы

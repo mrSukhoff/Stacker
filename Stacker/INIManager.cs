@@ -30,7 +30,7 @@ namespace Stacker
         private string path = null; //Для хранения пути к INI-файлу
 
         //Импорт функции GetPrivateProfileString (для чтения значений) из библиотеки kernel32.dll
-        [DllImport("kernel32.dll", EntryPoint = "GetPrivateProfileString")]
+        [DllImport("kernel32.dll", EntryPoint = "GetPrivateProfileString", CharSet = CharSet.Unicode)]
         private static extern int GetPrivateString(string section, string key, string def, StringBuilder buffer, int size, string path);
     }
 }
