@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace Stacker
 {
-    class OrdersManager
+    class OrdersManager : IDisposable
     {
         //коллекция заявок
         public List<Order> Orders { get; private set; } = new List<Order>();
@@ -17,6 +19,9 @@ namespace Stacker
         //появилась новая заявка
         public event StackerModelEventHandler NewOrderAppeared = (() => { });
 
+        //внутрении поля --------------------------------------------------------------------------
+
+        //места хранения файлов заявлок и архива
         private string OrdersFile;
         private string ArchiveFile;
         private string WrongOrdersFile;
@@ -30,7 +35,67 @@ namespace Stacker
         //хранит номер выбранной заявки в автоматическом режиме
         int SelectedOrderNumber = -1;
 
-        //Проверки изменений файла с заданиями и чтения заявок из него
+        //методы ----------------------------------------------------------------------------------
+        //public
+               
+        //*метод удаляет строку из файла заявок и записывает в указаный файл с заданным результатом
+        public void RemoveStringFromOrdersFile(string str, string filePath, string res)
+        {
+            try
+            {
+                //записываем в архив строку заявки, время и результат
+                File.AppendAllText(filePath,
+                    DateTime.Now.ToString() + " : " + str + " - " + res + '\r' + '\n',
+                        System.Text.Encoding.Default);
+
+                //читаем файл заявок и удаляем из него строку с нашей заявкой
+                string[] strings = File.ReadAllLines(OrdersFile, System.Text.Encoding.Default).
+                    Where(v => v.TrimEnd('\r', '\n').IndexOf(str) == -1).ToArray();
+
+                //записываем его обратно
+                File.WriteAllLines(OrdersFile, strings, System.Text.Encoding.Default);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "RemoveStringFromOrdersFile");
+            }
+        }
+
+        //*завершение заявки с удалением ее из файла заявок и запись в файл архива с временем
+        //и результатом выополнения
+        public void FinishOrder(bool succesed)
+        {
+            if (SelectedOrderNumber == -1) throw new Exception("Не установлен номер заявки");
+            string res = succesed ? " succeeded" : " canceled";
+
+            //удаляем строку из файла заявок и записываем в архив
+            RemoveStringFromOrdersFile(Orders[SelectedOrderNumber].OriginalString, ArchiveFile, res);
+
+            //удаляем заявку из коллекции
+            Orders.RemoveAt(SelectedOrderNumber);
+
+            //сбрасываем указатель
+            SelectedOrderNumber = -1;
+        }
+
+        //*выбор заявки для последующей работы с ней
+        public bool SelectOrder(int orderNumber)
+        {
+            if (orderNumber < 0 || orderNumber >= Orders.Count) return false;
+            else
+            {
+                SelectedOrderNumber = orderNumber;
+                return true;
+            }
+        }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
+        }
+
+        //private ---------------------------------------------------------------------------------
+        //*Проверки изменений файла с заданиями и чтения заявок из него
         private void ReadOrdersFile(object ob)
         {
             //проверяем не изменился ли файл с момента последнего чтения
@@ -79,57 +144,5 @@ namespace Stacker
 
             }
         }
-
-        //метод удаляет строку из файла заявок и записывает в указаный файл с заданным результатом
-        public void RemoveStringFromOrdersFile(string str, string filePath, string res)
-        {
-            try
-            {
-                //записываем в архив строку заявки, время и результат
-                File.AppendAllText(filePath,
-                    DateTime.Now.ToString() + " : " + str + " - " + res + '\r' + '\n',
-                        System.Text.Encoding.Default);
-
-                //читаем файл заявок и удаляем из него строку с нашей заявкой
-                string[] strings = File.ReadAllLines(OrdersFile, System.Text.Encoding.Default).
-                    Where(v => v.TrimEnd('\r', '\n').IndexOf(str) == -1).ToArray();
-
-                //записываем его обратно
-                File.WriteAllLines(OrdersFile, strings, System.Text.Encoding.Default);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "RemoveStringFromOrdersFile");
-            }
-        }
-
-        //завершение заявки с удалением ее из файла заявок и запись в файл архива с временем
-        //и результатом выополнения
-        public void FinishOrder(bool succesed)
-        {
-            if (SelectedOrderNumber == -1) throw new Exception("Не установлен номер заявки");
-            string res = succesed ? " succeeded" : " canceled";
-
-            //удаляем строку из файла заявок и записываем в архив
-            RemoveStringFromOrdersFile(Orders[SelectedOrderNumber].OriginalString, ArchiveFile, res);
-
-            //удаляем заявку из коллекции
-            Orders.RemoveAt(SelectedOrderNumber);
-
-            //сбрасываем указатель
-            SelectedOrderNumber = -1;
-        }
-
-        //выбор заявки для последующей работы с ней
-        public bool SelectOrder(int orderNumber)
-        {
-            if (orderNumber < 0 || orderNumber >= Orders.Count) return false;
-            else
-            {
-                SelectedOrderNumber = orderNumber;
-                return true;
-            }
-        }
-        
     }
 }

@@ -294,7 +294,7 @@ namespace Stacker
         }
 
         //*метод удаляет строку из файла заявок и записывает в указаный файл с заданным результатом
-        public void RemoveStringFromOrdersFile(string str, string filePath, string res)
+        private void RemoveStringFromOrdersFile(string str, string filePath, string res)
         {
             try
             {

@@ -114,6 +114,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CellsGrid.cs" />
+    <Compile Include="OrdersManager.cs" />
+    <Compile Include="SettingsKeeper.cs" />
     <Compile Include="StackerModel.cs" />
     <Compile Include="INIManager.cs" />
     <Compile Include="Order.cs" />
@@ -153,7 +155,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="b141_15-512.ico" />
+    <Resource Include="b141_15-512.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
