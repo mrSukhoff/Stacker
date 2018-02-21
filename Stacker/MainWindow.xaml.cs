@@ -122,7 +122,7 @@ namespace Stacker
             ErrorListBox.ItemsSource = model.ErrorList;
 
             //при необходимости прячем вкладку "взвесить"
-            if (!model.ShowWeightTab) WeightTabItem.Visibility = System.Windows.Visibility.Hidden;
+            if (!model.Settings.ShowWeightTab) WeightTabItem.Visibility = System.Windows.Visibility.Hidden;
             
             //настройка графика веса
             WeightPolyline.Stroke = Brushes.AliceBlue;
@@ -699,13 +699,13 @@ namespace Stacker
             Dispatcher.Invoke(() => MeasuredWeight2PointCollection.Add(point21));
             Dispatcher.Invoke(() => MeasuredWeight2PointCollection.Add(point22));
 
-            float w = model.MeasuredWeight - model.WeightAlpha1;
-            w = model.WeightBeta1 == 0 ? w : w * 100 / model.WeightBeta1;
+            float w = model.MeasuredWeight - model.Settings.WeightAlpha1;
+            w = model.Settings.WeightBeta1 == 0 ? w : w * 100 / model.Settings.WeightBeta1;
                        
             Dispatcher.Invoke(() => MeasuredWeightLabel.Content = w.ToString() + " кг");
 
-            w = model.MeasuredWeight2 - model.WeightAlpha2;
-            w = model.WeightBeta2 == 0 ? w : w * 100 / model.WeightBeta2;
+            w = model.MeasuredWeight2 - model.Settings.WeightAlpha2;
+            w = model.Settings.WeightBeta2 == 0 ? w : w * 100 / model.Settings.WeightBeta2;
 
             Dispatcher.Invoke(() => MeasuredWeightLabel2.Content = w.ToString() + " кг");
 

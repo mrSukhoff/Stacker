@@ -9,18 +9,27 @@ namespace Stacker
 {
     class SettingsKeeper
     {
+        //места хранения файлов заявлок и архива
         public string  OrdersFile { get; }
         public string ArchiveFile { get; }
         public string WrongOrdersFile { get; }
+        public string CellsFile { get; }
+
         public bool CloseOrInform { get; }
         public bool ShowWeightTab { get; }
+
         public char LeftRackName { get; }
         public char RightRackName { get; }
+
+        //имя порта, к которому подключен контроллер
         public string ComPort { get; }
+
+        //коэффициенты для пересчета тока ПЧ в вес
         public UInt16 WeightAlpha1 { get; }
         public UInt16 WeightBeta1 { get; }
         public UInt16 WeightAlpha2 { get; }
         public UInt16 WeightBeta2 { get; }
+        //Максимальный вес груза
         public UInt16 MaxWeight { get; }
         
         //Читаем первоначальные настройки
@@ -34,6 +43,7 @@ namespace Stacker
                 OrdersFile = manager.GetPrivateString("General", "OrderFile");
                 ArchiveFile = manager.GetPrivateString("General", "ArchiveFile");
                 WrongOrdersFile = manager.GetPrivateString("General", "WrongOrdersFile");
+                CellsFile = manager.GetPrivateString("General", "CellsFile");
                 CloseOrInform = Convert.ToBoolean(manager.GetPrivateString("General", "CloseOrInform"));
                 ShowWeightTab = Convert.ToBoolean(manager.GetPrivateString("General", "ShowWeightTab"));
 
@@ -50,6 +60,8 @@ namespace Stacker
                 WeightAlpha2 = Convert.ToUInt16(manager.GetPrivateString("Weigh", "alfa2"));
                 WeightBeta2 = Convert.ToUInt16(manager.GetPrivateString("Weigh", "beta2"));
                 MaxWeight = (UInt16)(Convert.ToUInt16(manager.GetPrivateString("Weigh", "MaxWeight")) * WeightBeta1 / 100 + WeightAlpha1);
+
+                manager = null;
             }
             catch (Exception ex)
             {
