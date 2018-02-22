@@ -9,30 +9,35 @@ namespace Stacker
 {
     class SettingsKeeper
     {
+        //orders
         //места хранения файлов заявлок и архива
-        public string  OrdersFile { get; }
+        public string OrdersFile { get; }
         public string ArchiveFile { get; }
         public string WrongOrdersFile { get; }
-        public string CellsFile { get; }
 
-        public bool CloseOrInform { get; }
+        //view
+        //показывать вкладку "взвесить"
         public bool ShowWeightTab { get; }
-
-        public char LeftRackName { get; }
-        public char RightRackName { get; }
-
-        //имя порта, к которому подключен контроллер
-        public string ComPort { get; }
-
         //коэффициенты для пересчета тока ПЧ в вес
         public UInt16 WeightAlpha1 { get; }
         public UInt16 WeightBeta1 { get; }
         public UInt16 WeightAlpha2 { get; }
         public UInt16 WeightBeta2 { get; }
+
+        //crane
+        //имя порта, к которому подключен контроллер
+        public string ComPort { get; }
+
+        //  ???
+        public bool CloseOrInform { get; }
+        public string CellsFile { get; }
+        public char LeftRackName { get; }
+        public char RightRackName { get; }
+                
         //Максимальный вес груза
         public UInt16 MaxWeight { get; }
         
-        //Читаем первоначальные настройки
+        //Читаем настройки
         public SettingsKeeper()
         {
             string path = Environment.CurrentDirectory + "\\Stacker.ini";

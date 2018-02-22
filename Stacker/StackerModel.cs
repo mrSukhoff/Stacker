@@ -13,38 +13,23 @@ namespace Stacker
     class StackerModel : IDisposable
     {
         //видимые свойства объекта ****************************************************************************
-        public SettingsKeeper Settings;
-
-        /*
-        //места хранения файлов заявлок и архива
-        private string OrdersFile;
-        private string ArchiveFile;
-        private string WrongOrdersFile;
-        */
 
         //имена и размеры стеллажей
         //нулевая позиция по горизонтали - место погрузки
         public int StackerDepth { get; } = 29;
         public int StackerHight { get; } = 16;
-        public char LeftRackName { get; private set; }
-        public char RightRackName { get; private set; }
+        
                 
         //Максимальные значения координат
         public int MaxX { get; } = 55000;
         public int MaxY { get; } = 14000;
-
-        /*
-        //Максимальный вес груза
-        public UInt16 MaxWeight;
-        */
-
+        
         //коллекция заявок
-        public List<Order> Orders { get; private set; } = new List<Order>();
+        //public List<Order> Orders { get; private set; } = new List<Order>();
         
         //События
         public delegate void StackerModelEventHandler();
-        //появилась новая заявка
-        public event StackerModelEventHandler NewOrderAppeared = (() => { });
+                        
         //появился флаг завершения выполнения команды
         public event StackerModelEventHandler CommandDone = (() => { });
         //флаг ошибки
@@ -86,34 +71,20 @@ namespace Stacker
         //флаг нахождения крана на начальной позиции
         public bool IsFloorMark;
 
-        /*
-        //коэффициенты для пересчета тока ПЧ в вес
-        public int WeightAlpha1;
-        public int WeightBeta1;
-        public int WeightAlpha2;
-        public int WeightBeta2;
-        */
-
-        /*
-        //сообщаем вью, надо ли показывать вкладку взвешивания
-        public bool ShowWeightTab = false;
-        */
-
         //внутренние поля класса ******************************************************************************
 
-        // переменная для контроля изменения файла заявок
-        private DateTime LastOrdersFileAccessTime = DateTime.Now;
+        OrdersManager OrdersManager;
+        SettingsKeeper Settings;
 
-        // таймер для контроля изменения файла заявок
-        private Timer FileTimer;
-        
+        private char LeftRackName;
+        private char RightRackName;
+
         //Таймер для чтения слова состояния контроллера
         private Timer PlcTimer;
         
         //Координаты ячеек
         private CellsGrid Stacker;
         
-
         //Com-порт к которому подсоединен контроллер
         private SerialPort ComPort = null;
         
@@ -121,35 +92,24 @@ namespace Stacker
         private IModbusMaster PLC;
 
         //хранит номер выбранной заявки в автоматическом режиме
-        int SelectedOrderNumber = -1;
-
-        /*
-        //флаг необходимости закрытия приложения при ошибке открытия порта
-        private bool CloseOrInform;
-        */
+        //int SelectedOrderNumber = -1;
 
         //флаг уничтожения объектов
         private bool disposed = false;
         
         //Конструктор класса **********************************************************************************
-        public StackerModel()
+        public StackerModel(OrdersManager ordersManager, SettingsKeeper settingsKeeper)
         {
-            //Читаем первоначальные настройки
-            SettingsKeeper Settings = new SettingsKeeper();
+            OrdersManager = ordersManager;
+            Settings = settingsKeeper; 
 
-            LeftRackName = Settings.LeftRackName;
-            RightRackName = Settings.RightRackName;
+            //LeftRackName = Settings.LeftRackName;
+            //RightRackName = Settings.RightRackName;
 
             //Загружаем таблицы координат ячеек
-            //LoadCellGrid();
             string path = Environment.CurrentDirectory+"\\"+Settings.CellsFile;
             Stacker = File.Exists(path) ? new CellsGrid(path) : new CellsGrid(StackerDepth, StackerHight);
-
-            //Записываем в класс заявок имена и названия штабелеров для идентификации заявок
-            Order.LeftStackerName = LeftRackName;
-            Order.RightStackerName = RightRackName;
-           
-
+            
             //Открываем порт и создаем контроллер
             try
             {
@@ -183,12 +143,6 @@ namespace Stacker
             Dispose(false);
         }
 
-        //Запускаем таймер для проверки изменений списка заявок
-        public void TimerStart()
-        {
-            FileTimer = new Timer(ReadOrdersFile, null, 0, 10000);
-        }
-
         //закрываем неуправляемые ресурсы
         public void Dispose()
         {
@@ -203,7 +157,6 @@ namespace Stacker
                 if (disposing)
                 {
                     // Освобождаем управляемые ресурсы
-                    if (FileTimer != null) FileTimer.Dispose();
                     if (PlcTimer != null) PlcTimer.Dispose();
                     if (PLC != null) PLC.Dispose();
                     if (ComPort != null) ComPort.Dispose();
@@ -213,154 +166,6 @@ namespace Stacker
             }
         }
         
-        /*
-        //Читаем первоначальные настройки
-        private void ReadINISettings()
-        {
-            string path = Environment.CurrentDirectory + "\\Stacker.ini";
-            try
-            {
-                INIManager manager = new INIManager(path);
-                //общие
-                OrdersFile = manager.GetPrivateString("General", "OrderFile");
-                ArchiveFile = manager.GetPrivateString("General", "ArchiveFile");
-                WrongOrdersFile = manager.GetPrivateString("General", "WrongOrdersFile"); 
-                CloseOrInform = Convert.ToBoolean(manager.GetPrivateString("General", "CloseOrInform"));
-                ShowWeightTab = Convert.ToBoolean(manager.GetPrivateString("General", "ShowWeightTab"));
-                
-                //свойства стеллажей
-                LeftRackName = Convert.ToChar(manager.GetPrivateString("Stacker", "LeftRackName"));
-                RightRackName = Convert.ToChar(manager.GetPrivateString("Stacker", "RightRackName"));
-                
-                //настройки порта
-                string port = manager.GetPrivateString("PLC", "ComPort");
-                ComPort = new SerialPort(port, 115200, Parity.Even, 7, StopBits.One);
-                
-                //настройка весов
-                WeightAlpha1 = Convert.ToInt16(manager.GetPrivateString("Weigh", "alfa1"));
-                WeightBeta1 = Convert.ToInt16(manager.GetPrivateString("Weigh", "beta1"));
-                WeightAlpha2 = Convert.ToInt16(manager.GetPrivateString("Weigh", "alfa2"));
-                WeightBeta2 = Convert.ToInt16(manager.GetPrivateString("Weigh", "beta2"));
-                MaxWeight =(UInt16) (Convert.ToUInt16(manager.GetPrivateString("Weigh", "MaxWeight"))*WeightBeta1/100+WeightAlpha1);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, caption: "ReadINISettings");
-            }
-        }
-        */
-
-        /*
-        //Загружаем таблицы координат ячеек
-        private void LoadCellGrid()
-        {
-            string path = Environment.CurrentDirectory;
-            Stacker = File.Exists(path + "\\Stack.cell") ?
-                    new CellsGrid(path + "\\Stack.cell") : new CellsGrid(StackerDepth, StackerHight);
-        }
-        */
-
-        //*Проверки изменений файла с заданиями и чтения заявок из него
-        private void ReadOrdersFile(object ob)
-        {
-            //проверяем не изменился ли файл с момента последнего чтения
-            if (File.GetLastWriteTime(Settings.OrdersFile) != LastOrdersFileAccessTime)
-            {
-                bool newOrderAdded = false;
-                try
-                {
-                    //MessageBox.Show(File.GetLastWriteTime(OrdersFile) + " " + LastOrdersFileAccessTime);
-                    //и если изменился читаем его
-                    string[] lines;
-                    lines = File.ReadAllLines(Settings.OrdersFile, System.Text.Encoding.Default);
-                    Order order = null;
-                    foreach (string str in lines)
-                    {
-                        //пытаемся преобразовать каждую строку в заявку
-                        try
-                        {
-                            order = new Order(str);
-                        }
-                        //в случае ошибки строку переносим в файл с ошибками
-                        catch (ArgumentException ae)
-                        {
-                            RemoveStringFromOrdersFile(str, Settings.WrongOrdersFile, ae.Message);
-                        }
-                        //в зависимости от результата добавляем строку или не добавляем
-                        finally
-                        {
-                            if (order != null && order.StackerName != '?' && !Orders.Contains(order))
-                            {
-                                Orders.Add(order);
-                                newOrderAdded = true;
-                            }
-                            order = null;
-                        }
-                    }
-                    //и запоминаем время последнего чтения
-                    LastOrdersFileAccessTime = File.GetLastWriteTime(Settings.OrdersFile);
-                    if (newOrderAdded) NewOrderAppeared();
-                }
-                catch (Exception ex)
-                {
-                    FileTimer.Dispose();
-                    MessageBox.Show(ex.Message, "ReadOrdersFile");
-                }
-
-            }
-        }
-
-        //*метод удаляет строку из файла заявок и записывает в указаный файл с заданным результатом
-        private void RemoveStringFromOrdersFile(string str, string filePath, string res)
-        {
-            try
-            {
-                //записываем в архив строку заявки, время и результат
-                File.AppendAllText(filePath,
-                    DateTime.Now.ToString() + " : " + str + " - " + res + '\r' + '\n',
-                        System.Text.Encoding.Default);
-
-                //читаем файл заявок и удаляем из него строку с нашей заявкой
-                string[] strings = File.ReadAllLines(Settings.OrdersFile, System.Text.Encoding.Default).
-                    Where(v => v.TrimEnd('\r', '\n').IndexOf(str) == -1).ToArray();
-
-                //записываем его обратно
-                File.WriteAllLines(Settings.OrdersFile, strings, System.Text.Encoding.Default);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "RemoveStringFromOrdersFile");
-            }
-        }
-        
-        //*завершение заявки с удалением ее из файла заявок и запись в файл архива с временем
-        //и результатом выополнения
-        public void FinishOrder(bool succesed)
-        {
-            if (SelectedOrderNumber == -1) throw new Exception("Не установлен номер заявки");
-            string res = succesed ? " succeeded" : " canceled";
-
-            //удаляем строку из файла заявок и записываем в архив
-            RemoveStringFromOrdersFile(Orders[SelectedOrderNumber].OriginalString, Settings.ArchiveFile, res);
-            
-            //удаляем заявку из коллекции
-            Orders.RemoveAt(SelectedOrderNumber);
-                
-            //сбрасываем указатель
-            SelectedOrderNumber = -1;
-        }
-
-        //*выбор заявки для последующей работы с ней
-        public bool SelectOrder(int orderNumber)
-        {
-            if (orderNumber < 0 || orderNumber >= Orders.Count) return false;
-            else
-            {
-                SelectedOrderNumber = orderNumber;
-                return true;
-            }
-        }
-
         //Сохранение массивов координат ячеек в файлы
         public void SaveCells()
         {
@@ -538,7 +343,6 @@ namespace Stacker
             return bits[num];
         }
 
-        
         //выдает по адресу ячейки её координаты и доступность
         public void GetCell(char r, int row, int floor, out int x, out int y, out bool isNotAvailable)
         {
@@ -547,7 +351,6 @@ namespace Stacker
             y = Stacker[row, floor].Y;
             isNotAvailable = r == LeftRackName ? Stacker[row, floor].LeftSideIsNotAvailable : Stacker[row, floor].RightSideIsNotAvailable;
         }
-        
         
         //устанавливает для ячейки её координаты и доступность
         //левый стеллаж r = false
@@ -561,14 +364,14 @@ namespace Stacker
             else Stacker[row, floor].RightSideIsNotAvailable = isNotAvailable;
         }
 
-        //команда подтверждения ошибок в ПЛК и очистка списка ошибок
+        //*команда подтверждения ошибок в ПЛК и очистка списка ошибок
         public void SubmitError()
         {
             ErrorList.Clear();
             if (PLC != null) SetMerker(PLC, 101, true);
         }
 
-        //команда дальше
+        //*команда дальше
         public void FartherButton(bool state)
         {
             if (PLC != null)
@@ -580,7 +383,7 @@ namespace Stacker
             }
         }
 
-        //команда ближе
+        //*команда ближе
         public void CloserButton(bool state)
         {
             if (PLC != null)
@@ -592,7 +395,7 @@ namespace Stacker
             }
         }
 
-        //команда вверх
+        //*команда вверх
         public void UpButton(bool state)
         {
             if (PLC != null)
@@ -604,7 +407,7 @@ namespace Stacker
             }
         }
 
-        //команда вниз
+        //*команда вниз
         public void DownButton(bool state)
         {
             if (PLC != null)
@@ -616,7 +419,7 @@ namespace Stacker
             }
         }
 
-        //Команда на движение дальше до следующего ряда
+        //*Команда на движение дальше до следующего ряда
         public void NextLineFartherCommand()
         {
             if (PLC != null)
@@ -628,7 +431,7 @@ namespace Stacker
             }
         }
 
-        //Команда на движение ближе до следующего ряда
+        //*Команда на движение ближе до следующего ряда
         public void NextLineCloserCommand()
         {
             if (PLC != null)
@@ -640,7 +443,7 @@ namespace Stacker
             }
         }
 
-        //Команда на движение вверх до следующего этажа
+        //*Команда на движение вверх до следующего этажа
         public void NextLineUpCommand()
         {
             if (PLC != null)
@@ -652,7 +455,7 @@ namespace Stacker
             }
         }
 
-        //Команда на движение вниз до следующего этажа
+        //*Команда на движение вниз до следующего этажа
         public void NextLineDownCommand()
         {
             if (PLC != null)
@@ -664,7 +467,7 @@ namespace Stacker
             }
         }
 
-        //команда "платформа влево"
+        //*команда "платформа влево"
         public void PlatformToLeft()
         {
             if (PLC != null)
@@ -676,7 +479,7 @@ namespace Stacker
             }
         }
 
-        //команда "платформа вправо"
+        //*команда "платформа вправо"
         public void PlatformToRight()
         {
             if (PLC != null)
@@ -688,13 +491,13 @@ namespace Stacker
             }
         }
 
-        //команда STOP
+        //*команда STOP
         public void StopButton()
         {
             if (PLC != null) SetMerker(PLC, 0, true);
         }
 
-        //команда "Перейти на координаты"
+        //*команда "Перейти на координаты"
         public void GotoXY(int x, int y)
         {
             //проверяем аргументы на допустимость
@@ -713,7 +516,7 @@ namespace Stacker
             }
         }
 
-        //Команда "привезти/увезти" из/в конкретную ячейку. bring = true - привезти
+        //*Команда "привезти/увезти" из/в конкретную ячейку. bring = true - привезти
         public void BringOrTakeAway(bool rack, int row, int floor, bool bring)
         {
             if (PLC != null)
@@ -742,17 +545,17 @@ namespace Stacker
             }
         }
         
-        //Команда "привезти/увезти" по зараннее установленной заявке, bring = true - привезти
+        //*Команда "привезти/увезти" по зараннее установленной заявке, bring = true - привезти
         public void BringOrTakeAway(bool bring)
         {
-            if (SelectedOrderNumber == -1) throw new Exception("Не установлен номер заявки");
-            bool rack = Orders[SelectedOrderNumber].StackerName == RightRackName;
-            int row = Orders[SelectedOrderNumber].Row;
-            int floor = Orders[SelectedOrderNumber].Floor;
+            Order order = OrdersManager.GetSelectedOrder();
+            bool rack = order.StackerName == RightRackName;
+            int row = order.Row;
+            int floor = order.Floor;
             BringOrTakeAway(rack, row, floor, bring);
         }
 
-        //Команда взвесить
+        //*Команда взвесить
         public void Weigh()
         {
             if (PLC != null)
@@ -764,7 +567,7 @@ namespace Stacker
             }
         }
 
-        //читает бит наличие ящика на платформе в слове состояния
+        //*читает бит наличие ящика на платформе в слове состояния
         public bool ChekBinOnPlatform()
         {
             int word = 0;

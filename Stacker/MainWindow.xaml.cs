@@ -20,6 +20,11 @@ namespace Stacker
             InitializeComponent();
         }
 
+        //хранилище настроек
+        SettingsKeeper Settings = new SettingsKeeper();
+
+        public OrdersManager ordersManager;
+
         //формат ввода координат в textbox'ы
         private Regex CoordinateRegex = new Regex(@"\d");
 
@@ -48,10 +53,13 @@ namespace Stacker
         //Основная точка входа -------------------------------------------------------------------------------!
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            ordersManager = new OrdersManager(Settings.OrdersFile, Settings.ArchiveFile, Settings.WrongOrdersFile,
+                Settings.LeftRackName, Settings.RightRackName);
+
             try
             {
                 //создаем модель
-                model = new StackerModel();
+                model = new StackerModel(ordersManager,Settings);
             }
             catch (NullReferenceException)
             {
@@ -65,13 +73,13 @@ namespace Stacker
             if (model != null)
             {
                 //подписываемся на события модели
-                model.NewOrderAppeared += UpdateOrderList;
+                ordersManager.NewOrderAppeared += UpdateOrderList;
                 model.CommandDone += CommandDone;
                 model.ErrorAppeared += ErrorAppeared;
                 model.CoordinateReaded += UpdateCoordinate;
                 model.StateWordChanged += SomethingChanged;
 
-                OrdersLitsView.ItemsSource = model.Orders;
+                OrdersLitsView.ItemsSource = ordersManager.Orders;
 
                 //Настраиваем визуальные компоненты
                 SetUpComponents();
@@ -80,7 +88,7 @@ namespace Stacker
                 SetEventHandlers();
                 
                 //запускаем чтение заявок
-                model.TimerStart();
+                ordersManager.TimerStart();
             }   
             
         }
@@ -89,8 +97,8 @@ namespace Stacker
         private void SetUpComponents()
         {
             //Подписываем кнопки
-            ManPlatformLeftButton.Content = model.LeftRackName;
-            ManPlatformRightButton.Content = model.RightRackName;
+            ManPlatformLeftButton.Content = Settings.LeftRackName;
+            ManPlatformRightButton.Content = Settings.RightRackName;
 
             //Заполняем combobox'ы номерами рядов
             int[] rowItems = new int[model.StackerDepth];
@@ -111,18 +119,18 @@ namespace Stacker
             FloorComboBox.SelectedIndex = 0;
 
             //.. и названиями стеллажей
-            RackComboBox.Items.Add(model.LeftRackName);
-            RackComboBox.Items.Add(model.RightRackName);
+            RackComboBox.Items.Add(Settings.LeftRackName);
+            RackComboBox.Items.Add(Settings.RightRackName);
             RackComboBox.SelectedIndex = 0;
-            RackSemiAutoComboBox.Items.Add(model.LeftRackName);
-            RackSemiAutoComboBox.Items.Add(model.RightRackName);
+            RackSemiAutoComboBox.Items.Add(Settings.LeftRackName);
+            RackSemiAutoComboBox.Items.Add(Settings.RightRackName);
             RackSemiAutoComboBox.SelectedIndex = 0;
 
             //источник данных для списка ошибок
             ErrorListBox.ItemsSource = model.ErrorList;
 
             //при необходимости прячем вкладку "взвесить"
-            if (!model.Settings.ShowWeightTab) WeightTabItem.Visibility = System.Windows.Visibility.Hidden;
+            if (!Settings.ShowWeightTab) WeightTabItem.Visibility = System.Windows.Visibility.Hidden;
             
             //настройка графика веса
             WeightPolyline.Stroke = Brushes.AliceBlue;
@@ -440,7 +448,7 @@ namespace Stacker
             IsNotAvailableLabel.Content = isNotAvailable? "Ячейка отсутствует!":"";
 
             //Формируем адрес ячейки для индикации
-            char rack = RackSemiAutoComboBox.SelectedIndex == 0 ? model.LeftRackName : model.RightRackName;
+            char rack = RackSemiAutoComboBox.SelectedIndex == 0 ? Settings.LeftRackName : Settings.RightRackName;
             SemiAutoAddressLabel.Content = rack + " - " + r.ToString() + " - " + f.ToString();
         }
 
@@ -450,7 +458,7 @@ namespace Stacker
             int r = RowXComboBox.SelectedIndex + 1;
             int f = FloorYComboBox.SelectedIndex + 1;
             if (r < 1 | f < 1) return;
-            model.GetCell(model.LeftRackName, r, f, out int x, out int y, out bool z);
+            model.GetCell(Settings.LeftRackName, r, f, out int x, out int y, out bool z);
             GotoXTextBox.Text = x.ToString();
             GotoYTextBox.Text = y.ToString();
         }
@@ -614,7 +622,7 @@ namespace Stacker
         private void BringAutoButton_Click(object sender, RoutedEventArgs e)
         {
             int i = OrdersLitsView.SelectedIndex;
-            if (model.SelectOrder(i))
+            if (ordersManager.SelectOrder(i))
             {
                 //Даем команду привезти
                 model.BringOrTakeAway(true);
@@ -644,7 +652,7 @@ namespace Stacker
             //возвращаем обработчик события
             model.CommandDone -= TakeAwayDone;
             //завершаем заявку
-            model.FinishOrder(true);
+            ordersManager.FinishSelectedOrder(true);
             Dispatcher.Invoke( () => OrdersLitsView.Items.Refresh());
         }
         
@@ -653,7 +661,7 @@ namespace Stacker
         {
             int i = OrdersLitsView.SelectedIndex;
             //Если элемент выбран, удаляем его, иначе выходим
-            if (model.SelectOrder(i)) model.FinishOrder(false);
+            if (ordersManager.SelectOrder(i)) ordersManager.FinishSelectedOrder(false);
             OrdersLitsView.SelectedIndex = -1;
             OrdersLitsView.Items.Refresh();
             
@@ -699,13 +707,13 @@ namespace Stacker
             Dispatcher.Invoke(() => MeasuredWeight2PointCollection.Add(point21));
             Dispatcher.Invoke(() => MeasuredWeight2PointCollection.Add(point22));
 
-            float w = model.MeasuredWeight - model.Settings.WeightAlpha1;
-            w = model.Settings.WeightBeta1 == 0 ? w : w * 100 / model.Settings.WeightBeta1;
+            float w = model.MeasuredWeight - Settings.WeightAlpha1;
+            w = Settings.WeightBeta1 == 0 ? w : w * 100 / Settings.WeightBeta1;
                        
             Dispatcher.Invoke(() => MeasuredWeightLabel.Content = w.ToString() + " кг");
 
-            w = model.MeasuredWeight2 - model.Settings.WeightAlpha2;
-            w = model.Settings.WeightBeta2 == 0 ? w : w * 100 / model.Settings.WeightBeta2;
+            w = model.MeasuredWeight2 - Settings.WeightAlpha2;
+            w = Settings.WeightBeta2 == 0 ? w : w * 100 / Settings.WeightBeta2;
 
             Dispatcher.Invoke(() => MeasuredWeightLabel2.Content = w.ToString() + " кг");
 
@@ -725,9 +733,9 @@ namespace Stacker
                 CancelAutoButton.IsEnabled = false;
                 return;
             }
-            int r = model.Orders[index].Row;
-            int f = model.Orders[index].Floor;
-            char n = model.Orders[index].StackerName;
+            int r = ordersManager.Orders[index].Row;
+            int f = ordersManager.Orders[index].Floor;
+            char n = ordersManager.Orders[index].StackerName;
             model.GetCell(n, r, f, out int x, out int y, out bool isNotAvailable);
             BringAutoButton.IsEnabled = !isNotAvailable & !model.IsBinOnPlatform;
             CancelAutoButton.IsEnabled = true;
