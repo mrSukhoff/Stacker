@@ -555,7 +555,12 @@ namespace Stacker
         public void SubmitError()
         {
             ErrorList.Clear();
-            if (PLC != null) SetMerker(PLC, 101, true);
+            if (PLC != null)
+            {
+                WriteDword(PLC,8,0);
+                SetMerker(PLC, 101, true);
+
+            }
         }
 
         //команда дальше
