@@ -69,8 +69,7 @@ namespace Stacker
             ListViewSetUp();
             //Настраиваем визуальные компоненты
             SetUpComponents();
-            //прописываем обработчики для кнопок
-            SetEventHandlers();
+            
             
             //создаем модель
             try
@@ -101,7 +100,8 @@ namespace Stacker
                 BringSemiAutoButton.IsEnabled = !isBin;
                 BringAutoButton.IsEnabled = !isBin;
             }
-            
+            //прописываем обработчики для кнопок
+            SetEventHandlers();
             //запускаем чтение заявок
             OrderManager.TimerStart();
         }

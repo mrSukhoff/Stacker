@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+using System.Windows.Input;
 
 namespace Stacker
 {
     public class MainVM : INotifyPropertyChanged
     {
-        
+        StackerModel Stacker;
+
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName)
         {
@@ -26,10 +23,32 @@ namespace Stacker
             set
             {
                 _gotoXTextBoxValue = value;
-                _selectedCellAddress = value.ToString();
             }
         }
         private int _gotoXTextBoxValue;
 
+        public int GotoYTextBoxValue
+        {
+            get => _gotoYTextBoxValue;
+            set
+            {
+                _gotoYTextBoxValue = value;
+            }
+        }
+        private int _gotoYTextBoxValue;
+
+        private RelayCommand bringAuto;
+        public RelayCommand BringAuto
+        {
+            get
+            {
+                return bringAuto ??
+                    (bringAuto = new RelayCommand(obj =>
+                    {
+                        Stacker.BringOrTakeAway(true);
+                   
+                    }));
+            }
+        }
     }
 }

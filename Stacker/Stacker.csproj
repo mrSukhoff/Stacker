@@ -55,7 +55,7 @@
     <StartupObject>Stacker.App</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>ico2.ico</ApplicationIcon>
+    <ApplicationIcon>Stacker.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -118,6 +118,7 @@
     <None Include="Crane.cs" />
     <Compile Include="MainVM.cs" />
     <Compile Include="OrdersManager.cs" />
+    <Compile Include="RelayCommand.cs" />
     <Compile Include="SettingsKeeper.cs" />
     <Compile Include="StackerModel.cs" />
     <Compile Include="INIManager.cs" />
@@ -175,7 +176,7 @@
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="ico2.ico" />
+    <Resource Include="Stacker.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
