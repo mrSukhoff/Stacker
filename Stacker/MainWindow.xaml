@@ -6,7 +6,10 @@
         xmlns:local="clr-namespace:Stacker"
         mc:Ignorable="d"
         Title="Штабелёр" MinWidth="900" MinHeight="600" Background="#FF91AAB4" Loaded="Window_Loaded" FontSize="20" d:DesignWidth="900" d:DesignHeight="600">
-
+    <Window.DataContext>
+        <local:MainVM/>
+        <!-- Создаем новый VM и соединяем его со View -->
+    </Window.DataContext>
     <Window.Resources>
         <!-- Убираем подсветку фокуса-->
         <Style x:Key="ButtonFocusVisual">
@@ -184,7 +187,7 @@
                     <Button x:Name="BringSemiAutoButton" Content="_Привезти" Height="50" Margin="0,0,146,10" Grid.Row="2" VerticalAlignment="Bottom" FontSize="24" FontWeight="Bold" Background="#FF91AAB4" HorizontalAlignment="Right" Width="150" BorderBrush="#FFCBDBD7"  HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="BringOrTakeAwaySemiAutoButton_Click" Grid.ColumnSpan="2" Foreground="#FFFCFFF5"/>
                     <Button x:Name="TakeAwaySemiAutoButton" Content="_Увезти" Grid.Column="2" Height="50" Margin="147,0,0,10" Grid.Row="2" VerticalAlignment="Bottom" FontSize="24" FontWeight="Bold" Background="#FF91AAB4" HorizontalAlignment="Left" Width="150" BorderBrush="#FFCBDBD7" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="BringOrTakeAwaySemiAutoButton_Click" Grid.ColumnSpan="2" Foreground="#FFFCFFF5"/>
                     <Button x:Name="SemiAutoStopButton" Content="_СТОП!" Grid.Column="3" HorizontalAlignment="Right" Height="50" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="100" BorderBrush="#FFCBDBD7" Background="#FF9E2E2E" FontSize="24" Grid.Row="2" Style="{DynamicResource StopButtonStyle}" Click="StopButton_Click"/>
-                    <Label x:Name="SemiAutoAddressLabel" Content="X-0-0" HorizontalAlignment="Center" Margin="130,42,131,64" Width="220" FontSize="36" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.ColumnSpan="2" FontWeight="Bold" Foreground="#FFFCFFF5" Grid.Column="1"/>
+                    <Label x:Name="SemiAutoAddressLabel" HorizontalAlignment="Center" Margin="130,42,131,64" Width="220" FontSize="36" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.ColumnSpan="2" FontWeight="Bold" Foreground="#FFFCFFF5" Grid.Column="1" Content="{Binding SelectedCellAdsress}"/>
                     <ComboBox x:Name="RackSemiAutoComboBox" Margin="0,65,170,0" FontSize="36" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsSynchronizedWithCurrentItem="False" BorderBrush="#FFFCFFF5" HorizontalAlignment="Right" Width="100" Background="#FFCBDBB7" BorderThickness="3" SnapsToDevicePixels="True" Grid.Row="1" Grid.ColumnSpan="2" Height="98" VerticalAlignment="Top"/>
                     <Label x:Name="IsNotAvailableLabel" Content="" Grid.Column="1" HorizontalAlignment="Center" Margin="80,112,82,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="278" Foreground="#FFCF3D3D" FontSize="24" HorizontalContentAlignment="Center"/>
                 </Grid>
@@ -239,8 +242,8 @@
                                 <ColumnDefinition Width="166*"/>
                                 <ColumnDefinition Width="167*"/>
                             </Grid.ColumnDefinitions>
-                            <Button x:Name="GotoButton" Content="Перейти" HorizontalAlignment="Center" Width="153" Margin="90,0,90,8" Grid.Row="2" MinWidth="101" MinHeight="36" FontWeight="Bold" FontSize="24" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" Click="GotoButton_Click" Height="50" VerticalAlignment="Bottom" Grid.ColumnSpan="2" Foreground="#FFFCFFF5"/>
-                            <TextBox x:Name="GotoXTextBox" Height="36" TextWrapping="Wrap" Text="0" VerticalAlignment="Bottom" RenderTransformOrigin="0.492,0.45" Margin="0,0,25,0" MinWidth="100" MinHeight="30" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="24" PreviewTextInput="TextBox_PreviewTextInput" Background="#FFCBDBB7" HorizontalAlignment="Right" Width="100"/>
+                            <Button x:Name="GotoButton" Content="Перейти" HorizontalAlignment="Center" Width="153" Margin="90,0,90,8" Grid.Row="2" MinWidth="101" MinHeight="36" FontWeight="Bold" FontSize="24" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" Click="GotoButton_Click" Height="50" VerticalAlignment="Bottom" Grid.ColumnSpan="2" Foreground="#FFFCFFF5" CommandParameter="{Binding Text, ElementName=GotoXTextBox}"/>
+                            <TextBox x:Name="GotoXTextBox" Height="36" TextWrapping="Wrap" Text="{Binding GotoXTextBoxValue, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Bottom" RenderTransformOrigin="0.492,0.45" Margin="0,0,25,0" MinWidth="100" MinHeight="30" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="24" PreviewTextInput="TextBox_PreviewTextInput" Background="#FFCBDBB7" HorizontalAlignment="Right" Width="100"/>
                             <TextBox x:Name="GotoYTextBox" HorizontalAlignment="Right" Height="36" TextWrapping="Wrap" Text="0" VerticalAlignment="Bottom" Width="100" Margin="0,0,25,1" MinWidth="100" MinHeight="30" Grid.Row="1" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="24" PreviewTextInput="TextBox_PreviewTextInput" Background="#FFCBDBB7"/>
                             <Label Content="X" HorizontalAlignment="Right" Margin="0,0,51,38" VerticalAlignment="Bottom" Width="50" VerticalContentAlignment="Center" Height="36" MinWidth="50" MinHeight="30" FontSize="24" HorizontalContentAlignment="Center" Foreground="#FFFCFFF5"/>
                             <Label Content="Y" HorizontalAlignment="Right" Margin="0,0,51,38" VerticalAlignment="Bottom" Width="50" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="36" MinWidth="50" MinHeight="30" FontSize="24" Foreground="#FFFCFFF5" Grid.Row="1"/>

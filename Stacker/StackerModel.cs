@@ -103,8 +103,8 @@ namespace Stacker
             OrdersManager = ordersManager;
             Settings = settingsKeeper; 
 
-            //LeftRackName = Settings.LeftRackName;
-            //RightRackName = Settings.RightRackName;
+            LeftRackName = Settings.LeftRackName;
+            RightRackName = Settings.RightRackName;
 
             //Загружаем таблицы координат ячеек
             string path = Environment.CurrentDirectory+"\\"+Settings.CellsFile;
