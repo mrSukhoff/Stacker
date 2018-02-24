@@ -16,6 +16,8 @@ namespace Stacker
         public string WrongOrdersFile { get; }
 
         //view
+        //закрыть при ошибке открытия порта
+        public bool CloseOrInform { get; }
         //показывать вкладку "взвесить"
         public bool ShowWeightTab { get; }
         //коэффициенты для пересчета тока ПЧ в вес
@@ -29,7 +31,9 @@ namespace Stacker
         public string ComPort { get; }
 
         //  ???
-        public bool CloseOrInform { get; }
+        public int StackerDepth { get; } = 29;
+        public int StackerHight { get; } = 16;
+        
         public string CellsFile { get; }
         public char LeftRackName { get; }
         public char RightRackName { get; }

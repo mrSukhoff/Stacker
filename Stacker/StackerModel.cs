@@ -16,20 +16,15 @@ namespace Stacker
 
         //имена и размеры стеллажей
         //нулевая позиция по горизонтали - место погрузки
-        public int StackerDepth { get; } = 29;
-        public int StackerHight { get; } = 16;
-        
-                
+        //public int StackerDepth { get; } = 29;
+        //public int StackerHight { get; } = 16;
+                 
         //Максимальные значения координат
         public int MaxX { get; } = 55000;
         public int MaxY { get; } = 14000;
         
-        //коллекция заявок
-        //public List<Order> Orders { get; private set; } = new List<Order>();
-        
-        //События
+         //События
         public delegate void StackerModelEventHandler();
-                        
         //появился флаг завершения выполнения команды
         public event StackerModelEventHandler CommandDone = (() => { });
         //флаг ошибки
@@ -91,9 +86,6 @@ namespace Stacker
         //интерфейс контроллера
         private IModbusMaster PLC;
 
-        //хранит номер выбранной заявки в автоматическом режиме
-        //int SelectedOrderNumber = -1;
-
         //флаг уничтожения объектов
         private bool disposed = false;
         
@@ -108,7 +100,7 @@ namespace Stacker
 
             //Загружаем таблицы координат ячеек
             string path = Environment.CurrentDirectory+"\\"+Settings.CellsFile;
-            Stacker = File.Exists(path) ? new CellsGrid(path) : new CellsGrid(StackerDepth, StackerHight);
+            Stacker = File.Exists(path) ? new CellsGrid(path) : new CellsGrid(Settings.StackerDepth, Settings.StackerHight);
             
             //Открываем порт и создаем контроллер
             try
@@ -134,7 +126,7 @@ namespace Stacker
                 MessageBox.Show(ex.Message, caption: "Ошибка открытия порта");
             }
 
-            if (!ComPort.IsOpen && !Settings.CloseOrInform) throw new NullReferenceException("!");
+            //if (!ComPort.IsOpen) throw new NullReferenceException("!");
         }
 
         //завершение работы программы
@@ -169,7 +161,8 @@ namespace Stacker
         //Сохранение массивов координат ячеек в файлы
         public void SaveCells()
         {
-            Stacker.SaveCellsGrid("Stack.cell");
+            string path = Environment.CurrentDirectory + "\\" + Settings.CellsFile;
+            Stacker.SaveCellsGrid(path);
         }
 
         //Записывает 32-битное число в контроллер
@@ -549,10 +542,13 @@ namespace Stacker
         public void BringOrTakeAway(bool bring)
         {
             Order order = OrdersManager.GetSelectedOrder();
-            bool rack = order.StackerName == RightRackName;
-            int row = order.Row;
-            int floor = order.Floor;
-            BringOrTakeAway(rack, row, floor, bring);
+            if (order != null)
+            {
+                bool rack = order.StackerName == RightRackName;
+                int row = order.Row;
+                int floor = order.Floor;
+                BringOrTakeAway(rack, row, floor, bring);
+            }
         }
 
         //*Команда взвесить

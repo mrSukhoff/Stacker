@@ -21,18 +21,19 @@ namespace Stacker
         }
 
         //хранилище настроек
-        SettingsKeeper Settings = new SettingsKeeper();
+        SettingsKeeper Settings;
 
-        public OrdersManager ordersManager;
+        //менеджер заявок
+        public OrdersManager OrderManager;
 
         //формат ввода координат в textbox'ы
         private Regex CoordinateRegex = new Regex(@"\d");
 
         //Список кнопок, выдавших задание и заблокированных
-        private List<Button> bt = new List<Button>();
+        private List<Button> ButtonList = new List<Button>();
 
         //модель паттерна MVP(если это конечно он)
-        private StackerModel model;
+        private StackerModel Model;
 
         //для рисования графика веса
         private Polyline WeightPolyline = new Polyline();
@@ -46,51 +47,63 @@ namespace Stacker
         //стиль оттображения списка заявок
         GridView OrdersGridView = new GridView();
 
-        //
+        //флаг закрытия неуправляемых ресурсов
         private bool disposed = false;
 
         //#####################################################################################################
         //Основная точка входа -------------------------------------------------------------------------------!
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            ordersManager = new OrdersManager(Settings.OrdersFile, Settings.ArchiveFile, Settings.WrongOrdersFile,
-                Settings.LeftRackName, Settings.RightRackName);
+            //Инициализируем хранилище настроек
+            Settings = new SettingsKeeper();
 
-            try
-            {
-                //создаем модель
-                model = new StackerModel(ordersManager,Settings);
-            }
-            catch (NullReferenceException)
-            {
-                model?.Dispose();
-                Application.Current.Shutdown();
-            }
+            //Создаем менеджер заявок
+            OrderManager = new OrdersManager(Settings.OrdersFile, Settings.ArchiveFile, Settings.WrongOrdersFile,
+                Settings.LeftRackName, Settings.RightRackName);
+            //Определяем его источником данных для списка
+            OrdersLitsView.ItemsSource = OrderManager.Orders;
+            //и подписываемся на обновления
+            OrderManager.NewOrderAppeared += UpdateOrderList;
 
             //Настраиваем вид списка заявок
             ListViewSetUp();
+            //Настраиваем визуальные компоненты
+            SetUpComponents();
+            //прописываем обработчики для кнопок
+            SetEventHandlers();
+            
+            //создаем модель
+            try
+            {
+                
+                Model = new StackerModel(OrderManager,Settings);
+            }
+            catch 
+            {
+                Model?.Dispose();
+                if (!Settings.CloseOrInform) Application.Current.Shutdown();
+            }
 
-            if (model != null)
+            if (Model != null)
             {
                 //подписываемся на события модели
-                ordersManager.NewOrderAppeared += UpdateOrderList;
-                model.CommandDone += CommandDone;
-                model.ErrorAppeared += ErrorAppeared;
-                model.CoordinateReaded += UpdateCoordinate;
-                model.StateWordChanged += SomethingChanged;
-
-                OrdersLitsView.ItemsSource = ordersManager.Orders;
-
-                //Настраиваем визуальные компоненты
-                SetUpComponents();
-
-                //прописываем обработчики для кнопок
-                SetEventHandlers();
+                Model.CommandDone += CommandDone;
+                Model.ErrorAppeared += ErrorAppeared;
+                Model.CoordinateReaded += UpdateCoordinate;
+                Model.StateWordChanged += SomethingChanged;
                 
-                //запускаем чтение заявок
-                ordersManager.TimerStart();
-            }   
+                //источник данных для списка ошибок
+                ErrorListBox.ItemsSource = Model.ErrorList;
+                
+                //проверяем при старте наличие ящика на платформе и устанавливаем активные кнопки
+                bool isBin = Model.ChekBinOnPlatform();
+                TakeAwaySemiAutoButton.IsEnabled = isBin;
+                BringSemiAutoButton.IsEnabled = !isBin;
+                BringAutoButton.IsEnabled = !isBin;
+            }
             
+            //запускаем чтение заявок
+            OrderManager.TimerStart();
         }
 
         //Настраиваем визуальные компоненты
@@ -101,7 +114,7 @@ namespace Stacker
             ManPlatformRightButton.Content = Settings.RightRackName;
 
             //Заполняем combobox'ы номерами рядов
-            int[] rowItems = new int[model.StackerDepth];
+            int[] rowItems = new int[Settings.StackerDepth];
             for (int i = 0; i < rowItems.Length; i++) { rowItems[i] = i + 1; }
             RowSemiAutoComboBox.ItemsSource = rowItems;
             RowComboBox.ItemsSource = rowItems;
@@ -110,7 +123,7 @@ namespace Stacker
             RowComboBox.SelectedIndex = 0;
 
             // .. и этажей
-            int[] floorItems = new int[model.StackerHight];
+            int[] floorItems = new int[Settings.StackerHight];
             for (int i = 0; i < floorItems.Length; i++) { floorItems[i] = i + 1; }
             FloorSemiAutoCombobox.ItemsSource = floorItems;
             FloorComboBox.ItemsSource = floorItems;
@@ -125,9 +138,6 @@ namespace Stacker
             RackSemiAutoComboBox.Items.Add(Settings.LeftRackName);
             RackSemiAutoComboBox.Items.Add(Settings.RightRackName);
             RackSemiAutoComboBox.SelectedIndex = 0;
-
-            //источник данных для списка ошибок
-            ErrorListBox.ItemsSource = model.ErrorList;
 
             //при необходимости прячем вкладку "взвесить"
             if (!Settings.ShowWeightTab) WeightTabItem.Visibility = System.Windows.Visibility.Hidden;
@@ -151,15 +161,6 @@ namespace Stacker
             MeasuredWeightPolyline2.Points = MeasuredWeight2PointCollection;
             WeightGrid.Children.Add(MeasuredWeightPolyline2);
 
-            //проверяем при старте наличие ящика на платформе и устанавливаем активные кнопки
-            if (model != null)
-            {
-                bool isBin = model.ChekBinOnPlatform();
-                TakeAwaySemiAutoButton.IsEnabled = isBin;
-                BringSemiAutoButton.IsEnabled = !isBin;
-                BringAutoButton.IsEnabled = !isBin;
-            }
-            
             //Кнопка "увезти" активируется только при работе с заявкой
             TakeAwayAutoButton.IsEnabled = false;
             //Кнопка "отмена" активируется при выборе заявки
@@ -202,9 +203,7 @@ namespace Stacker
             OrdersGridView.Columns.Add(gvc5);
 
             OrdersLitsView.View = OrdersGridView;
-            
-
-        }
+         }
 
         //прописываем обработчики событий
         private void SetEventHandlers()
@@ -250,15 +249,15 @@ namespace Stacker
         private void CommandDone()
         {
             //разблокируем все кнопки
-            foreach (Button b in bt)
+            foreach (Button b in ButtonList)
             {
                 Dispatcher.Invoke(() => (b.IsEnabled = true));
             }
-            bt.Clear();
+            ButtonList.Clear();
 
             //кнопки привезти/увезти устанавливаем в зависиомсти от наличия корзины
-            Dispatcher.Invoke(() => BringSemiAutoButton.IsEnabled = !model.IsBinOnPlatform);
-            Dispatcher.Invoke(() => TakeAwaySemiAutoButton.IsEnabled = model.IsBinOnPlatform);
+            Dispatcher.Invoke(() => BringSemiAutoButton.IsEnabled = !Model.IsBinOnPlatform);
+            Dispatcher.Invoke(() => TakeAwaySemiAutoButton.IsEnabled = Model.IsBinOnPlatform);
         }
 
         //обработчик события "ошибка"
@@ -271,19 +270,19 @@ namespace Stacker
         //Обновление координат и слова состояния
         private void UpdateCoordinate()
         {
-            string r = model.ActualRow.ToString();
+            string r = Model.ActualRow.ToString();
             r = r.Length == 1 ? "0" + r : r;
             Dispatcher.Invoke( () => RowLabel.Content = "Ряд : " + r);
 
-            string f = model.ActualFloor.ToString();
+            string f = Model.ActualFloor.ToString();
             f = f.Length == 1 ? "0" + f : f;
             Dispatcher.Invoke( () => FloorLabel.Content = "Этаж : " + f );
 
-            string x = model.ActualX.ToString();
+            string x = Model.ActualX.ToString();
             while (x.Length < 5) x = "0" + x;
             Dispatcher.Invoke( () => XLabel.Content = "X : " +  x);
 
-            string y = model.ActualY.ToString();
+            string y = Model.ActualY.ToString();
             while (y.Length < 5) y = "0" + y;
             Dispatcher.Invoke( () => YLabel.Content = "Y : " + y );
         }
@@ -292,9 +291,9 @@ namespace Stacker
         private void SomethingChanged()
         {
             //устанавливаем индикатор начальной позиции
-            Dispatcher.Invoke(() => SPLabel.IsEnabled = model.IsStartPosiotion);
-            Dispatcher.Invoke(() => RLabel.IsEnabled = model.IsRowMark);
-            Dispatcher.Invoke(() => FLabel.IsEnabled = model.IsFloorMark);
+            Dispatcher.Invoke(() => SPLabel.IsEnabled = Model.IsStartPosiotion);
+            Dispatcher.Invoke(() => RLabel.IsEnabled = Model.IsRowMark);
+            Dispatcher.Invoke(() => FLabel.IsEnabled = Model.IsFloorMark);
         }
 
         //при изменении размеров окна меняем размеры колонок
@@ -314,22 +313,22 @@ namespace Stacker
         //Обработчик нажатия кнопки STOP
         private void StopButton_Click(object sender, RoutedEventArgs e)
         {
-            model.StopButton();
+            Model.StopButton();
         }
 
         //Обработчик нажатия кнопки подтверждения ошибок
         private void SubmitErrorButton_Click(object sender, RoutedEventArgs e)
         {
             //даем команду на сброс ошибки
-            model.SubmitError();
+            Model.SubmitError();
             //восстанавливаем цвет строки состояния и закладки
             StatusPlane.Background = new SolidColorBrush(Color.FromArgb(0xFF, 0x3E, 0x60, 0x6F));
             ErrorTabItem.Background = new SolidColorBrush(Color.FromArgb(0xFF, 0xCB, 0xDB, 0xD7));
             //разблокируем кнопки
             CommandDone();
             ErrorListBox.Items.Refresh();
-            model.CommandDone -= TakeAwayDone;
-            BringAutoButton.IsEnabled = !model.IsBinOnPlatform;
+            Model.CommandDone -= TakeAwayDone;
+            BringAutoButton.IsEnabled = !Model.IsBinOnPlatform;
             TakeAwayAutoButton.IsEnabled = false;
         }
 
@@ -344,7 +343,7 @@ namespace Stacker
                 int floor = FloorComboBox.SelectedIndex+1;
 
                 //получаем координаты
-                model.GetCell(stack, row, floor, out int x, out int y, out bool isNOTAvailable);
+                Model.GetCell(stack, row, floor, out int x, out int y, out bool isNOTAvailable);
 
                 //отключаем обработчики на изменение координат
                 CoordinateXTextBox.TextChanged -= CoordinateChanged;
@@ -386,20 +385,20 @@ namespace Stacker
                 int y = Convert.ToInt32(CoordinateYTextBox.Text);
                 
                 //если координата больше максимальноразрешшенной, устанавливаем ее максимальной
-                if (x > model.MaxX)
+                if (x > Model.MaxX)
                 {
-                    x = model.MaxX;
+                    x = Model.MaxX;
                     CoordinateXTextBox.Text = x.ToString();
                 }
-                if (y > model.MaxY)
+                if (y > Model.MaxY)
                 {
-                    y = model.MaxY;
+                    y = Model.MaxY;
                     CoordinateYTextBox.Text = y.ToString();
                 }
                 
                 bool isNotAvailable = (bool)IsNOTAvailableCheckBox.IsChecked;
                 //записываем
-                model.SetCell(stacker,row,floor,x,y,isNotAvailable);
+                Model.SetCell(stacker,row,floor,x,y,isNotAvailable);
             }
             catch (Exception ex)
             {
@@ -416,11 +415,11 @@ namespace Stacker
         {
             try
             {
-                model.SaveCells();
+                Model.SaveCells();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, "SaveButton_Click");
             }
         }
         
@@ -439,10 +438,10 @@ namespace Stacker
             char stack = (char)RackComboBox.SelectedItem;
             int r = RowSemiAutoComboBox.SelectedIndex + 1;
             int f = FloorSemiAutoCombobox.SelectedIndex + 1;
-            model.GetCell(stack, r, f, out int x, out int y, out bool isNotAvailable);
+            Model.GetCell(stack, r, f, out int x, out int y, out bool isNotAvailable);
 
             //устанавливаем доступность кнопок в зависимости от состояния ячейки
-            bool state = model.IsBinOnPlatform;
+            bool state = Model.IsBinOnPlatform;
             BringSemiAutoButton.IsEnabled = !isNotAvailable & !state;
             TakeAwaySemiAutoButton.IsEnabled &= !isNotAvailable & state;
             IsNotAvailableLabel.Content = isNotAvailable? "Ячейка отсутствует!":"";
@@ -458,7 +457,7 @@ namespace Stacker
             int r = RowXComboBox.SelectedIndex + 1;
             int f = FloorYComboBox.SelectedIndex + 1;
             if (r < 1 | f < 1) return;
-            model.GetCell(Settings.LeftRackName, r, f, out int x, out int y, out bool z);
+            Model.GetCell(Settings.LeftRackName, r, f, out int x, out int y, out bool z);
             GotoXTextBox.Text = x.ToString();
             GotoYTextBox.Text = y.ToString();
         }
@@ -478,16 +477,16 @@ namespace Stacker
         //Обработчик нажатия кнопки "платформа влево"
         private void ManPlatformLeftButton_Checked(object sender, RoutedEventArgs e)
         {
-            model.PlatformToRight();
-            bt.Add(sender as Button);
+            Model.PlatformToRight();
+            ButtonList.Add(sender as Button);
             (sender as Button).IsEnabled = false;
         }
 
         //Обработчик нажатия кнопки платформа "вправо вправо"
         private void ManPlatformRightButton_Checked(object sender, RoutedEventArgs e)
         {
-            model.PlatformToLeft();
-            bt.Add(sender as Button);
+            Model.PlatformToLeft();
+            ButtonList.Add(sender as Button);
             (sender as Button).IsEnabled = false;
         }
 
@@ -553,16 +552,16 @@ namespace Stacker
             switch (((Button)sender).Name)
             {
                 case "FartherButton":
-                    model.FartherButton(state);
+                    Model.FartherButton(state);
                     break;
                 case "CloserButton":
-                    model.CloserButton(state);
+                    Model.CloserButton(state);
                     break;
                 case "UpButton":
-                    model.UpButton(state);
+                    Model.UpButton(state);
                     break;
                 case "DownButton":
-                    model.DownButton(state);
+                    Model.DownButton(state);
                     break;
                 default: return;
             }
@@ -574,20 +573,20 @@ namespace Stacker
             switch ( ((Button)sender).Name )
             {
                 case "FartherButton":
-                    model.NextLineFartherCommand();
+                    Model.NextLineFartherCommand();
                     break;
                 case "CloserButton":
-                    model.NextLineCloserCommand();
+                    Model.NextLineCloserCommand();
                     break;
                 case "UpButton":
-                    model.NextLineUpCommand();
+                    Model.NextLineUpCommand();
                     break;
                 case "DownButton":
-                    model.NextLineDownCommand();
+                    Model.NextLineDownCommand();
                     break;
                 default: return;
             }
-            bt.Add((Button)sender);
+            ButtonList.Add((Button)sender);
             (sender as Button).IsEnabled = false;
         }
 
@@ -596,10 +595,10 @@ namespace Stacker
         {
             int x = Convert.ToUInt16(GotoXTextBox.Text);
             int y = Convert.ToUInt16(GotoYTextBox.Text);
-            x = x > model.MaxX ? model.MaxX : x;
-            y = y > model.MaxY ? model.MaxY : y;
-            model.GotoXY(x, y);
-            bt.Add((Button)sender);
+            x = x > Model.MaxX ? Model.MaxX : x;
+            y = y > Model.MaxY ? Model.MaxY : y;
+            Model.GotoXY(x, y);
+            ButtonList.Add((Button)sender);
             (sender as Button).IsEnabled = false;
         }
 
@@ -613,7 +612,7 @@ namespace Stacker
             //если была нажата кнопка привезти устанавливае переменную в true
             bool bring = sender == BringSemiAutoButton ? true : false;
 
-            model.BringOrTakeAway(stack,r,f,bring);           
+            Model.BringOrTakeAway(stack,r,f,bring);           
             
             (sender as Button).IsEnabled = false; 
         }
@@ -622,14 +621,14 @@ namespace Stacker
         private void BringAutoButton_Click(object sender, RoutedEventArgs e)
         {
             int i = OrdersLitsView.SelectedIndex;
-            if (ordersManager.SelectOrder(i))
+            if (OrderManager.SelectOrder(i))
             {
                 //Даем команду привезти
-                model.BringOrTakeAway(true);
+                Model.BringOrTakeAway(true);
                 //Выключаем кнопку "привезти"
                 BringAutoButton.IsEnabled = false;
                 //и добавляем в список нажатых кнопок кнопку "увезти"
-                bt.Add(TakeAwayAutoButton);
+                ButtonList.Add(TakeAwayAutoButton);
             }
         }
         
@@ -637,22 +636,22 @@ namespace Stacker
         private void TakeAwayAutoButton_Click(object sender, RoutedEventArgs e)
         {
             //Даем команду привезти
-            model.BringOrTakeAway(false);
+            Model.BringOrTakeAway(false);
             //Выключаем кнопку "увезти"
             TakeAwayAutoButton.IsEnabled = false;
             //и добавляем в список нажатых кнопок кнопку "привезти"
-            bt.Add(BringAutoButton);
+            ButtonList.Add(BringAutoButton);
             //к обработчику завершения команды добавляем метод.
-            model.CommandDone += TakeAwayDone;
+            Model.CommandDone += TakeAwayDone;
         }
 
         //после доставки  на место разрешаем кнопкку "привезти"
         private void TakeAwayDone()
         {
             //возвращаем обработчик события
-            model.CommandDone -= TakeAwayDone;
+            Model.CommandDone -= TakeAwayDone;
             //завершаем заявку
-            ordersManager.FinishSelectedOrder(true);
+            OrderManager.FinishSelectedOrder(true);
             Dispatcher.Invoke( () => OrdersLitsView.Items.Refresh());
         }
         
@@ -661,7 +660,7 @@ namespace Stacker
         {
             int i = OrdersLitsView.SelectedIndex;
             //Если элемент выбран, удаляем его, иначе выходим
-            if (ordersManager.SelectOrder(i)) ordersManager.FinishSelectedOrder(false);
+            if (OrderManager.SelectOrder(i)) OrderManager.FinishSelectedOrder(false);
             OrdersLitsView.SelectedIndex = -1;
             OrdersLitsView.Items.Refresh();
             
@@ -670,23 +669,23 @@ namespace Stacker
         //нажатие кнопки "взвесить"
         private void WeighButton_Click(object sender, RoutedEventArgs e)
         {
-            bt.Add(sender as Button);
+            ButtonList.Add(sender as Button);
             (sender as Button).IsEnabled = false;
             //очищаем графики
             WeightPointCollection.Clear();
             MeasuredWeight1PointCollection.Clear();
             MeasuredWeight2PointCollection.Clear();
             //подписываемся для считывания текущих значений
-            model.CoordinateReaded += MakeGraph;
-            model.CommandDone += WeighDone;
+            Model.CoordinateReaded += MakeGraph;
+            Model.CommandDone += WeighDone;
             //запускаем взвешивание
-            model.Weigh();
+            Model.Weigh();
         }
 
         //по актуальному значению тока строим график
         private void MakeGraph()
         {
-            double w = 450 - model.Weight;
+            double w = 450 - Model.Weight;
             Point point = new Point(c*10, w);
             Dispatcher.Invoke(() => WeightPointCollection.Add(point));
             c++;
@@ -695,30 +694,30 @@ namespace Stacker
         //по окончании взвешивания рисуем 7 перпендикулярных красных линий ;-)
         private void WeighDone()
         {
-            int y = 450 - model.MeasuredWeight;
+            int y = 450 - Model.MeasuredWeight;
             Point point11 = new Point(0,y);
             Point point12 = new Point(300, y);
             Dispatcher.Invoke(() => MeasuredWeight1PointCollection.Add(point11));
             Dispatcher.Invoke(() => MeasuredWeight1PointCollection.Add(point12));
                        
-            y = 450 - model.MeasuredWeight2;
+            y = 450 - Model.MeasuredWeight2;
             Point point21 = new Point(0, y);
             Point point22 = new Point(300, y);
             Dispatcher.Invoke(() => MeasuredWeight2PointCollection.Add(point21));
             Dispatcher.Invoke(() => MeasuredWeight2PointCollection.Add(point22));
 
-            float w = model.MeasuredWeight - Settings.WeightAlpha1;
+            float w = Model.MeasuredWeight - Settings.WeightAlpha1;
             w = Settings.WeightBeta1 == 0 ? w : w * 100 / Settings.WeightBeta1;
                        
             Dispatcher.Invoke(() => MeasuredWeightLabel.Content = w.ToString() + " кг");
 
-            w = model.MeasuredWeight2 - Settings.WeightAlpha2;
+            w = Model.MeasuredWeight2 - Settings.WeightAlpha2;
             w = Settings.WeightBeta2 == 0 ? w : w * 100 / Settings.WeightBeta2;
 
             Dispatcher.Invoke(() => MeasuredWeightLabel2.Content = w.ToString() + " кг");
 
-            model.CommandDone -= WeighDone;
-            model.CoordinateReaded -= MakeGraph;
+            Model.CommandDone -= WeighDone;
+            Model.CoordinateReaded -= MakeGraph;
             c = 0;
         }
 
@@ -733,11 +732,11 @@ namespace Stacker
                 CancelAutoButton.IsEnabled = false;
                 return;
             }
-            int r = ordersManager.Orders[index].Row;
-            int f = ordersManager.Orders[index].Floor;
-            char n = ordersManager.Orders[index].StackerName;
-            model.GetCell(n, r, f, out int x, out int y, out bool isNotAvailable);
-            BringAutoButton.IsEnabled = !isNotAvailable & !model.IsBinOnPlatform;
+            int r = OrderManager.Orders[index].Row;
+            int f = OrderManager.Orders[index].Floor;
+            char n = OrderManager.Orders[index].StackerName;
+            Model.GetCell(n, r, f, out int x, out int y, out bool isNotAvailable);
+            BringAutoButton.IsEnabled = !isNotAvailable & !Model.IsBinOnPlatform;
             CancelAutoButton.IsEnabled = true;
         }
 
@@ -754,7 +753,7 @@ namespace Stacker
             {
                 if (disposing)
                 {
-                    if (model != null) model.Dispose();
+                    if (Model != null) Model.Dispose();
                 }
                 disposed = true;
             }
