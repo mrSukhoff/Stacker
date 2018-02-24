@@ -15,9 +15,9 @@ namespace Stacker
         public List<Order> Orders { get; private set; } = new List<Order>();
 
         //События
-        public delegate void OrdersManagerEventHandler();
+        public delegate void OrdersManagerEvent();
         //появилась новая заявка
-        public event OrdersManagerEventHandler NewOrderAppeared = (() => { });
+        public event OrdersManagerEvent NewOrderAppeared = (() => { });
 
         //внутрении поля --------------------------------------------------------------------------
 
@@ -35,6 +35,8 @@ namespace Stacker
         //хранит номер выбранной заявки в автоматическом режиме
         int SelectedOrderNumber = -1;
 
+        bool disposed;
+
         //методы ----------------------------------------------------------------------------------
         //public
         public OrdersManager(string ordersFile, string archiveFile, string wrongOrdersFile, char leftRackName, char rightRackName)
@@ -46,11 +48,25 @@ namespace Stacker
             Order.RightStackerName = rightRackName;
         }
 
+
         public void Dispose()
         {
-            FileTimer?.Dispose();
+            Dispose(true);
+            // подавляем финализацию
+            GC.SuppressFinalize(this);
+            
         }
-
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing)
+                {
+                    FileTimer?.Dispose();
+                }
+                disposed = true;
+            }
+        }
         //Запускаем таймер для проверки изменений списка заявок
         public void TimerStart()
         {

@@ -753,7 +753,8 @@ namespace Stacker
             {
                 if (disposing)
                 {
-                    if (Model != null) Model.Dispose();
+                    Model?.Dispose();
+                    OrderManager?.Dispose();
                 }
                 disposed = true;
             }
