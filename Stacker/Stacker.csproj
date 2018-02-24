@@ -116,9 +116,7 @@
     <Compile Include="Cell.cs" />
     <Compile Include="CellsGrid.cs" />
     <None Include="Crane.cs" />
-    <Compile Include="MainVM.cs" />
     <Compile Include="OrdersManager.cs" />
-    <Compile Include="RelayCommand.cs" />
     <Compile Include="SettingsKeeper.cs" />
     <Compile Include="StackerModel.cs" />
     <Compile Include="INIManager.cs" />
