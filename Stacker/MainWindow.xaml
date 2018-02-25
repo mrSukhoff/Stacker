@@ -6,10 +6,6 @@
         xmlns:local="clr-namespace:Stacker"
         mc:Ignorable="d"
         Title="Штабелёр" MinWidth="900" MinHeight="600" Background="#FF91AAB4" Loaded="Window_Loaded" FontSize="20" d:DesignWidth="900" d:DesignHeight="600">
-    <Window.DataContext>
-        <local:MainVM/>
-        <!-- Создаем новый VM и соединяем его со View -->
-    </Window.DataContext>
     <Window.Resources>
         <!-- Убираем подсветку фокуса-->
         <Style x:Key="ButtonFocusVisual">

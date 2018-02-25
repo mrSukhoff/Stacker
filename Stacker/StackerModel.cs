@@ -108,15 +108,15 @@ namespace Stacker
                 ComPort.Open();
                 PLC = ModbusSerialMaster.CreateAscii(ComPort);
                 //временно включаем ручной режим
-                WriteDword(PLC, 8, 1);
+                WriteDword(8, 1);
                 //Записываем максимальные значения координат
-                WriteDword(PLC, 10, MaxX);
-                WriteDword(PLC, 12, MaxY);
+                WriteDword(10, MaxX);
+                WriteDword(12, MaxY);
                 //и максимальные значения ячеек
-                WriteDword(PLC, 14, 29);
-                WriteDword(PLC, 16, 16);
+                WriteDword(14, 29);
+                WriteDword(16, 16);
                 //записываем максимальный вес
-                WriteDword(PLC, 18, Settings.MaxWeight);
+                WriteDword(18, Settings.MaxWeight);
                 //запускаем таймер на чтение сосотояния контроллера
                 PlcTimer = new Timer(ReadStateWord, null, 0, 500);
             }
@@ -165,7 +165,7 @@ namespace Stacker
         }
 
         //Записывает 32-битное число в контроллер
-        public bool WriteDword(IModbusMaster plc, int adr, int d)
+        public bool WriteDword(int adr, int d)
         {
             try
             {
@@ -173,8 +173,8 @@ namespace Stacker
                 ushort dhi = (ushort)(d / 0x10000);
                 UInt16 address = Convert.ToUInt16(adr);
                 address += 0x1000;
-                plc.WriteSingleRegister(1, address, dlo);
-                plc.WriteSingleRegister(1, ++address, dhi);
+                PLC.WriteSingleRegister(1, address, dlo);
+                PLC.WriteSingleRegister(1, ++address, dhi);
                 return true;
             }
             catch (Exception ex)
@@ -185,13 +185,13 @@ namespace Stacker
         }
 
         //Читает 32-битное число из контроллера
-        public bool ReadDword(IModbusMaster plc, ushort address, out int d)
+        public bool ReadDword(ushort address, out int d)
         {
             try
             {
                 d = 0;
                 address += 0x1000;
-                ushort[] x = plc.ReadHoldingRegisters(1, address, 2);
+                ushort[] x = PLC.ReadHoldingRegisters(1, address, 2);
                 d = x[0] + x[1] * 0x10000;
                 return true;
             }
@@ -204,13 +204,13 @@ namespace Stacker
         }
 
         //метод читает меркер из ПЛК
-        public bool ReadMerker(IModbusMaster plc, ushort address, out bool m)
+        public bool ReadMerker(ushort address, out bool m)
         {
             try
             {
                 bool[] ms;
                 address += 0x800;
-                ms = plc.ReadCoils(1, address, 1);
+                ms = PLC.ReadCoils(1, address, 1);
                 m = ms[0];
                 return true;
             }
@@ -223,12 +223,12 @@ namespace Stacker
         }
 
         //метод устанавливает меркер в ПЛК
-        public bool SetMerker(IModbusMaster plc, ushort address, bool m)
+        public bool SetMerker(ushort address, bool m)
         {
             try
             {
                 address += 0x800;
-                plc.WriteSingleCoil(1, address, m);
+                PLC.WriteSingleCoil(1, address, m);
                 return true;
             }
             catch (Exception ex)
@@ -292,7 +292,7 @@ namespace Stacker
         //вызывается при появления флага ошибки в слове состояния
         private void ErrorHandler()
         {
-            ReadDword(PLC, 110, out int ErrorWord);
+            ReadDword(110, out int ErrorWord);
             if (GetBitState(ErrorWord, 0)) addAlarm("Нажата кнопка аварийной остановки");
             if (GetBitState(ErrorWord, 1)) addAlarm("Одновременное включение контакторов");
             if (GetBitState(ErrorWord, 2)) addAlarm("Попытка загрузки на занятый кран");
@@ -360,7 +360,11 @@ namespace Stacker
         public void SubmitError()
         {
             ErrorList.Clear();
-            if (PLC != null) SetMerker(PLC, 101, true);
+            if (PLC != null)
+            {
+                WriteDword(8, 0);
+                SetMerker(101, true);
+            }
         }
 
         //*команда дальше
@@ -369,9 +373,9 @@ namespace Stacker
             if (PLC != null)
             {
                 //устанавливаем ручной режим передвижения
-                WriteDword(PLC, 8, 1);
+                WriteDword(8, 1);
                 //задаем команду "движение дальше"
-                SetMerker(PLC, 10, state);
+                SetMerker(10, state);
             }
         }
 
@@ -381,9 +385,9 @@ namespace Stacker
             if (PLC != null)
             {
                 //устанавливаем ручной режим передвижения
-                WriteDword(PLC, 8, 1);
+                WriteDword(8, 1);
                 //задаем команду "движение ближе"
-                SetMerker(PLC, 11, state);
+                SetMerker(11, state);
             }
         }
 
@@ -393,9 +397,9 @@ namespace Stacker
             if (PLC != null)
             {
                 //устанавливаем ручной режим передвижения
-                WriteDword(PLC, 8, 1);
+                WriteDword(8, 1);
                 //задаем команду "движение вверх"
-                SetMerker(PLC, 12, state);
+                SetMerker(12, state);
             }
         }
 
@@ -405,9 +409,9 @@ namespace Stacker
             if (PLC != null)
             {
                 //устанавливаем ручной режим передвижения
-                WriteDword(PLC, 8, 1);
+                WriteDword(8, 1);
                 //задаем команду "движение вниз"
-                SetMerker(PLC, 13, state);
+                SetMerker(13, state);
             }
         }
 
@@ -417,9 +421,9 @@ namespace Stacker
             if (PLC != null)
             {
                 //устанавливаем режим движения по координатам
-                WriteDword(PLC, 8, 4);
+                WriteDword(8, 4);
                 //задаем команду "движение дальше"
-                SetMerker(PLC, 10, true);
+                SetMerker(10, true);
             }
         }
 
@@ -429,9 +433,9 @@ namespace Stacker
             if (PLC != null)
             {
                 //устанавливаем режим движения по координатам
-                WriteDword(PLC, 8, 4);
+                WriteDword(8, 4);
                 //задаем команду "движение ближе"
-                SetMerker(PLC, 11, true);
+                SetMerker(11, true);
             }
         }
 
@@ -441,9 +445,9 @@ namespace Stacker
             if (PLC != null)
             {
                 //устанавливаем режим движения по координатам
-                WriteDword(PLC, 8, 4);
+                WriteDword(8, 4);
                 //задаем команду "движение вверх"
-                SetMerker(PLC, 12, true);
+                SetMerker(12, true);
             }
         }
 
@@ -453,9 +457,9 @@ namespace Stacker
             if (PLC != null)
             {
                 //устанавливаем режим движения по координатам
-                WriteDword(PLC, 8, 4);
+                WriteDword(8, 4);
                 //задаем команду "движение вниз"
-                SetMerker(PLC, 13, true);
+                SetMerker(13, true);
             }
         }
 
@@ -465,9 +469,9 @@ namespace Stacker
             if (PLC != null)
             {
                 //включаем ручной режим
-                WriteDword(PLC, 8, 1);
+                WriteDword(8, 1);
                 //задаем команду ПЛК "платформа вправо"
-                SetMerker(PLC, 14, true);
+                SetMerker(14, true);
             }
         }
 
@@ -477,16 +481,16 @@ namespace Stacker
             if (PLC != null)
             {
                 //включаем ручной режим
-                WriteDword(PLC, 8, 1);
+                WriteDword(8, 1);
                 //задаем команду ПЛК "платформа влево"
-                SetMerker(PLC, 15, true);
+                SetMerker(15, true);
             }
         }
 
         //*команда STOP
         public void StopButton()
         {
-            if (PLC != null) SetMerker(PLC, 0, true);
+            if (PLC != null) SetMerker(0, true);
         }
 
         //*команда "Перейти на координаты"
@@ -497,14 +501,14 @@ namespace Stacker
             if (PLC != null)
             {
                 //Включаем режим перемещения по координатам
-                WriteDword(PLC, 8, 3);
+                WriteDword(8, 3);
 
                 //Записываем координаты в ПЛК
-                WriteDword(PLC, 0, x);
-                WriteDword(PLC, 2, y);
+                WriteDword(0, x);
+                WriteDword(2, y);
 
                 //даем команду на движение
-                SetMerker(PLC, 20, true);
+                SetMerker(20, true);
             }
         }
 
@@ -521,19 +525,19 @@ namespace Stacker
                 if ( x == 0 || (y==0 && floor!=1) ) throw new ArgumentException("Неверные координаты ячеейки");
 
                 //Включаем режим перемещения по координатам
-                WriteDword(PLC, 8, 2);
+                WriteDword(8, 2);
                 //Пишем координаты
-                WriteDword(PLC, 0, x);
-                WriteDword(PLC, 2, y);
+                WriteDword(0, x);
+                WriteDword(2, y);
                 //Пишем ряд и этаж
-                WriteDword(PLC, 4, row);
-                WriteDword(PLC, 6, floor);
+                WriteDword(4, row);
+                WriteDword(6, floor);
                 //Устанваливаем сторону
-                SetMerker(PLC, 2, rack);
+                SetMerker(2, rack);
                 //Устанавливаем флаг в "привезти/увезти"
-                SetMerker(PLC, 3, bring);
+                SetMerker(3, bring);
                 //Даем команду на старт
-                SetMerker(PLC, 1, true);
+                SetMerker(1, true);
             }
         }
         
@@ -556,9 +560,9 @@ namespace Stacker
             if (PLC != null)
             {
                 //включаем режим взвешивания
-                WriteDword(PLC, 8, 5);
+                WriteDword(8, 5);
                 //задаем команду "взвесить"
-                SetMerker(PLC,21,true);
+                SetMerker(21,true);
             }
         }
 
@@ -566,7 +570,7 @@ namespace Stacker
         public bool ChekBinOnPlatform()
         {
             int word = 0;
-            if (PLC != null) ReadDword(PLC, 100, out word);
+            if (PLC != null) ReadDword(100, out word);
             return GetBitState(word, 10);
         }
     }
