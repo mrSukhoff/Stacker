@@ -593,11 +593,24 @@ namespace Stacker
         //Обработчик нажатия кнопки "Перейти на координаты"
         private void GotoButton_Click(object sender, RoutedEventArgs e)
         {
-            int x = Convert.ToUInt16(GotoXTextBox.Text);
-            int y = Convert.ToUInt16(GotoYTextBox.Text);
-            x = x > Model.MaxX ? Model.MaxX : x;
-            y = y > Model.MaxY ? Model.MaxY : y;
+            UInt16 x, y;
+;           if (!UInt16.TryParse(GotoXTextBox.Text,out x)) 
+            {
+                GotoXTextBox.Text = "0";
+                x = 0;
+            }
+
+            if (!UInt16.TryParse(GotoYTextBox.Text, out y))
+            {
+                GotoYTextBox.Text = "0";
+                y = 0;
+            }
+            
+            x = x > Model.MaxX ? (UInt16)Model.MaxX : x;
+            y = y > Model.MaxY ? (UInt16)Model.MaxY : y;
+
             Model.GotoXY(x, y);
+
             ButtonList.Add((Button)sender);
             (sender as Button).IsEnabled = false;
         }
