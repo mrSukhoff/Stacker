@@ -2,21 +2,26 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace Stacker
 {
-    class OrdersManager
+    public class OrdersManager : IDisposable
     {
         //коллекция заявок
         public List<Order> Orders { get; private set; } = new List<Order>();
 
         //События
-        public delegate void StackerModelEventHandler();
+        public delegate void OrdersManagerEvent();
         //появилась новая заявка
-        public event StackerModelEventHandler NewOrderAppeared = (() => { });
+        public event OrdersManagerEvent NewOrderAppeared = (() => { });
 
+        //внутрении поля --------------------------------------------------------------------------
+
+        //места хранения файлов заявлок и архива
         private string OrdersFile;
         private string ArchiveFile;
         private string WrongOrdersFile;
@@ -30,7 +35,81 @@ namespace Stacker
         //хранит номер выбранной заявки в автоматическом режиме
         int SelectedOrderNumber = -1;
 
-        //Проверки изменений файла с заданиями и чтения заявок из него
+        bool disposed;
+
+        //методы ----------------------------------------------------------------------------------
+        //public
+        public OrdersManager(string ordersFile, string archiveFile, string wrongOrdersFile, char leftRackName, char rightRackName)
+        {
+            OrdersFile = ordersFile;
+            ArchiveFile = archiveFile;
+            WrongOrdersFile = wrongOrdersFile;
+            Order.LeftStackerName = leftRackName;
+            Order.RightStackerName = rightRackName;
+        }
+
+
+        public void Dispose()
+        {
+            Dispose(true);
+            // подавляем финализацию
+            GC.SuppressFinalize(this);
+            
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing)
+                {
+                    FileTimer?.Dispose();
+                }
+                disposed = true;
+            }
+        }
+        //Запускаем таймер для проверки изменений списка заявок
+        public void TimerStart()
+        {
+            FileTimer = new Timer(ReadOrdersFile, null, 0, 10000);
+        }
+
+        //*выбор заявки для последующей работы с ней
+        public bool SelectOrder(int orderNumber)
+        {
+            if (orderNumber < 0 || orderNumber >= Orders.Count) return false;
+            else
+            {
+                SelectedOrderNumber = orderNumber;
+                return true;
+            }
+        }
+
+        //*завершение заявки с удалением ее из файла заявок и запись в файл архива с временем
+        //и результатом выополнения
+        public void FinishSelectedOrder(bool successfully)
+        {
+            if (SelectedOrderNumber == -1) throw new Exception("Не установлен номер заявки");
+            string res = successfully ? " успешно" : " отменено";
+
+            //удаляем строку из файла заявок и записываем в архив
+            RemoveStringFromOrdersFile(Orders[SelectedOrderNumber].OriginalString, ArchiveFile, res);
+
+            //удаляем заявку из коллекции
+            Orders.RemoveAt(SelectedOrderNumber);
+
+            //сбрасываем указатель
+            SelectedOrderNumber = -1;
+        }
+
+        public Order GetSelectedOrder()
+        {
+            if (SelectedOrderNumber >= 0 & SelectedOrderNumber < Orders.Count)
+                return Orders[SelectedOrderNumber];
+            else return null;
+        }
+
+        //private ---------------------------------------------------------------------------------
+        //*Проверки изменений файла с заданиями и чтения заявок из него
         private void ReadOrdersFile(object ob)
         {
             //проверяем не изменился ли файл с момента последнего чтения
@@ -39,7 +118,6 @@ namespace Stacker
                 bool newOrderAdded = false;
                 try
                 {
-                    //MessageBox.Show(File.GetLastWriteTime(OrdersFile) + " " + LastOrdersFileAccessTime);
                     //и если изменился читаем его
                     string[] lines;
                     lines = File.ReadAllLines(OrdersFile, System.Text.Encoding.Default);
@@ -80,8 +158,8 @@ namespace Stacker
             }
         }
 
-        //метод удаляет строку из файла заявок и записывает в указаный файл с заданным результатом
-        public void RemoveStringFromOrdersFile(string str, string filePath, string res)
+        //*метод удаляет строку из файла заявок и записывает в указаный файл с заданным результатом
+        private void RemoveStringFromOrdersFile(string str, string filePath, string res)
         {
             try
             {
@@ -103,33 +181,5 @@ namespace Stacker
             }
         }
 
-        //завершение заявки с удалением ее из файла заявок и запись в файл архива с временем
-        //и результатом выополнения
-        public void FinishOrder(bool succesed)
-        {
-            if (SelectedOrderNumber == -1) throw new Exception("Не установлен номер заявки");
-            string res = succesed ? " succeeded" : " canceled";
-
-            //удаляем строку из файла заявок и записываем в архив
-            RemoveStringFromOrdersFile(Orders[SelectedOrderNumber].OriginalString, ArchiveFile, res);
-
-            //удаляем заявку из коллекции
-            Orders.RemoveAt(SelectedOrderNumber);
-
-            //сбрасываем указатель
-            SelectedOrderNumber = -1;
-        }
-
-        //выбор заявки для последующей работы с ней
-        public bool SelectOrder(int orderNumber)
-        {
-            if (orderNumber < 0 || orderNumber >= Orders.Count) return false;
-            else
-            {
-                SelectedOrderNumber = orderNumber;
-                return true;
-            }
-        }
-        
     }
 }

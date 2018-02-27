@@ -4,21 +4,6 @@ using System.Windows;
 
 namespace Stacker
 {
-    //класс ячейки массива для хранения координат и доступности 
-    class Cell
-    {
-        public Cell()
-        {
-            X = 0;
-            Y = 0;
-            IsNotAvailable = false;
-        }
-
-        public int X { get; set; }
-        public int Y { get; set; }
-        public bool IsNotAvailable { get; set; }
-    }
-
     //класс-обертка для массива ячеек
     class CellsGrid
     {
@@ -87,10 +72,12 @@ namespace Stacker
                     int f = Convert.ToInt32(line[1])-1;
                     int x = Convert.ToInt32(line[2]);
                     int y = Convert.ToInt32(line[3]);
-                    bool isNotAvailable = Convert.ToBoolean(line[4]);
+                    bool leftSideIsNotAvailable = Convert.ToBoolean(line[4]);
+                    bool rightSideIsNotAvailable = Convert.ToBoolean(line[5]);
                     grid[r, f].X = x;
                     grid[r, f].Y = y;
-                    grid[r, f].IsNotAvailable = isNotAvailable;
+                    grid[r, f].LeftSideIsNotAvailable = leftSideIsNotAvailable;
+                    grid[r, f].RightSideIsNotAvailable = rightSideIsNotAvailable;
                 }
             }
         }
@@ -118,7 +105,8 @@ namespace Stacker
                         (f+1).ToString() + '~' +
                         grid[r, f].X.ToString() + '~'+
                         grid[r, f].Y.ToString() + "~"+
-                        grid[r, f].IsNotAvailable.ToString();
+                        grid[r, f].LeftSideIsNotAvailable.ToString() + "~" +
+                        grid[r, f].RightSideIsNotAvailable.ToString();
                 }
             }
             //пытаемся сохранить получееные строки в файл

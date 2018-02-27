@@ -55,7 +55,7 @@
     <StartupObject>Stacker.App</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>b141_15-512.ico</ApplicationIcon>
+    <ApplicationIcon>Stacker.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -113,7 +113,11 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Cell.cs" />
     <Compile Include="CellsGrid.cs" />
+    <None Include="Crane.cs" />
+    <Compile Include="OrdersManager.cs" />
+    <Compile Include="SettingsKeeper.cs" />
     <Compile Include="StackerModel.cs" />
     <Compile Include="INIManager.cs" />
     <Compile Include="Order.cs" />
@@ -147,13 +151,12 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Stacker.ini" />
+    <None Include="Stacker.ini">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="b141_15-512.ico" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
@@ -169,6 +172,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Stacker.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
