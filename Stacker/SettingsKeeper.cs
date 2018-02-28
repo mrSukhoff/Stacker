@@ -14,6 +14,7 @@ namespace Stacker
         public string OrdersFile { get; }
         public string ArchiveFile { get; }
         public string WrongOrdersFile { get; }
+        public ushort ReadingInterval { get; }
 
         //view
         //закрыть при ошибке открытия порта
@@ -55,6 +56,7 @@ namespace Stacker
                 CellsFile = manager.GetPrivateString("General", "CellsFile");
                 CloseOrInform = Convert.ToBoolean(manager.GetPrivateString("General", "CloseOrInform"));
                 ShowWeightTab = Convert.ToBoolean(manager.GetPrivateString("General", "ShowWeightTab"));
+                ReadingInterval = Convert.ToUInt16(manager.GetPrivateString("General", "ReadingInterval"));
 
                 //свойства стеллажей
                 LeftRackName = Convert.ToChar(manager.GetPrivateString("Stacker", "LeftRackName"));

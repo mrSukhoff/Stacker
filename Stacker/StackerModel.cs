@@ -12,12 +12,7 @@ namespace Stacker
     class StackerModel : IDisposable
     {
         //видимые свойства объекта ****************************************************************************
-
-        //имена и размеры стеллажей
-        //нулевая позиция по горизонтали - место погрузки
-        //public int StackerDepth { get; } = 29;
-        //public int StackerHight { get; } = 16;
-                 
+    
         //Максимальные значения координат
         public int MaxX { get; } = 55000;
         public int MaxY { get; } = 14000;

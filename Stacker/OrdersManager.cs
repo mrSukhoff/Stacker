@@ -68,9 +68,10 @@ namespace Stacker
             }
         }
         //Запускаем таймер для проверки изменений списка заявок
-        public void TimerStart()
+        public void TimerStart(uint period)
         {
-            FileTimer = new Timer(ReadOrdersFile, null, 0, 10000);
+            uint p = period * 1000;
+            FileTimer = new Timer(callback: ReadOrdersFile, state: null, dueTime: 0, period: p);
         }
 
         //*выбор заявки для последующей работы с ней

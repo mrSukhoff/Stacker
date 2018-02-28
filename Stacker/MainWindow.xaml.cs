@@ -103,7 +103,7 @@ namespace Stacker
             //прописываем обработчики для кнопок
             SetEventHandlers();
             //запускаем чтение заявок
-            OrderManager.TimerStart();
+            OrderManager.TimerStart(Settings.ReadingInterval);
         }
 
         //Настраиваем визуальные компоненты
