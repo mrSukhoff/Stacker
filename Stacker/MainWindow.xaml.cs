@@ -21,7 +21,7 @@ namespace Stacker
         }
 
         //хранилище настроек
-        SettingsKeeper Settings;
+        internal SettingsKeeper Settings;
 
         //менеджер заявок
         public OrdersManager OrderManager;
@@ -59,7 +59,8 @@ namespace Stacker
 
             //Создаем менеджер заявок
             OrderManager = new OrdersManager(Settings.OrdersFile, Settings.ArchiveFile, Settings.WrongOrdersFile,
-                Settings.LeftRackName, Settings.RightRackName);
+               Settings.LeftRackName, Settings.RightRackName);
+            
             //Определяем его источником данных для списка
             OrdersLitsView.ItemsSource = OrderManager.Orders;
             //и подписываемся на обновления
@@ -634,7 +635,8 @@ namespace Stacker
         private void BringAutoButton_Click(object sender, RoutedEventArgs e)
         {
             int i = OrdersLitsView.SelectedIndex;
-            if (OrderManager.SelectOrder(i))
+            OrderManager.SelectedOrderNumber =i;
+            try
             {
                 //Даем команду привезти
                 Model.BringOrTakeAway(true);
@@ -642,6 +644,10 @@ namespace Stacker
                 BringAutoButton.IsEnabled = false;
                 //и добавляем в список нажатых кнопок кнопку "увезти"
                 ButtonList.Add(TakeAwayAutoButton);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
         
@@ -671,12 +677,18 @@ namespace Stacker
         //нажатие кнопки "отменить заявку"
         private void CancelAutoButton_Click(object sender, RoutedEventArgs e)
         {
-            int i = OrdersLitsView.SelectedIndex;
-            //Если элемент выбран, удаляем его, иначе выходим
-            if (OrderManager.SelectOrder(i)) OrderManager.FinishSelectedOrder(false);
-            OrdersLitsView.SelectedIndex = -1;
-            OrdersLitsView.Items.Refresh();
-            
+            try
+            {
+                int i = OrdersLitsView.SelectedIndex;
+                OrderManager.SelectedOrderNumber = i;
+                OrderManager.FinishSelectedOrder(false);
+                OrdersLitsView.SelectedIndex = -1;
+                OrdersLitsView.Items.Refresh();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         //нажатие кнопки "взвесить"

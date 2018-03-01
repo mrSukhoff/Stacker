@@ -539,7 +539,7 @@ namespace Stacker
         //*Команда "привезти/увезти" по зараннее установленной заявке, bring = true - привезти
         public void BringOrTakeAway(bool bring)
         {
-            Order order = OrdersManager.GetSelectedOrder();
+            Order order = OrdersManager.Orders[OrdersManager.SelectedOrderNumber];
             if (order != null)
             {
                 bool rack = order.StackerName == RightRackName;

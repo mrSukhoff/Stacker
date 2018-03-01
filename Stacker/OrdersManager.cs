@@ -14,6 +14,13 @@ namespace Stacker
         //коллекция заявок
         public List<Order> Orders { get; private set; } = new List<Order>();
 
+        //номер выбранной заявки для автоматического режима
+        public int SelectedOrderNumber
+        {
+            get => _selectedOrderNumber;
+            set =>_selectedOrderNumber = (value >= 0) & (value < Orders.Count()) ? value : -1;
+        }
+
         //События
         public delegate void OrdersManagerEvent();
         //появилась новая заявка
@@ -32,9 +39,10 @@ namespace Stacker
         // таймер для контроля изменения файла заявок
         private Timer FileTimer;
 
-        //хранит номер выбранной заявки в автоматическом режиме
-        int SelectedOrderNumber = -1;
+        //хранит номер выбранной заявки для автоматического режима
+        private int _selectedOrderNumber = -1;
 
+        //флаг уничтожения неуправляемых ресурсов
         bool disposed;
 
         //методы ----------------------------------------------------------------------------------
@@ -48,7 +56,6 @@ namespace Stacker
             Order.RightStackerName = rightRackName;
         }
 
-
         public void Dispose()
         {
             Dispose(true);
@@ -56,6 +63,7 @@ namespace Stacker
             GC.SuppressFinalize(this);
             
         }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!disposed)
@@ -67,6 +75,7 @@ namespace Stacker
                 disposed = true;
             }
         }
+
         //Запускаем таймер для проверки изменений списка заявок
         public void TimerStart(uint period)
         {
@@ -74,43 +83,25 @@ namespace Stacker
             FileTimer = new Timer(callback: ReadOrdersFile, state: null, dueTime: 0, period: p);
         }
 
-        //*выбор заявки для последующей работы с ней
-        public bool SelectOrder(int orderNumber)
-        {
-            if (orderNumber < 0 || orderNumber >= Orders.Count) return false;
-            else
-            {
-                SelectedOrderNumber = orderNumber;
-                return true;
-            }
-        }
-
-        //*завершение заявки с удалением ее из файла заявок и запись в файл архива с временем
+        //завершение заявки с удалением ее из файла заявок и запись в файл архива с временем
         //и результатом выополнения
         public void FinishSelectedOrder(bool successfully)
         {
-            if (SelectedOrderNumber == -1) throw new Exception("Не установлен номер заявки");
+            if (_selectedOrderNumber == -1) throw new Exception("Не установлен номер заявки");
             string res = successfully ? " успешно" : " отменено";
 
             //удаляем строку из файла заявок и записываем в архив
-            RemoveStringFromOrdersFile(Orders[SelectedOrderNumber].OriginalString, ArchiveFile, res);
+            RemoveStringFromOrdersFile(Orders[_selectedOrderNumber].OriginalString, ArchiveFile, res);
 
             //удаляем заявку из коллекции
-            Orders.RemoveAt(SelectedOrderNumber);
+            Orders.RemoveAt(_selectedOrderNumber);
 
             //сбрасываем указатель
-            SelectedOrderNumber = -1;
-        }
-
-        public Order GetSelectedOrder()
-        {
-            if (SelectedOrderNumber >= 0 & SelectedOrderNumber < Orders.Count)
-                return Orders[SelectedOrderNumber];
-            else return null;
+            _selectedOrderNumber = -1;
         }
 
         //private ---------------------------------------------------------------------------------
-        //*Проверки изменений файла с заданиями и чтения заявок из него
+        //Проверки изменений файла с заданиями и чтения заявок из него
         private void ReadOrdersFile(object ob)
         {
             //проверяем не изменился ли файл с момента последнего чтения
@@ -120,8 +111,18 @@ namespace Stacker
                 try
                 {
                     //и если изменился читаем его
-                    string[] lines;
-                    lines = File.ReadAllLines(OrdersFile, System.Text.Encoding.Default);
+                    List<string> lines = new List<string>();
+                    using (FileStream fs = new FileStream(OrdersFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                    {
+                        using (StreamReader sr = new StreamReader(fs, System.Text.Encoding.Default))
+                        {
+                            while (sr.Peek()>=0)
+                            {
+                                lines.Add(sr.ReadLine());
+                            }
+                        }
+                    }
+
                     Order order = null;
                     foreach (string str in lines)
                     {
@@ -148,6 +149,7 @@ namespace Stacker
                     }
                     //и запоминаем время последнего чтения
                     LastOrdersFileAccessTime = File.GetLastWriteTime(OrdersFile);
+                    lines = null;
                     if (newOrderAdded) NewOrderAppeared();
                 }
                 catch (Exception ex)
@@ -159,7 +161,7 @@ namespace Stacker
             }
         }
 
-        //*метод удаляет строку из файла заявок и записывает в указаный файл с заданным результатом
+        //метод удаляет строку из файла заявок и записывает в указаный файл с заданным результатом
         private void RemoveStringFromOrdersFile(string str, string filePath, string res)
         {
             try
@@ -169,18 +171,29 @@ namespace Stacker
                     DateTime.Now.ToString() + " : " + str + " - " + res + '\r' + '\n',
                         System.Text.Encoding.Default);
 
-                //читаем файл заявок и удаляем из него строку с нашей заявкой
-                string[] strings = File.ReadAllLines(OrdersFile, System.Text.Encoding.Default).
-                    Where(v => v.TrimEnd('\r', '\n').IndexOf(str) == -1).ToArray();
-
-                //записываем его обратно
-                File.WriteAllLines(OrdersFile, strings, System.Text.Encoding.Default);
+                //читаем файл заявок в список строк
+                List<string> lines = new List<string>();
+                using (FileStream fs = new FileStream(OrdersFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+                    using (StreamReader sr = new StreamReader(fs, System.Text.Encoding.Default))
+                    {
+                        while (sr.Peek() >= 0)
+                        {
+                            lines.Add(sr.ReadLine());
+                        }
+                    }
+                }
+                //и удаляем из списка строку с нашей заявкой
+                lines.Remove(str);
+                //записываем список обратно
+                File.WriteAllLines(OrdersFile, lines, System.Text.Encoding.Default);
+                //обнуляем список
+                lines = null;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "RemoveStringFromOrdersFile");
             }
         }
-
     }
 }
