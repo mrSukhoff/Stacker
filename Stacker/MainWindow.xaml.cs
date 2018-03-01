@@ -60,7 +60,6 @@ namespace Stacker
             //Создаем менеджер заявок
             OrderManager = new OrdersManager(Settings.OrdersFile, Settings.ArchiveFile, Settings.WrongOrdersFile,
                Settings.LeftRackName, Settings.RightRackName);
-            
             //Определяем его источником данных для списка
             OrdersLitsView.ItemsSource = OrderManager.Orders;
             //и подписываемся на обновления
@@ -71,11 +70,9 @@ namespace Stacker
             //Настраиваем визуальные компоненты
             SetUpComponents();
             
-            
             //создаем модель
             try
             {
-                
                 Model = new StackerModel(OrderManager,Settings);
             }
             catch 
