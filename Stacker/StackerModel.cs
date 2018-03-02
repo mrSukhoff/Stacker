@@ -12,7 +12,12 @@ namespace Stacker
     class StackerModel : IDisposable
     {
         //видимые свойства объекта ****************************************************************************
-    
+
+        //хранилище настроек
+        public SettingsKeeper Settings;
+        //менеджер заявок
+        public OrdersManager OrderManager;
+
         //Максимальные значения координат
         public int MaxX { get; } = 55000;
         public int MaxY { get; } = 14000;
@@ -60,11 +65,10 @@ namespace Stacker
         //флаг нахождения крана на начальной позиции
         public bool IsFloorMark;
 
+        //флаг успешности подключения
+        public bool IsConnected = false;
+
         //внутренние поля класса ******************************************************************************
-
-        OrdersManager OrdersManager;
-        SettingsKeeper Settings;
-
         private char LeftRackName;
         private char RightRackName;
 
@@ -84,10 +88,13 @@ namespace Stacker
         private bool disposed = false;
         
         //Конструктор класса **********************************************************************************
-        public StackerModel(OrdersManager ordersManager, SettingsKeeper settingsKeeper)
+        public StackerModel()
         {
-            OrdersManager = ordersManager;
-            Settings = settingsKeeper; 
+            //Инициализируем хранилище настроек
+            Settings = new SettingsKeeper();
+            
+            //Создаем менеджер заявок
+            OrderManager = new OrdersManager(this);
 
             LeftRackName = Settings.LeftRackName;
             RightRackName = Settings.RightRackName;
@@ -114,13 +121,12 @@ namespace Stacker
                 WriteDword(18, Settings.MaxWeight);
                 //запускаем таймер на чтение сосотояния контроллера
                 PlcTimer = new Timer(ReadStateWord, null, 0, 500);
+                IsConnected = true;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, caption: "Ошибка открытия порта");
             }
-
-            //if (!ComPort.IsOpen) throw new NullReferenceException("!");
         }
 
         //завершение работы программы
@@ -143,9 +149,10 @@ namespace Stacker
                 if (disposing)
                 {
                     // Освобождаем управляемые ресурсы
-                    if (PlcTimer != null) PlcTimer.Dispose();
-                    if (PLC != null) PLC.Dispose();
-                    if (ComPort != null) ComPort.Dispose();
+                    PlcTimer?.Dispose();
+                    PLC?.Dispose();
+                    ComPort?.Dispose();
+                    OrderManager.Dispose();
                 }
                 // освобождаем неуправляемые объекты
                 disposed = true;
@@ -539,7 +546,7 @@ namespace Stacker
         //*Команда "привезти/увезти" по зараннее установленной заявке, bring = true - привезти
         public void BringOrTakeAway(bool bring)
         {
-            Order order = OrdersManager.Orders[OrdersManager.SelectedOrderNumber];
+            Order order = OrderManager.Orders[OrderManager.SelectedOrderNumber];
             if (order != null)
             {
                 bool rack = order.StackerName == RightRackName;
