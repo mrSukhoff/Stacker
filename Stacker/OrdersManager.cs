@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace Stacker
@@ -18,7 +15,7 @@ namespace Stacker
         public int SelectedOrderNumber
         {
             get => _selectedOrderNumber;
-            set =>_selectedOrderNumber = (value >= 0) & (value < Orders.Count()) ? value : -1;
+            set =>_selectedOrderNumber = (value >= 0) & (value < Orders.Count) ? value : -1;
         }
 
         //События

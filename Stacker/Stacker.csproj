@@ -115,7 +115,6 @@
     </Compile>
     <Compile Include="Cell.cs" />
     <Compile Include="CellsGrid.cs" />
-    <None Include="Crane.cs" />
     <Compile Include="OrdersManager.cs" />
     <Compile Include="SettingsKeeper.cs" />
     <Compile Include="StackerModel.cs" />
