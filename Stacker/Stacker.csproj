@@ -115,7 +115,6 @@
     </Compile>
     <Compile Include="Cell.cs" />
     <Compile Include="CellsGrid.cs" />
-    <None Include="Crane.cs" />
     <Compile Include="OrdersManager.cs" />
     <Compile Include="SettingsKeeper.cs" />
     <Compile Include="StackerModel.cs" />
@@ -151,9 +150,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Stacker.ini">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <None Include="Stacker.ini" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

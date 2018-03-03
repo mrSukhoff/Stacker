@@ -21,87 +21,75 @@ namespace Stacker
         }
 
         //хранилище настроек
-        internal SettingsKeeper Settings;
+        SettingsKeeper Settings;
 
         //менеджер заявок
-        public OrdersManager OrderManager;
+        OrdersManager OrderManager;
 
         //формат ввода координат в textbox'ы
-        private Regex CoordinateRegex = new Regex(@"\d");
+        Regex CoordinateRegex = new Regex(@"\d");
 
         //Список кнопок, выдавших задание и заблокированных
-        private List<Button> ButtonList = new List<Button>();
+        List<Button> ButtonList = new List<Button>();
 
         //модель паттерна MVP(если это конечно он)
-        private StackerModel Model;
+        StackerModel Model;
 
         //для рисования графика веса
-        private Polyline WeightPolyline = new Polyline();
-        private PointCollection WeightPointCollection = new PointCollection();
-        private int c = 0;
-        private Polyline MeasuredWeightPolyline1 = new Polyline();
-        private Polyline MeasuredWeightPolyline2 = new Polyline();
-        private PointCollection MeasuredWeight1PointCollection = new PointCollection();
-        private PointCollection MeasuredWeight2PointCollection = new PointCollection();
+        Polyline WeightPolyline = new Polyline();
+        PointCollection WeightPointCollection = new PointCollection();
+        int c = 0;
+        Polyline MeasuredWeightPolyline1 = new Polyline();
+        Polyline MeasuredWeightPolyline2 = new Polyline();
+        PointCollection MeasuredWeight1PointCollection = new PointCollection();
+        PointCollection MeasuredWeight2PointCollection = new PointCollection();
 
         //стиль оттображения списка заявок
         GridView OrdersGridView = new GridView();
 
         //флаг закрытия неуправляемых ресурсов
-        private bool disposed = false;
+        bool disposed = false;
 
         //#####################################################################################################
         //Основная точка входа -------------------------------------------------------------------------------!
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            //Инициализируем хранилище настроек
-            Settings = new SettingsKeeper();
+            //Создаем модель
+            Model = new StackerModel();
 
-            //Создаем менеджер заявок
-            OrderManager = new OrdersManager(Settings.OrdersFile, Settings.ArchiveFile, Settings.WrongOrdersFile,
-               Settings.LeftRackName, Settings.RightRackName);
+            //инициализируем менеджер заявок
+            OrderManager = Model.OrderManager;
             //Определяем его источником данных для списка
             OrdersLitsView.ItemsSource = OrderManager.Orders;
             //и подписываемся на обновления
             OrderManager.NewOrderAppeared += UpdateOrderList;
 
+            //инициализируем хранилище настроек
+            Settings = Model.Settings;
+
             //Настраиваем вид списка заявок
             ListViewSetUp();
             //Настраиваем визуальные компоненты
             SetUpComponents();
-            
-            //создаем модель
-            try
-            {
-                Model = new StackerModel(OrderManager,Settings);
-            }
-            catch 
-            {
-                Model?.Dispose();
-                if (!Settings.CloseOrInform) Application.Current.Shutdown();
-            }
 
-            if (Model != null)
+            if (Model.IsConnected)
             {
                 //подписываемся на события модели
                 Model.CommandDone += CommandDone;
                 Model.ErrorAppeared += ErrorAppeared;
                 Model.CoordinateReaded += UpdateCoordinate;
                 Model.StateWordChanged += SomethingChanged;
-                
                 //источник данных для списка ошибок
                 ErrorListBox.ItemsSource = Model.ErrorList;
-                
                 //проверяем при старте наличие ящика на платформе и устанавливаем активные кнопки
                 bool isBin = Model.ChekBinOnPlatform();
                 TakeAwaySemiAutoButton.IsEnabled = isBin;
                 BringSemiAutoButton.IsEnabled = !isBin;
                 BringAutoButton.IsEnabled = !isBin;
             }
+            else if (!Settings.CloseOrInform) Application.Current.Shutdown(-1);
             //прописываем обработчики для кнопок
             SetEventHandlers();
-            //запускаем чтение заявок
-            OrderManager.TimerStart(Settings.ReadingInterval);
         }
 
         //Настраиваем визуальные компоненты

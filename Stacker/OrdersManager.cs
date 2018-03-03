@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace Stacker
@@ -18,7 +15,7 @@ namespace Stacker
         public int SelectedOrderNumber
         {
             get => _selectedOrderNumber;
-            set =>_selectedOrderNumber = (value >= 0) & (value < Orders.Count()) ? value : -1;
+            set =>_selectedOrderNumber = (value >= 0) & (value < Orders.Count) ? value : -1;
         }
 
         //События
@@ -47,13 +44,16 @@ namespace Stacker
 
         //методы ----------------------------------------------------------------------------------
         //public
-        public OrdersManager(string ordersFile, string archiveFile, string wrongOrdersFile, char leftRackName, char rightRackName)
+        public OrdersManager(object master)
         {
-            OrdersFile = ordersFile;
-            ArchiveFile = archiveFile;
-            WrongOrdersFile = wrongOrdersFile;
-            Order.LeftStackerName = leftRackName;
-            Order.RightStackerName = rightRackName;
+            SettingsKeeper sk = (master as StackerModel).Settings;
+            OrdersFile = sk.OrdersFile;
+            ArchiveFile = sk.ArchiveFile;
+            WrongOrdersFile = sk.WrongOrdersFile;
+            Order.LeftStackerName = sk.LeftRackName;
+            Order.RightStackerName = sk.RightRackName;
+            uint p = sk.ReadingInterval * (uint)1000;
+            FileTimer = new Timer(callback: ReadOrdersFile, state: null, dueTime: 5000, period: p);
         }
 
         public void Dispose()
@@ -61,7 +61,6 @@ namespace Stacker
             Dispose(true);
             // подавляем финализацию
             GC.SuppressFinalize(this);
-            
         }
 
         protected virtual void Dispose(bool disposing)
@@ -74,13 +73,6 @@ namespace Stacker
                 }
                 disposed = true;
             }
-        }
-
-        //Запускаем таймер для проверки изменений списка заявок
-        public void TimerStart(uint period)
-        {
-            uint p = period * 1000;
-            FileTimer = new Timer(callback: ReadOrdersFile, state: null, dueTime: 0, period: p);
         }
 
         //завершение заявки с удалением ее из файла заявок и запись в файл архива с временем
@@ -183,6 +175,7 @@ namespace Stacker
                         }
                     }
                 }
+
                 //и удаляем из списка строку с нашей заявкой
                 lines.Remove(str);
                 //записываем список обратно
