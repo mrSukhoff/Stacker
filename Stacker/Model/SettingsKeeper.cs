@@ -45,7 +45,7 @@ namespace Stacker.Model
         
         //Максимальный вес груза
         public UInt16 MaxWeight { get; }
-        
+
         //Читаем настройки
         public SettingsKeeper()
         {

@@ -58,6 +58,7 @@ namespace Stacker
         {
             //Создаем модель
             Model = new StackerModel();
+            
 
             //инициализируем менеджер заявок
             OrderManager = Model.OrderManager;

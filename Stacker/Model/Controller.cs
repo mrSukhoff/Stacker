@@ -13,7 +13,7 @@ namespace Stacker.Model
         private IModbusMaster PLC;
 
         private bool disposed;
-        public Controller(string port)
+        internal Controller(string port)
         {
             //создаем порт
             ComPort = new SerialPort(port, 115200, Parity.Even, 7, StopBits.One);
