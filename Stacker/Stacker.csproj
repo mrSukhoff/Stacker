@@ -115,6 +115,8 @@
     </Compile>
     <Compile Include="Model\Cell.cs" />
     <Compile Include="Model\CellsGrid.cs" />
+    <Compile Include="Model\Controller.cs" />
+    <Compile Include="Model\CraneCommands.cs" />
     <Compile Include="Model\OrdersManager.cs" />
     <Compile Include="Model\SettingsKeeper.cs" />
     <Compile Include="Model\StackerModel.cs" />

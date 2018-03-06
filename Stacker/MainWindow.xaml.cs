@@ -22,6 +22,9 @@ namespace Stacker
             InitializeComponent();
         }
 
+        //модель паттерна MVP
+        StackerModel Model;
+
         //хранилище настроек
         SettingsKeeper Settings;
 
@@ -33,9 +36,6 @@ namespace Stacker
 
         //Список кнопок, выдавших задание и заблокированных
         List<Button> ButtonList = new List<Button>();
-
-        //модель паттерна MVP(если это конечно он)
-        StackerModel Model;
 
         //для рисования графика веса
         Polyline WeightPolyline = new Polyline();
@@ -64,7 +64,7 @@ namespace Stacker
             //Определяем его источником данных для списка
             OrdersLitsView.ItemsSource = OrderManager.Orders;
             //и подписываемся на обновления
-            OrderManager.NewOrderAppeared += UpdateOrderList;
+            //OrderManager.NewOrderAppeared += UpdateOrderList;
 
             //инициализируем хранилище настроек
             Settings = Model.Settings;
@@ -84,7 +84,7 @@ namespace Stacker
                 //источник данных для списка ошибок
                 ErrorListBox.ItemsSource = Model.ErrorList;
                 //проверяем при старте наличие ящика на платформе и устанавливаем активные кнопки
-                bool isBin = Model.ChekBinOnPlatform();
+                bool isBin = Model.Crane.ChekBinOnPlatform();
                 TakeAwaySemiAutoButton.IsEnabled = isBin;
                 BringSemiAutoButton.IsEnabled = !isBin;
                 BringAutoButton.IsEnabled = !isBin;
@@ -301,14 +301,14 @@ namespace Stacker
         //Обработчик нажатия кнопки STOP
         private void StopButton_Click(object sender, RoutedEventArgs e)
         {
-            Model.StopButton();
+            Model.Crane.StopButton();
         }
 
         //Обработчик нажатия кнопки подтверждения ошибок
         private void SubmitErrorButton_Click(object sender, RoutedEventArgs e)
         {
             //даем команду на сброс ошибки
-            Model.SubmitError();
+            Model.Crane.SubmitError();
             //восстанавливаем цвет строки состояния и закладки
             StatusPlane.Background = new SolidColorBrush(Color.FromArgb(0xFF, 0x3E, 0x60, 0x6F));
             ErrorTabItem.Background = new SolidColorBrush(Color.FromArgb(0xFF, 0xCB, 0xDB, 0xD7));
@@ -373,14 +373,14 @@ namespace Stacker
                 int y = Convert.ToInt32(CoordinateYTextBox.Text);
                 
                 //если координата больше максимальноразрешшенной, устанавливаем ее максимальной
-                if (x > Model.MaxX)
+                if (x > Model.Settings.MaxX)
                 {
-                    x = Model.MaxX;
+                    x = Model.Settings.MaxX;
                     CoordinateXTextBox.Text = x.ToString();
                 }
-                if (y > Model.MaxY)
+                if (y > Model.Settings.MaxY)
                 {
-                    y = Model.MaxY;
+                    y = Model.Settings.MaxY;
                     CoordinateYTextBox.Text = y.ToString();
                 }
                 
@@ -465,7 +465,7 @@ namespace Stacker
         //Обработчик нажатия кнопки "платформа влево"
         private void ManPlatformLeftButton_Checked(object sender, RoutedEventArgs e)
         {
-            Model.PlatformToRight();
+            Model.Crane.PlatformToRight();
             ButtonList.Add(sender as Button);
             (sender as Button).IsEnabled = false;
         }
@@ -473,7 +473,7 @@ namespace Stacker
         //Обработчик нажатия кнопки платформа "вправо вправо"
         private void ManPlatformRightButton_Checked(object sender, RoutedEventArgs e)
         {
-            Model.PlatformToLeft();
+            Model.Crane.PlatformToLeft();
             ButtonList.Add(sender as Button);
             (sender as Button).IsEnabled = false;
         }
@@ -540,16 +540,16 @@ namespace Stacker
             switch (((Button)sender).Name)
             {
                 case "FartherButton":
-                    Model.FartherButton(state);
+                    Model.Crane.FartherButton(state);
                     break;
                 case "CloserButton":
-                    Model.CloserButton(state);
+                    Model.Crane.CloserButton(state);
                     break;
                 case "UpButton":
-                    Model.UpButton(state);
+                    Model.Crane.UpButton(state);
                     break;
                 case "DownButton":
-                    Model.DownButton(state);
+                    Model.Crane.DownButton(state);
                     break;
                 default: return;
             }
@@ -561,16 +561,16 @@ namespace Stacker
             switch ( ((Button)sender).Name )
             {
                 case "FartherButton":
-                    Model.NextLineFartherCommand();
+                    Model.Crane.NextLineFartherCommand();
                     break;
                 case "CloserButton":
-                    Model.NextLineCloserCommand();
+                    Model.Crane.NextLineCloserCommand();
                     break;
                 case "UpButton":
-                    Model.NextLineUpCommand();
+                    Model.Crane.NextLineUpCommand();
                     break;
                 case "DownButton":
-                    Model.NextLineDownCommand();
+                    Model.Crane.NextLineDownCommand();
                     break;
                 default: return;
             }
@@ -594,10 +594,10 @@ namespace Stacker
                 y = 0;
             }
             
-            x = x > Model.MaxX ? (UInt16)Model.MaxX : x;
-            y = y > Model.MaxY ? (UInt16)Model.MaxY : y;
+            x = x > Model.Settings.MaxX ? (UInt16)Model.Settings.MaxX : x;
+            y = y > Model.Settings.MaxY ? (UInt16)Model.Settings.MaxY : y;
 
-            Model.GotoXY(x, y);
+            Model.Crane.GotoXY(x, y);
 
             ButtonList.Add((Button)sender);
             (sender as Button).IsEnabled = false;
@@ -613,7 +613,7 @@ namespace Stacker
             //если была нажата кнопка привезти устанавливае переменную в true
             bool bring = sender == BringSemiAutoButton ? true : false;
 
-            Model.BringOrTakeAway(stack,r,f,bring);           
+            Model.Crane.BringOrTakeAway(stack,r,f,bring);           
             
             (sender as Button).IsEnabled = false; 
         }
@@ -626,7 +626,7 @@ namespace Stacker
             try
             {
                 //Даем команду привезти
-                Model.BringOrTakeAway(true);
+                Model.Crane.BringOrTakeAway(true);
                 //Выключаем кнопку "привезти"
                 BringAutoButton.IsEnabled = false;
                 //и добавляем в список нажатых кнопок кнопку "увезти"
@@ -642,7 +642,7 @@ namespace Stacker
         private void TakeAwayAutoButton_Click(object sender, RoutedEventArgs e)
         {
             //Даем команду привезти
-            Model.BringOrTakeAway(false);
+            Model.Crane.BringOrTakeAway(false);
             //Выключаем кнопку "увезти"
             TakeAwayAutoButton.IsEnabled = false;
             //и добавляем в список нажатых кнопок кнопку "привезти"
@@ -691,7 +691,7 @@ namespace Stacker
             Model.CoordinateReaded += MakeGraph;
             Model.CommandDone += WeighDone;
             //запускаем взвешивание
-            Model.Weigh();
+            Model.Crane.Weigh();
         }
 
         //по актуальному значению тока строим график
