@@ -76,12 +76,12 @@ namespace Stacker
             if (Model.IsConnected)
             {
                 //подписываемся на события модели
-                Model.CommandDone += CommandDone;
-                Model.ErrorAppeared += ErrorAppeared;
-                Model.CoordinateReaded += UpdateCoordinate;
-                Model.StateWordChanged += SomethingChanged;
+                Model.CraneState.CommandDone += CommandDone;
+                Model.CraneState.ErrorAppeared += ErrorAppeared;
+                Model.CraneState.CoordinateReaded += UpdateCoordinate;
+                Model.CraneState.StateWordChanged += SomethingChanged;
                 //источник данных для списка ошибок
-                ErrorListBox.ItemsSource = Model.ErrorList;
+                ErrorListBox.ItemsSource = Model.CraneState.ErrorList;
                 //проверяем при старте наличие ящика на платформе и устанавливаем активные кнопки
                 bool isBin = Model.Crane.ChekBinOnPlatform();
                 TakeAwaySemiAutoButton.IsEnabled = isBin;
@@ -236,8 +236,8 @@ namespace Stacker
             ButtonList.Clear();
 
             //кнопки привезти/увезти устанавливаем в зависиомсти от наличия корзины
-            Dispatcher.Invoke(() => BringSemiAutoButton.IsEnabled = !Model.IsBinOnPlatform);
-            Dispatcher.Invoke(() => TakeAwaySemiAutoButton.IsEnabled = Model.IsBinOnPlatform);
+            Dispatcher.Invoke(() => BringSemiAutoButton.IsEnabled = !Model.CraneState.IsBinOnPlatform);
+            Dispatcher.Invoke(() => TakeAwaySemiAutoButton.IsEnabled = Model.CraneState.IsBinOnPlatform);
         }
 
         //обработчик события "ошибка"
@@ -250,19 +250,19 @@ namespace Stacker
         //Обновление координат и слова состояния
         private void UpdateCoordinate()
         {
-            string r = Model.ActualRow.ToString();
+            string r = Model.CraneState.ActualRow.ToString();
             r = r.Length == 1 ? "0" + r : r;
             Dispatcher.Invoke( () => RowLabel.Content = "Ряд : " + r);
 
-            string f = Model.ActualFloor.ToString();
+            string f = Model.CraneState.ActualFloor.ToString();
             f = f.Length == 1 ? "0" + f : f;
             Dispatcher.Invoke( () => FloorLabel.Content = "Этаж : " + f );
 
-            string x = Model.ActualX.ToString();
+            string x = Model.CraneState.ActualX.ToString();
             while (x.Length < 5) x = "0" + x;
             Dispatcher.Invoke( () => XLabel.Content = "X : " +  x);
 
-            string y = Model.ActualY.ToString();
+            string y = Model.CraneState.ActualY.ToString();
             while (y.Length < 5) y = "0" + y;
             Dispatcher.Invoke( () => YLabel.Content = "Y : " + y );
         }
@@ -271,9 +271,9 @@ namespace Stacker
         private void SomethingChanged()
         {
             //устанавливаем индикатор начальной позиции
-            Dispatcher.Invoke(() => SPLabel.IsEnabled = Model.IsStartPosiotion);
-            Dispatcher.Invoke(() => RLabel.IsEnabled = Model.IsRowMark);
-            Dispatcher.Invoke(() => FLabel.IsEnabled = Model.IsFloorMark);
+            Dispatcher.Invoke(() => SPLabel.IsEnabled = Model.CraneState.IsStartPosiotion);
+            Dispatcher.Invoke(() => RLabel.IsEnabled = Model.CraneState.IsRowMark);
+            Dispatcher.Invoke(() => FLabel.IsEnabled = Model.CraneState.IsFloorMark);
         }
 
         //при изменении размеров окна меняем размеры колонок
@@ -307,8 +307,8 @@ namespace Stacker
             //разблокируем кнопки
             CommandDone();
             ErrorListBox.Items.Refresh();
-            Model.CommandDone -= TakeAwayDone;
-            BringAutoButton.IsEnabled = !Model.IsBinOnPlatform;
+            Model.CraneState.CommandDone -= TakeAwayDone;
+            BringAutoButton.IsEnabled = !Model.CraneState.IsBinOnPlatform;
             TakeAwayAutoButton.IsEnabled = false;
         }
 
@@ -421,7 +421,7 @@ namespace Stacker
             Model.GetCell(stack, r, f, out int x, out int y, out bool isNotAvailable);
 
             //устанавливаем доступность кнопок в зависимости от состояния ячейки
-            bool state = Model.IsBinOnPlatform;
+            bool state = Model.CraneState.IsBinOnPlatform;
             BringSemiAutoButton.IsEnabled = !isNotAvailable & !state;
             TakeAwaySemiAutoButton.IsEnabled &= !isNotAvailable & state;
             IsNotAvailableLabel.Content = isNotAvailable? "Ячейка отсутствует!":"";
@@ -640,14 +640,14 @@ namespace Stacker
             //и добавляем в список нажатых кнопок кнопку "привезти"
             ButtonList.Add(BringAutoButton);
             //к обработчику завершения команды добавляем метод.
-            Model.CommandDone += TakeAwayDone;
+            Model.CraneState.CommandDone += TakeAwayDone;
         }
 
         //после доставки  на место разрешаем кнопкку "привезти"
         private void TakeAwayDone()
         {
             //возвращаем обработчик события
-            Model.CommandDone -= TakeAwayDone;
+            Model.CraneState.CommandDone -= TakeAwayDone;
             //завершаем заявку
             OrderManager.FinishSelectedOrder(true);
             Dispatcher.Invoke( () => OrdersLitsView.Items.Refresh());
@@ -680,8 +680,8 @@ namespace Stacker
             MeasuredWeight1PointCollection.Clear();
             MeasuredWeight2PointCollection.Clear();
             //подписываемся для считывания текущих значений
-            Model.CoordinateReaded += MakeGraph;
-            Model.CommandDone += WeighDone;
+            Model.CraneState.CoordinateReaded += MakeGraph;
+            Model.CraneState.CommandDone += WeighDone;
             //запускаем взвешивание
             Model.Crane.Weigh();
         }
@@ -689,7 +689,7 @@ namespace Stacker
         //по актуальному значению тока строим график
         private void MakeGraph()
         {
-            double w = 450 - Model.Weight;
+            double w = 450 - Model.CraneState.Weight;
             Point point = new Point(c*10, w);
             Dispatcher.Invoke(() => WeightPointCollection.Add(point));
             c++;
@@ -698,30 +698,30 @@ namespace Stacker
         //по окончании взвешивания рисуем 7 перпендикулярных красных линий ;-)
         private void WeighDone()
         {
-            int y = 450 - Model.MeasuredWeight;
+            int y = 450 - Model.CraneState.MeasuredWeight;
             Point point11 = new Point(0,y);
             Point point12 = new Point(300, y);
             Dispatcher.Invoke(() => MeasuredWeight1PointCollection.Add(point11));
             Dispatcher.Invoke(() => MeasuredWeight1PointCollection.Add(point12));
                        
-            y = 450 - Model.MeasuredWeight2;
+            y = 450 - Model.CraneState.MeasuredWeight2;
             Point point21 = new Point(0, y);
             Point point22 = new Point(300, y);
             Dispatcher.Invoke(() => MeasuredWeight2PointCollection.Add(point21));
             Dispatcher.Invoke(() => MeasuredWeight2PointCollection.Add(point22));
 
-            float w = Model.MeasuredWeight - Settings.WeightAlpha1;
+            float w = Model.CraneState.MeasuredWeight - Settings.WeightAlpha1;
             w = Settings.WeightBeta1 == 0 ? w : w * 100 / Settings.WeightBeta1;
                        
             Dispatcher.Invoke(() => MeasuredWeightLabel.Content = w.ToString() + " кг");
 
-            w = Model.MeasuredWeight2 - Settings.WeightAlpha2;
+            w = Model.CraneState.MeasuredWeight2 - Settings.WeightAlpha2;
             w = Settings.WeightBeta2 == 0 ? w : w * 100 / Settings.WeightBeta2;
 
             Dispatcher.Invoke(() => MeasuredWeightLabel2.Content = w.ToString() + " кг");
 
-            Model.CommandDone -= WeighDone;
-            Model.CoordinateReaded -= MakeGraph;
+            Model.CraneState.CommandDone -= WeighDone;
+            Model.CraneState.CoordinateReaded -= MakeGraph;
             c = 0;
         }
 
@@ -740,7 +740,7 @@ namespace Stacker
             int f = OrderManager.Orders[index].Floor;
             char n = OrderManager.Orders[index].StackerName;
             Model.GetCell(n, r, f, out int x, out int y, out bool isNotAvailable);
-            BringAutoButton.IsEnabled = !isNotAvailable & !Model.IsBinOnPlatform;
+            BringAutoButton.IsEnabled = !isNotAvailable & !Model.CraneState.IsBinOnPlatform;
             CancelAutoButton.IsEnabled = true;
         }
 

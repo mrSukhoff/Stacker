@@ -29,7 +29,7 @@ namespace Stacker.Model
         //массив с координатами ячеек
         private Cell[,] grid;
 
-        //конструктор создает массив и инициализирует его
+        //конструктор создает массив
         internal CellsGrid(ushort RowSize, ushort FloorSize)
         {
             //проверяем не слишком малы ли аргументы

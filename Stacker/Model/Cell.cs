@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Stacker.Model
+﻿namespace Stacker.Model
 {
     //класс ячейки массива для хранения координат и доступности 
     internal class Cell
