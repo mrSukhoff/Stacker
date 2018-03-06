@@ -30,7 +30,7 @@ namespace Stacker.Model
         private Cell[,] grid;
 
         //конструктор создает массив и инициализирует его
-        public CellsGrid(ushort RowSize, ushort FloorSize)
+        internal CellsGrid(ushort RowSize, ushort FloorSize)
         {
             //проверяем не слишком малы ли аргументы
             if (RowSize < 1 || FloorSize < 1) throw new ArgumentException("Размры массива слишком малы");
@@ -38,7 +38,7 @@ namespace Stacker.Model
         }
 
         //конструктор считывает массив координат из файла
-        public CellsGrid(string path)
+        internal CellsGrid(string path)
         {
             if (!File.Exists(path)) throw new FileNotFoundException();
 
@@ -87,7 +87,7 @@ namespace Stacker.Model
         }
 
         //сохраняет массив координат в файл
-        public void SaveCellsGrid(string path)
+        internal void SaveCellsGrid(string path)
         {
             //создаем массив строк размером равным количеству ячеек + 2
             int rowSize = grid.GetLength(0);

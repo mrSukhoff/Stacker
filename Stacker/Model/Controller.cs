@@ -43,13 +43,13 @@ namespace Stacker.Model
             }
         }
 
-        public ushort[] ReadHoldingRegisters(ushort address, ushort num)
+        internal ushort[] ReadHoldingRegisters(ushort address, ushort num)
         {
             return PLC.ReadHoldingRegisters(1, address, num);
         }
 
         //Записывает 32-битное число в контроллер
-        public bool WriteDword(int adr, int d)
+        internal bool WriteDword(int adr, int d)
         {
             ushort dlo = (ushort)(d % 0x10000);
             ushort dhi = (ushort)(d / 0x10000);
@@ -61,7 +61,7 @@ namespace Stacker.Model
         }
 
         //Читает 32-битное число из контроллера
-        public bool ReadDword(ushort address, out int d)
+        internal bool ReadDword(ushort address, out int d)
         {
             d = 0;
             address += 0x1000;
@@ -71,7 +71,7 @@ namespace Stacker.Model
         }
 
         //метод читает меркер из ПЛК
-        public bool ReadMerker(ushort address, out bool m)
+        internal bool ReadMerker(ushort address, out bool m)
         {
             bool[] ms;
             address += 0x800;
@@ -81,7 +81,7 @@ namespace Stacker.Model
         }
 
         //метод устанавливает меркер в ПЛК
-        public bool SetMerker(ushort address, bool m)
+        internal bool SetMerker(ushort address, bool m)
         {
             address += 0x800;
             PLC.WriteSingleCoil(1, address, m);

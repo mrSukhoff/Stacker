@@ -62,15 +62,13 @@ namespace Stacker
             //инициализируем менеджер заявок
             OrderManager = Model.OrderManager;
             //Определяем его источником данных для списка
-            //OrdersLitsView.ItemsSource = OrderManager.Orders;
-            //и подписываемся на обновления
-            //OrderManager.NewOrderAppeared += UpdateOrderList;
+            OrdersLitsView.ItemsSource = OrderManager.Orders;
 
             //инициализируем хранилище настроек
             Settings = Model.Settings;
 
             //Настраиваем вид списка заявок
-            //ListViewSetUp();
+            ListViewSetUp();
             //Настраиваем визуальные компоненты
             SetUpComponents();
 
@@ -82,7 +80,7 @@ namespace Stacker
                 Model.CoordinateReaded += UpdateCoordinate;
                 Model.StateWordChanged += SomethingChanged;
                 //источник данных для списка ошибок
-                //ErrorListBox.ItemsSource = Model.ErrorList;
+                ErrorListBox.ItemsSource = Model.ErrorList;
                 //проверяем при старте наличие ящика на платформе и устанавливаем активные кнопки
                 bool isBin = Model.Crane.ChekBinOnPlatform();
                 TakeAwaySemiAutoButton.IsEnabled = isBin;
@@ -224,13 +222,6 @@ namespace Stacker
             //считываем координаты первоначально
             CellChanged(null, null);
             SemiAutoComboBox_SelectionChanged(null,null);
-        }
-
-        //обработчик события "ошибка"
-        private void UpdateOrderList()
-        {
-            Dispatcher.Invoke(() => OrdersLitsView.Items.Refresh());
-            Dispatcher.Invoke( ()=>OrdersLitsView_SizeChanged(null, null));
         }
 
         //обработчик события "команда выполнена"

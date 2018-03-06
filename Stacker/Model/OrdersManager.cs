@@ -40,16 +40,16 @@ namespace Stacker.Model
 
         //методы ----------------------------------------------------------------------------------
         //public
-        public OrdersManager(object master)
+        public OrdersManager(StackerModel master)
         {
-            SettingsKeeper sk = (master as StackerModel).Settings;
+            SettingsKeeper sk = master.Settings;
             OrdersFile = sk.OrdersFile;
             ArchiveFile = sk.ArchiveFile;
             WrongOrdersFile = sk.WrongOrdersFile;
             Order.LeftStackerName = sk.LeftRackName;
             Order.RightStackerName = sk.RightRackName;
             uint p = sk.ReadingInterval * (uint)1000;
-            FileTimer = new Timer(callback: ReadOrdersFile, state: null, dueTime: 5000, period: p);
+            FileTimer = new Timer(callback: ReadOrdersFile, state: null, dueTime: 0, period: p);
         }
 
         ~OrdersManager() => Dispose(false);

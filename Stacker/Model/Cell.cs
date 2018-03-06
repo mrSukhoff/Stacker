@@ -9,7 +9,7 @@ namespace Stacker.Model
     //класс ячейки массива для хранения координат и доступности 
     internal class Cell
     {
-        public Cell()
+        internal Cell()
         {
             X = 0;
             Y = 0;
@@ -17,9 +17,9 @@ namespace Stacker.Model
             RightSideIsNotAvailable = false;
         }
 
-        public int X { get; set; }
-        public int Y { get; set; }
-        public bool LeftSideIsNotAvailable { get; set; }
-        public bool RightSideIsNotAvailable { get; set; }
+        internal int X { get; set; }
+        internal int Y { get; set; }
+        internal bool LeftSideIsNotAvailable { get; set; }
+        internal bool RightSideIsNotAvailable { get; set; }
     }
 }

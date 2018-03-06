@@ -7,13 +7,13 @@ namespace Stacker.Model
     internal class INIManager
     {
         //Конструктор, принимающий путь к INI-файлу
-        public INIManager(string aPath)
+        internal INIManager(string aPath)
         {
             path = aPath;
         }
 
         //Возвращает значение из INI-файла (по указанным секции и ключу) 
-        public string GetPrivateString(string aSection, string aKey)
+        internal string GetPrivateString(string aSection, string aKey)
         {
             //Для получения значения
             StringBuilder buffer = new StringBuilder(SIZE);

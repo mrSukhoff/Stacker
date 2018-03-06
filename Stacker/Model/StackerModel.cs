@@ -85,7 +85,7 @@ namespace Stacker.Model
         {
             //Инициализируем хранилище настроек
             Settings = new SettingsKeeper();
-            
+
             //Создаем менеджер заявок
             OrderManager = new OrdersManager(this);
 
