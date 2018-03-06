@@ -2,7 +2,7 @@
 using System.IO;
 using System.Windows;
 
-namespace Stacker
+namespace Stacker.Model
 {
     //класс-обертка для массива ячеек
     class CellsGrid

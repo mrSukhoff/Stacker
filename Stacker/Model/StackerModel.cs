@@ -7,7 +7,7 @@ using System.Windows;
 using Modbus.Device;
 
 
-namespace Stacker
+namespace Stacker.Model
 {
     class StackerModel : IDisposable
     {

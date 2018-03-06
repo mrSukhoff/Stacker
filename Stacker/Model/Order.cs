@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace Stacker
+namespace Stacker.Model
 {
     public class Order : IEquatable<Order>
     {

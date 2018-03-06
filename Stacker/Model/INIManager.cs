@@ -1,7 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Stacker
+namespace Stacker.Model
 {
     //Компонен не мой.
     public class INIManager

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace Stacker
+namespace Stacker.Model
 {
     class SettingsKeeper
     {

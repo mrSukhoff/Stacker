@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Stacker
+namespace Stacker.Model
 {
     //класс ячейки массива для хранения координат и доступности 
     class Cell

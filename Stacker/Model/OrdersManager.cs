@@ -4,7 +4,7 @@ using System.IO;
 using System.Threading;
 using System.Windows;
 
-namespace Stacker
+namespace Stacker.Model
 {
     public class OrdersManager : IDisposable
     {
