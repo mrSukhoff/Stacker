@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Stacker.Model
 {
     //класс ячейки массива для хранения координат и доступности 
-    class Cell
+    internal class Cell
     {
         public Cell()
         {

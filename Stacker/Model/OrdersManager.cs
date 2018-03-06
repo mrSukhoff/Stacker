@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading;
 using System.Windows;
@@ -9,7 +10,7 @@ namespace Stacker.Model
     public class OrdersManager : IDisposable
     {
         //коллекция заявок
-        public List<Order> Orders { get; private set; } = new List<Order>();
+        public ObservableCollection<Order> Orders { get; private set; } = new ObservableCollection<Order>();
 
         //номер выбранной заявки для автоматического режима
         public int SelectedOrderNumber
@@ -17,11 +18,6 @@ namespace Stacker.Model
             get => _selectedOrderNumber;
             set =>_selectedOrderNumber = (value >= 0) & (value < Orders.Count) ? value : -1;
         }
-
-        //События
-        public delegate void OrdersManagerEvent();
-        //появилась новая заявка
-        public event OrdersManagerEvent NewOrderAppeared = (() => { });
 
         //внутрении поля --------------------------------------------------------------------------
 
@@ -56,13 +52,13 @@ namespace Stacker.Model
             FileTimer = new Timer(callback: ReadOrdersFile, state: null, dueTime: 5000, period: p);
         }
 
+        ~OrdersManager() => Dispose(false);
         public void Dispose()
         {
             Dispose(true);
             // подавляем финализацию
             GC.SuppressFinalize(this);
         }
-
         protected virtual void Dispose(bool disposing)
         {
             if (!disposed)
@@ -99,7 +95,6 @@ namespace Stacker.Model
             //проверяем не изменился ли файл с момента последнего чтения
             if (File.GetLastWriteTime(OrdersFile) != LastOrdersFileAccessTime)
             {
-                bool newOrderAdded = false;
                 try
                 {
                     //и если изменился читаем его
@@ -133,8 +128,7 @@ namespace Stacker.Model
                         {
                             if (order != null && order.StackerName != '?' && !Orders.Contains(order))
                             {
-                                Orders.Add(order);
-                                newOrderAdded = true;
+                                App.Current.Dispatcher.Invoke( () => Orders.Add(order));
                             }
                             order = null;
                         }
@@ -142,7 +136,6 @@ namespace Stacker.Model
                     //и запоминаем время последнего чтения
                     LastOrdersFileAccessTime = File.GetLastWriteTime(OrdersFile);
                     lines = null;
-                    if (newOrderAdded) NewOrderAppeared();
                 }
                 catch (Exception ex)
                 {

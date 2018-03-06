@@ -5,10 +5,10 @@ using System.Windows;
 namespace Stacker.Model
 {
     //класс-обертка для массива ячеек
-    class CellsGrid
+    internal class CellsGrid
     {
         //индексатор
-        public Cell this[int rowIndex,int floorIndex]
+        internal Cell this[int rowIndex,int floorIndex]
         {
             //так как стеллажи нумируются с единицы вычитаем 1
             get
@@ -30,56 +30,60 @@ namespace Stacker.Model
         private Cell[,] grid;
 
         //конструктор создает массив и инициализирует его
-        public CellsGrid(int RowSize, int FloorSize)
+        public CellsGrid(ushort RowSize, ushort FloorSize)
         {
             //проверяем не слишком малы ли аргументы
             if (RowSize < 1 || FloorSize < 1) throw new ArgumentException("Размры массива слишком малы");
-            
-            //создаем массив координат
-            grid = new Cell[RowSize, FloorSize];
-            
-            //и инициализируем каждый элемент
-            for (int r=0;r<RowSize;r++) 
-                for (int f=0;f<FloorSize;f++)
-                    grid[r, f] = new Cell(); 
+            grid = InitGrid(RowSize, FloorSize);
         }
 
         //конструктор считывает массив координат из файла
         public CellsGrid(string path)
         {
-            if (File.Exists(path))
+            if (!File.Exists(path)) throw new FileNotFoundException();
+
+            //читаем файл с координатами  в массив строк
+            string[] lines = File.ReadAllLines(path, System.Text.Encoding.Default);
+
+            //первые две строки хранят размер массива
+            if (!UInt16.TryParse(lines[0], out ushort rowSize) | !UInt16.TryParse(lines[1], out ushort floorSize))
+                throw new ArgumentException("Неверный размер массива ячеек");
+
+            //создаем массив координат
+            grid = InitGrid(rowSize, floorSize);
+        
+            //разбираем все строки и заносим значения в массив
+            for (int i = 2; i < lines.Length; i++)
             {
-                //читаем файл с координатами  в массив строк
-                string[] lines = File.ReadAllLines(path, System.Text.Encoding.Default);
+                string[] line = lines[i].Split('~');
 
-                //первые две строки хранят размер массива
-                int rowSize = Convert.ToInt32(lines[0]);
-                int floorSize = Convert.ToInt32(lines[1]);
-                
-                //создаем массив координат
-                grid = new Cell[rowSize, floorSize];
+                int r = Convert.ToInt32(line[0]) - 1;
+                int f = Convert.ToInt32(line[1]) - 1;
+                int x = Convert.ToInt32(line[2]);
+                int y = Convert.ToInt32(line[3]);
+                bool leftSideIsNotAvailable = Convert.ToBoolean(line[4]);
+                bool rightSideIsNotAvailable = Convert.ToBoolean(line[5]);
 
-                //и инициализируем каждый элемент
-                for (int r = 0; r < rowSize; r++)
-                    for (int f = 0; f < floorSize; f++)
-                        grid[r, f] = new Cell();
-
-                //разбираем все строки и заносим значения в массив
-                for (int i = 2; i < lines.Length; i++)
-                {
-                    string[] line = lines[i].Split('~');
-                    int r = Convert.ToInt32(line[0])-1;
-                    int f = Convert.ToInt32(line[1])-1;
-                    int x = Convert.ToInt32(line[2]);
-                    int y = Convert.ToInt32(line[3]);
-                    bool leftSideIsNotAvailable = Convert.ToBoolean(line[4]);
-                    bool rightSideIsNotAvailable = Convert.ToBoolean(line[5]);
-                    grid[r, f].X = x;
-                    grid[r, f].Y = y;
-                    grid[r, f].LeftSideIsNotAvailable = leftSideIsNotAvailable;
-                    grid[r, f].RightSideIsNotAvailable = rightSideIsNotAvailable;
-                }
+                grid[r, f].X = x;
+                grid[r, f].Y = y;
+                grid[r, f].LeftSideIsNotAvailable = leftSideIsNotAvailable;
+                grid[r, f].RightSideIsNotAvailable = rightSideIsNotAvailable;
             }
+
+        }
+
+        //создаем массив ячеек и инициализируем все его элементы
+        private Cell[,] InitGrid(ushort rowSize, ushort floorSize)
+        {
+            //создаем массив координат
+            Cell[,] grid = new Cell[rowSize, floorSize];
+
+            //и инициализируем каждый элемент
+            for (int r = 0; r < rowSize; r++)
+                for (int f = 0; f < floorSize; f++)
+                    grid[r, f] = new Cell();
+
+            return grid;
         }
 
         //сохраняет массив координат в файл

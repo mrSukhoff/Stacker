@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
-using System.IO.Ports;
 using System.Threading;
 using System.Windows;
-using Modbus.Device;
 
 
 namespace Stacker.Model
 {
-    class StackerModel : IDisposable
+    public class StackerModel : IDisposable
     {
         //видимые свойства объекта ****************************************************************************
 
@@ -17,12 +15,10 @@ namespace Stacker.Model
         public SettingsKeeper Settings;
         //менеджер заявок
         public OrdersManager OrderManager;
+        //команды управления краном
+        public CraneCommands Crane;
 
-        //Максимальные значения координат
-        public int MaxX { get; } = 55000;
-        public int MaxY { get; } = 14000;
-        
-         //События
+        //События
         public delegate void StackerModelEventHandler();
         //появился флаг завершения выполнения команды
         public event StackerModelEventHandler CommandDone = (() => { });
@@ -40,7 +36,7 @@ namespace Stacker.Model
         public int ActualFloor { get; private set; }
 
         //список ошибок контроллера
-        public List<string> ErrorList { get; private set; } = new List<string>();
+        public ObservableCollection<string> ErrorList { get; private set; } = new ObservableCollection<string>();
 
         //Слово состояния контроллера
         public int StateWord { get; private set; } = 0;
@@ -68,21 +64,18 @@ namespace Stacker.Model
         //флаг успешности подключения
         public bool IsConnected = false;
 
+        //Контроллер крана
+        internal Controller PLC;
+
+        //Координаты ячеек
+        internal CellsGrid Stacker;
+
         //внутренние поля класса ******************************************************************************
         private char LeftRackName;
         private char RightRackName;
 
         //Таймер для чтения слова состояния контроллера
         private Timer PlcTimer;
-        
-        //Координаты ячеек
-        private CellsGrid Stacker;
-        
-        //Com-порт к которому подсоединен контроллер
-        private SerialPort ComPort = null;
-        
-        //интерфейс контроллера
-        private IModbusMaster PLC;
 
         //флаг уничтожения объектов
         private bool disposed = false;
@@ -103,22 +96,20 @@ namespace Stacker.Model
             string path = Environment.CurrentDirectory+"\\"+Settings.CellsFile;
             Stacker = File.Exists(path) ? new CellsGrid(path) : new CellsGrid(Settings.StackerDepth, Settings.StackerHight);
             
-            //Открываем порт и создаем контроллер
             try
             {
-                ComPort = new SerialPort(Settings.ComPort, 115200, Parity.Even, 7, StopBits.One);
-                ComPort.Open();
-                PLC = ModbusSerialMaster.CreateAscii(ComPort);
+                //создаем контроллер
+                PLC = new Controller(Settings.ComPort);
                 //временно включаем ручной режим
-                WriteDword(8, 1);
+                PLC.WriteDword(8, 1);
                 //Записываем максимальные значения координат
-                WriteDword(10, MaxX);
-                WriteDword(12, MaxY);
+                PLC.WriteDword(10, Settings.MaxX);
+                PLC.WriteDword(12, Settings.MaxY);
                 //и максимальные значения ячеек
-                WriteDword(14, 29);
-                WriteDword(16, 16);
+                PLC.WriteDword(14, 29);
+                PLC.WriteDword(16, 16);
                 //записываем максимальный вес
-                WriteDword(18, Settings.MaxWeight);
+                PLC.WriteDword(18, Settings.MaxWeight);
                 //запускаем таймер на чтение сосотояния контроллера
                 PlcTimer = new Timer(ReadStateWord, null, 0, 500);
                 IsConnected = true;
@@ -127,10 +118,12 @@ namespace Stacker.Model
             {
                 MessageBox.Show(ex.Message, caption: "Ошибка открытия порта");
             }
+
+            Crane = new CraneCommands(this);
         }
 
         //завершение работы программы
-         ~StackerModel()
+        ~StackerModel()
         {
             Dispose(false);
         }
@@ -151,7 +144,6 @@ namespace Stacker.Model
                     // Освобождаем управляемые ресурсы
                     PlcTimer?.Dispose();
                     PLC?.Dispose();
-                    ComPort?.Dispose();
                     OrderManager.Dispose();
                 }
                 // освобождаем неуправляемые объекты
@@ -165,81 +157,7 @@ namespace Stacker.Model
             string path = Environment.CurrentDirectory + "\\" + Settings.CellsFile;
             Stacker.SaveCellsGrid(path);
         }
-
-        //Записывает 32-битное число в контроллер
-        public bool WriteDword(int adr, int d)
-        {
-            try
-            {
-                ushort dlo = (ushort)(d % 0x10000);
-                ushort dhi = (ushort)(d / 0x10000);
-                UInt16 address = Convert.ToUInt16(adr);
-                address += 0x1000;
-                PLC.WriteSingleRegister(1, address, dlo);
-                PLC.WriteSingleRegister(1, ++address, dhi);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, caption: "WriteDwordToPLC");
-                return false;
-            }
-        }
-
-        //Читает 32-битное число из контроллера
-        public bool ReadDword(ushort address, out int d)
-        {
-            try
-            {
-                d = 0;
-                address += 0x1000;
-                ushort[] x = PLC.ReadHoldingRegisters(1, address, 2);
-                d = x[0] + x[1] * 0x10000;
-                return true;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, caption: "ReadDwordFromPLC");
-                d = 0;
-                return false;
-            }
-        }
-
-        //метод читает меркер из ПЛК
-        public bool ReadMerker(ushort address, out bool m)
-        {
-            try
-            {
-                bool[] ms;
-                address += 0x800;
-                ms = PLC.ReadCoils(1, address, 1);
-                m = ms[0];
-                return true;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, caption: "ReadMerker");
-                m = false;
-                return false;
-            }
-        }
-
-        //метод устанавливает меркер в ПЛК
-        public bool SetMerker(ushort address, bool m)
-        {
-            try
-            {
-                address += 0x800;
-                PLC.WriteSingleCoil(1, address, m);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, caption: "SetMerker");
-                return false;
-            }
-        }
-
+        
         //По таймеру читаем слово состояния контроллера
         private void ReadStateWord(object ob)
         {
@@ -247,7 +165,7 @@ namespace Stacker.Model
             try
             {
                 //читаем оптом из ПЛК актуальные координаты крана
-                ushort[] word = PLC.ReadHoldingRegisters(1, 0x1198, 8);
+                ushort[] word = PLC.ReadHoldingRegisters(0x1198, 8);
 
                 //и записываем их значения
                 ActualX = word[0] + 0x10000 * word[1];
@@ -256,7 +174,7 @@ namespace Stacker.Model
                 ActualFloor = word[6];
 
                 //читаем слово состояния ПЛК
-                word = PLC.ReadHoldingRegisters(1, 0x1064, 8);
+                word = PLC.ReadHoldingRegisters(0x1064, 8);
 
                 int stateWord = word[0];
                 Weight = word[2] > 32767 ? 0 : word[2];
@@ -294,7 +212,7 @@ namespace Stacker.Model
         //вызывается при появления флага ошибки в слове состояния
         private void ErrorHandler()
         {
-            ReadDword(110, out int ErrorWord);
+            PLC.ReadDword(110, out int ErrorWord);
             if (GetBitState(ErrorWord, 0)) addAlarm("Нажата кнопка аварийной остановки");
             if (GetBitState(ErrorWord, 1)) addAlarm("Одновременное включение контакторов");
             if (GetBitState(ErrorWord, 2)) addAlarm("Попытка загрузки на занятый кран");
@@ -313,7 +231,7 @@ namespace Stacker.Model
             void addAlarm(string alarmText)
             {
                 string str = DateTime.Now.ToString() + " : " + alarmText;
-                ErrorList.Add(str);
+                App.Current.Dispatcher.Invoke(() => ErrorList.Add(str));
                 try
                 {
                     //записываем в лог 
@@ -340,7 +258,10 @@ namespace Stacker.Model
         //выдает по адресу ячейки её координаты и доступность
         public void GetCell(char r, int row, int floor, out int x, out int y, out bool isNotAvailable)
         {
-            if (r != LeftRackName & r != RightRackName) throw new ArgumentException("Неправильное имя стойки");
+            //if (r != LeftRackName & r != RightRackName) throw new ArgumentException("Неправильное имя стойки");
+            if (r == '\0') r = LeftRackName;
+            if (row < 1) row = 1;
+            if (floor < 1) floor = 1;
             x = Stacker[row, floor].X;
             y = Stacker[row, floor].Y;
             isNotAvailable = r == LeftRackName ? Stacker[row, floor].LeftSideIsNotAvailable : Stacker[row, floor].RightSideIsNotAvailable;
@@ -350,230 +271,12 @@ namespace Stacker.Model
         //левый стеллаж r = false
         public void SetCell(bool r, int row, int floor, int x, int y, bool isNotAvailable)
         {
-            if ((x < 0) || (y < 0) || (x > MaxX) || (y > MaxY)) throw new ArgumentException();
+            if ((x < 0) || (y < 0) || (x > Settings.MaxX) || (y > Settings.MaxY)) throw new ArgumentException();
             
             Stacker[row, floor].X = x;
             Stacker[row, floor].Y = y;
             if (!r) Stacker[row, floor].LeftSideIsNotAvailable  = isNotAvailable;
             else Stacker[row, floor].RightSideIsNotAvailable = isNotAvailable;
-        }
-
-        //*команда подтверждения ошибок в ПЛК и очистка списка ошибок
-        public void SubmitError()
-        {
-            ErrorList.Clear();
-            if (PLC != null)
-            {
-                WriteDword(8, 0);
-                SetMerker(101, true);
-            }
-        }
-
-        //*команда дальше
-        public void FartherButton(bool state)
-        {
-            if (PLC != null)
-            {
-                //устанавливаем ручной режим передвижения
-                WriteDword(8, 1);
-                //задаем команду "движение дальше"
-                SetMerker(10, state);
-            }
-        }
-
-        //*команда ближе
-        public void CloserButton(bool state)
-        {
-            if (PLC != null)
-            {
-                //устанавливаем ручной режим передвижения
-                WriteDword(8, 1);
-                //задаем команду "движение ближе"
-                SetMerker(11, state);
-            }
-        }
-
-        //*команда вверх
-        public void UpButton(bool state)
-        {
-            if (PLC != null)
-            {
-                //устанавливаем ручной режим передвижения
-                WriteDword(8, 1);
-                //задаем команду "движение вверх"
-                SetMerker(12, state);
-            }
-        }
-
-        //*команда вниз
-        public void DownButton(bool state)
-        {
-            if (PLC != null)
-            {
-                //устанавливаем ручной режим передвижения
-                WriteDword(8, 1);
-                //задаем команду "движение вниз"
-                SetMerker(13, state);
-            }
-        }
-
-        //*Команда на движение дальше до следующего ряда
-        public void NextLineFartherCommand()
-        {
-            if (PLC != null)
-            {
-                //устанавливаем режим движения по координатам
-                WriteDword(8, 4);
-                //задаем команду "движение дальше"
-                SetMerker(10, true);
-            }
-        }
-
-        //*Команда на движение ближе до следующего ряда
-        public void NextLineCloserCommand()
-        {
-            if (PLC != null)
-            {
-                //устанавливаем режим движения по координатам
-                WriteDword(8, 4);
-                //задаем команду "движение ближе"
-                SetMerker(11, true);
-            }
-        }
-
-        //*Команда на движение вверх до следующего этажа
-        public void NextLineUpCommand()
-        {
-            if (PLC != null)
-            {
-                //устанавливаем режим движения по координатам
-                WriteDword(8, 4);
-                //задаем команду "движение вверх"
-                SetMerker(12, true);
-            }
-        }
-
-        //*Команда на движение вниз до следующего этажа
-        public void NextLineDownCommand()
-        {
-            if (PLC != null)
-            {
-                //устанавливаем режим движения по координатам
-                WriteDword(8, 4);
-                //задаем команду "движение вниз"
-                SetMerker(13, true);
-            }
-        }
-
-        //*команда "платформа влево"
-        public void PlatformToLeft()
-        {
-            if (PLC != null)
-            {
-                //включаем ручной режим
-                WriteDword(8, 1);
-                //задаем команду ПЛК "платформа вправо"
-                SetMerker(14, true);
-            }
-        }
-
-        //*команда "платформа вправо"
-        public void PlatformToRight()
-        {
-            if (PLC != null)
-            {
-                //включаем ручной режим
-                WriteDword(8, 1);
-                //задаем команду ПЛК "платформа влево"
-                SetMerker(15, true);
-            }
-        }
-
-        //*команда STOP
-        public void StopButton()
-        {
-            if (PLC != null) SetMerker(0, true);
-        }
-
-        //*команда "Перейти на координаты"
-        public void GotoXY(int x, int y)
-        {
-            //проверяем аргументы на допустимость
-            if ((x < 0) || (y < 0) || (x > MaxX) || (y > MaxY)) throw new ArgumentException();
-            if (PLC != null)
-            {
-                //Включаем режим перемещения по координатам
-                WriteDword(8, 3);
-
-                //Записываем координаты в ПЛК
-                WriteDword(0, x);
-                WriteDword(2, y);
-
-                //даем команду на движение
-                SetMerker(20, true);
-            }
-        }
-
-        //*Команда "привезти/увезти" из/в конкретную ячейку. bring = true - привезти
-        public void BringOrTakeAway(bool rack, int row, int floor, bool bring)
-        {
-            if (PLC != null)
-            {
-                if (rack ? Stacker[row, floor].RightSideIsNotAvailable : Stacker[row, floor].LeftSideIsNotAvailable)
-                    throw new ArgumentException("Ячейка недоступна!");
-                int x = Stacker[row, floor].X;
-                int y = Stacker[row, floor].Y;
-                //требуемая ячейка не может находится в начале штабелера или иметь вертикальную координату 0
-                if ( x == 0 || (y==0 && floor!=1) ) throw new ArgumentException("Неверные координаты ячеейки");
-
-                //Включаем режим перемещения по координатам
-                WriteDword(8, 2);
-                //Пишем координаты
-                WriteDword(0, x);
-                WriteDword(2, y);
-                //Пишем ряд и этаж
-                WriteDword(4, row);
-                WriteDword(6, floor);
-                //Устанваливаем сторону
-                SetMerker(2, rack);
-                //Устанавливаем флаг в "привезти/увезти"
-                SetMerker(3, bring);
-                //Даем команду на старт
-                SetMerker(1, true);
-            }
-        }
-        
-        //*Команда "привезти/увезти" по зараннее установленной заявке, bring = true - привезти
-        public void BringOrTakeAway(bool bring)
-        {
-            Order order = OrderManager.Orders[OrderManager.SelectedOrderNumber];
-            if (order != null)
-            {
-                bool rack = order.StackerName == RightRackName;
-                int row = order.Row;
-                int floor = order.Floor;
-                BringOrTakeAway(rack, row, floor, bring);
-            }
-        }
-
-        //*Команда взвесить
-        public void Weigh()
-        {
-            if (PLC != null)
-            {
-                //включаем режим взвешивания
-                WriteDword(8, 5);
-                //задаем команду "взвесить"
-                SetMerker(21,true);
-            }
-        }
-
-        //*читает бит наличие ящика на платформе в слове состояния
-        public bool ChekBinOnPlatform()
-        {
-            int word = 0;
-            if (PLC != null) ReadDword(100, out word);
-            return GetBitState(word, 10);
         }
     }
 }

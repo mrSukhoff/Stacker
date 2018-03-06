@@ -1,44 +1,48 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace Stacker.Model
 {
-    class SettingsKeeper
+    public class SettingsKeeper
     {
         //orders
         //места хранения файлов заявлок и архива
         public string OrdersFile { get; }
         public string ArchiveFile { get; }
         public string WrongOrdersFile { get; }
+        //интервал чтения заявок
         public ushort ReadingInterval { get; }
 
-        //view
         //закрыть при ошибке открытия порта
         public bool CloseOrInform { get; }
+        
         //показывать вкладку "взвесить"
         public bool ShowWeightTab { get; }
+        
         //коэффициенты для пересчета тока ПЧ в вес
         public UInt16 WeightAlpha1 { get; }
         public UInt16 WeightBeta1 { get; }
         public UInt16 WeightAlpha2 { get; }
         public UInt16 WeightBeta2 { get; }
-
-        //crane
+        
         //имя порта, к которому подключен контроллер
         public string ComPort { get; }
 
-        //  ???
-        public int StackerDepth { get; } = 29;
-        public int StackerHight { get; } = 16;
+        //размеры штабелера
+        public ushort StackerDepth { get; } = 29;
+        public ushort StackerHight { get; } = 16;
         
-        public string CellsFile { get; }
+        //Максимальные значения координат
+        public int MaxX { get; } = 55000;
+        public int MaxY { get; } = 14000;
+
+        //имена стеллажей
         public char LeftRackName { get; }
         public char RightRackName { get; }
-                
+
+        //имя файла с координатами ячеек
+        public string CellsFile { get; }
+        
         //Максимальный вес груза
         public UInt16 MaxWeight { get; }
         

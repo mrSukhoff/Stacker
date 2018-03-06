@@ -4,7 +4,7 @@ using System.Text;
 namespace Stacker.Model
 {
     //Компонен не мой.
-    public class INIManager
+    internal class INIManager
     {
         //Конструктор, принимающий путь к INI-файлу
         public INIManager(string aPath)
