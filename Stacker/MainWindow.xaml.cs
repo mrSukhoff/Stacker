@@ -62,7 +62,7 @@ namespace Stacker
             //инициализируем менеджер заявок
             OrderManager = Model.OrderManager;
             //Определяем его источником данных для списка
-            OrdersLitsView.ItemsSource = OrderManager.Orders;
+            //OrdersLitsView.ItemsSource = OrderManager.Orders;
             //и подписываемся на обновления
             //OrderManager.NewOrderAppeared += UpdateOrderList;
 
@@ -82,7 +82,7 @@ namespace Stacker
                 Model.CoordinateReaded += UpdateCoordinate;
                 Model.StateWordChanged += SomethingChanged;
                 //источник данных для списка ошибок
-                ErrorListBox.ItemsSource = Model.ErrorList;
+                //ErrorListBox.ItemsSource = Model.ErrorList;
                 //проверяем при старте наличие ящика на платформе и устанавливаем активные кнопки
                 bool isBin = Model.Crane.ChekBinOnPlatform();
                 TakeAwaySemiAutoButton.IsEnabled = isBin;

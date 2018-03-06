@@ -3,8 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:Model="clr-namespace:Stacker.Model"
-        x:Name="Stacker" 
+        x:Name="Stacker"
         x:Class="Stacker.MainWindow"
         mc:Ignorable="d"
         Title="Штабелёр" MinWidth="900" MinHeight="600" Background="#FF91AAB4" Loaded="Window_Loaded" FontSize="20" d:DesignWidth="900" d:DesignHeight="600">
@@ -154,9 +153,7 @@
                     <Button x:Name="TakeAwayAutoButton" Content="_Увезти" HorizontalAlignment="Left" Margin="147,0,0,10"  FontWeight="Bold" Grid.Row="1" MinHeight="50" VerticalAlignment="Bottom" FontSize="24" Height="50" Width="150" Background="#FF91AAB4" Grid.Column="1" BorderBrush="#FFCBDBD7" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="TakeAwayAutoButton_Click" Foreground="#FFFCFFF5" />
                     <Button x:Name="CancelAutoButton" Content="_Отменить" HorizontalAlignment="Center" Width="150" Margin="365,0,363,10"     FontWeight="Bold" Grid.Row="1" Height="50" VerticalAlignment="Bottom" FontSize="24" Background="#FF91AAB4" Grid.ColumnSpan="2" BorderBrush="#FFCBDBD7"  VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="CancelAutoButton_Click" Foreground="#FFFCFFF5" />
                     <ListView x:Name="OrdersLitsView" Grid.ColumnSpan="2" FontSize="24" Background="#FF91AAB4" BorderBrush="#FF3E606F" Margin="0" Foreground="Black" SelectionChanged="OrdersLitsView_SelectionChanged" SizeChanged="OrdersLitsView_SizeChanged">
-                        <ListView.DataContext>
-                            <Model:StackerModel/>
-                        </ListView.DataContext>
+                        
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header=" Тип "/>
@@ -297,7 +294,9 @@
                         <RowDefinition/>
                         <RowDefinition Height="70"/>
                     </Grid.RowDefinitions>
-                    <ListBox x:Name="ErrorListBox" Margin="3" Background="#FF91AAB4" Foreground="#FFCF3D3D" FontSize="24"/>
+                    <ListBox x:Name="ErrorListBox" Margin="3" Background="#FF91AAB4" Foreground="#FFCF3D3D" FontSize="24" ItemsSource="{Binding ErrorList}">
+                    
+                    </ListBox>
                     <Button x:Name="SubmitErrorButton" Content="Сбросить" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="286,0,285,10" Grid.Row="1" FontSize="24" FontWeight="Bold" BorderBrush="#FFCBDBD7" Background="#FF91AAB4" UseLayoutRounding="False" BorderThickness="3,0" MinWidth="175" MinHeight="50" MaxWidth="175" MaxHeight="50" Click="SubmitErrorButton_Click" Foreground="#FFFCFFF5"/>
                 </Grid>
             </TabItem>
