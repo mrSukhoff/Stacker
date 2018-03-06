@@ -50,8 +50,7 @@ namespace Stacker.Model
             {
                 //создаем контроллер
                 PLC = new Controller(Settings.ComPort);
-                //включаем мониторинг его состояния
-                CraneState = new ControllerWatcher(PLC);
+                
                 //временно включаем ручной режим
                 PLC.WriteDword(8, 1);
                 //Записываем максимальные значения координат
@@ -69,6 +68,9 @@ namespace Stacker.Model
                 MessageBox.Show(ex.Message, caption: "Ошибка открытия порта");
             }
 
+            //включаем мониторинг состояния крана
+            CraneState = new ControllerWatcher(PLC);
+            //и его управление
             Crane = new CraneCommands(this);
         }
 

@@ -63,7 +63,7 @@ namespace Stacker.Model
         internal ControllerWatcher(Controller plc)
         {
             PLC = plc;
-            PlcTimer = new Timer(ReadStateWord, null, 0, 500);
+            if (plc != null) PlcTimer = new Timer(ReadStateWord, null, 0, 500);
         }
 
         //деструктор

@@ -2,6 +2,7 @@
 using Stacker.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -573,14 +574,13 @@ namespace Stacker
         //Обработчик нажатия кнопки "Перейти на координаты"
         private void GotoButton_Click(object sender, RoutedEventArgs e)
         {
-            UInt16 x, y;
-;           if (!UInt16.TryParse(GotoXTextBox.Text,out x)) 
+           if (!UInt16.TryParse(GotoXTextBox.Text,out UInt16 x)) 
             {
                 GotoXTextBox.Text = "0";
                 x = 0;
             }
 
-            if (!UInt16.TryParse(GotoYTextBox.Text, out y))
+            if (!UInt16.TryParse(GotoYTextBox.Text, out UInt16 y))
             {
                 GotoYTextBox.Text = "0";
                 y = 0;
