@@ -70,7 +70,7 @@ namespace Stacker
             Settings = Model.Settings;
 
             //Настраиваем вид списка заявок
-            ListViewSetUp();
+            //ListViewSetUp();
             //Настраиваем визуальные компоненты
             SetUpComponents();
 

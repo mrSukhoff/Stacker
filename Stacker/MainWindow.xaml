@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Stacker"
+        xmlns:Model="clr-namespace:Stacker.Model"
         x:Name="Stacker" x:Class="Stacker.MainWindow"
         mc:Ignorable="d"
         Title="Штабелёр" MinWidth="900" MinHeight="600" Background="#FF91AAB4" Loaded="Window_Loaded" FontSize="20" d:DesignWidth="900" d:DesignHeight="600">
@@ -156,9 +157,17 @@
                     <ListView x:Name="OrdersLitsView" Grid.ColumnSpan="2" FontSize="24" Background="#FF91AAB4" BorderBrush="#FF3E606F" Margin="0" Foreground="Black" SelectionChanged="OrdersLitsView_SelectionChanged" SizeChanged="OrdersLitsView_SizeChanged">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn/>
+                                <GridViewColumn Header=" Тип "/>
+                                <GridViewColumn Header=" Номер заказа "/>
+                                <GridViewColumn Header=" Кодовое обозначение "/>
+                                <GridViewColumn Header=" Описание "/>
+                                <GridViewColumn Header=" Кол-во "/>
+                                <GridViewColumn Header=" Ячейка "/>
                             </GridView>
                         </ListView.View>
+                        <ListView.DataContext>
+                            <Model:StackerModel/>
+                        </ListView.DataContext>
                     </ListView>
                     <Button x:Name="AutoStopButton" Content="СТОП!" Grid.Column="1" Margin="0,0,10,10" BorderBrush="#FFCBDBD7" Background="#FF9E2E2E" FontSize="24" Grid.Row="1" RenderTransformOrigin="0.44,-0.04" Height="50" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="100" Style="{DynamicResource StopButtonStyle}" Click="StopButton_Click"/>
                 </Grid>
