@@ -92,13 +92,8 @@ namespace Stacker
             else if (!Settings.CloseOrInform) Application.Current.Shutdown(-1);
             //прописываем обработчики для кнопок
             SetEventHandlers();
-            OrderManager.Orders.CollectionChanged += Zzz;
+            OrderManager.Orders.CollectionChanged += OrdersCollectionChanged;
             OrderManager.StartTimer();
-        }
-
-        public void Zzz(object sender,NotifyCollectionChangedEventArgs a)
-        {
-            OrdersLitsView_SizeChanged(null, null);
         }
 
         //Настраиваем визуальные компоненты
@@ -296,6 +291,12 @@ namespace Stacker
             }
             //и не спрашивайте почему 107 :-)
             OrdersGridView.Columns[3].Width = OrdersLitsView.ActualWidth - s - 107;
+        }
+
+        //запускает подбор ширины столбцов
+        public void OrdersCollectionChanged(object sender, NotifyCollectionChangedEventArgs a)
+        {
+            OrdersLitsView_SizeChanged(null, null);
         }
 
         //Обработчик нажатия кнопки STOP
