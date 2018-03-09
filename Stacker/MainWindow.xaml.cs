@@ -92,6 +92,13 @@ namespace Stacker
             else if (!Settings.CloseOrInform) Application.Current.Shutdown(-1);
             //прописываем обработчики для кнопок
             SetEventHandlers();
+            OrderManager.Orders.CollectionChanged += Zzz;
+            OrderManager.StartTimer();
+        }
+
+        public void Zzz(object sender,NotifyCollectionChangedEventArgs a)
+        {
+            OrdersLitsView_SizeChanged(null, null);
         }
 
         //Настраиваем визуальные компоненты

@@ -38,18 +38,18 @@ namespace Stacker.Model
         //флаг уничтожения неуправляемых ресурсов
         bool disposed;
 
+        SettingsKeeper sk;
+
         //методы ----------------------------------------------------------------------------------
         //public
         public OrdersManager(StackerModel master)
         {
-            SettingsKeeper sk = master.Settings;
+            sk = master.Settings;
             OrdersFile = sk.OrdersFile;
             ArchiveFile = sk.ArchiveFile;
             WrongOrdersFile = sk.WrongOrdersFile;
             Order.LeftStackerName = sk.LeftRackName;
             Order.RightStackerName = sk.RightRackName;
-            uint p = sk.ReadingInterval * (uint)1000;
-            FileTimer = new Timer(callback: ReadOrdersFile, state: null, dueTime: 0, period: p);
         }
 
         ~OrdersManager() => Dispose(false);
@@ -71,6 +71,12 @@ namespace Stacker.Model
             }
         }
 
+        public void StartTimer()
+        {
+            uint p = sk.ReadingInterval * (uint)1000;
+            FileTimer = new Timer(callback: ReadOrdersFile, state: null, dueTime: 0, period: p);
+        }
+        
         //завершение заявки с удалением ее из файла заявок и запись в файл архива с временем
         //и результатом выополнения
         public void FinishSelectedOrder(bool successfully)
