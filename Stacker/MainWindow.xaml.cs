@@ -53,6 +53,9 @@ namespace Stacker
         //флаг закрытия неуправляемых ресурсов
         bool disposed = false;
 
+        //направления сортировки списка заявок
+        bool[] SortDirection = new bool[6];
+
         //#####################################################################################################
         //Основная точка входа -------------------------------------------------------------------------------!
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -60,7 +63,6 @@ namespace Stacker
             //Создаем модель
             Model = new StackerModel();
             
-
             //инициализируем менеджер заявок
             OrderManager = Model.OrderManager;
             //Определяем его источником данных для списка
@@ -769,6 +771,39 @@ namespace Stacker
                     OrderManager?.Dispose();
                 }
                 disposed = true;
+            }
+        }
+
+        //сортировка списка заявок по заголоку
+        void SortListView(Object sender, RoutedEventArgs e)
+        {
+            string str = (e.OriginalSource as GridViewColumnHeader).Content.ToString();
+            switch (str)
+            {
+                case " Тип ":
+                    OrderManager.SortList("OrderType", SortDirection[0]);
+                    SortDirection[0] = !SortDirection[0];
+                    break;
+                case " Номер заказа ":
+                    OrderManager.SortList("OrderNumber", SortDirection[1]);
+                    SortDirection[1] = !SortDirection[1];
+                    break;
+                case " Кодовое обозначение ":
+                    OrderManager.SortList("ProductCode", SortDirection[2]);
+                    SortDirection[2] = !SortDirection[2];
+                    break;
+                case " Описание ":
+                    OrderManager.SortList("ProductDescription", SortDirection[3]);
+                    SortDirection[3] = !SortDirection[3];
+                    break;
+                case " Кол-во ":
+                    OrderManager.SortList("Amount", SortDirection[4]);
+                    SortDirection[4] = !SortDirection[4];
+                    break;
+                case " Ячейка ":
+                    OrderManager.SortList("Address", SortDirection[5]);
+                    SortDirection[5] = !SortDirection[5];
+                    break;
             }
         }
     }

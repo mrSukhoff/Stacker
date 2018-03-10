@@ -74,7 +74,7 @@ namespace Stacker.Model
         public void StartTimer()
         {
             uint p = sk.ReadingInterval * (uint)1000;
-            FileTimer = new Timer(callback: ReadOrdersFile, state: null, dueTime: 0, period: p);
+            FileTimer = new Timer(callback: ReadOrdersFile, state: null, dueTime: 2000, period: p);
         }
         
         //завершение заявки с удалением ее из файла заявок и запись в файл архива с временем
@@ -92,6 +92,61 @@ namespace Stacker.Model
 
             //сбрасываем указатель
             _selectedOrderNumber = -1;
+        }
+
+        //сортировка списка заявок пр заданному полю и в задданом направлении
+        //dir=false по возрастанию
+        public void SortList(string sortField, bool direction)
+        {
+            bool sorted = false;
+            bool needsSorting;
+            string str1, str2;
+            while (!sorted)
+            {
+                sorted = true;
+                for (int i = 1; i < Orders.Count; i++)
+                {
+                    str1 = GetField(Orders[i - 1], sortField);
+                    str2 = GetField(Orders[i], sortField);
+                    needsSorting = !direction & str1.CompareTo(str2) > 0 || direction & str1.CompareTo(str2) < 0;
+                    if (needsSorting)
+                    {
+                        if (direction) Orders.Move(i-1, i);
+                        else Orders.Move(i, i - 1);
+                        sorted = false;
+                    }
+                }
+            }
+
+            string GetField(Order order, string field)
+            {
+                string str;
+                switch (field)
+                {
+                    case "OrderType":
+                        str = order.OrderType;
+                        break;
+                    case "OrderNumber":
+                        str = order.OrderNumber;
+                        break;
+                    case "ProductCode":
+                        str = order.ProductCode;
+                        break;
+                    case "ProductDescription":
+                        str = order.ProductDescription;
+                        break;
+                    case "Amount":
+                        str = order.Amount;
+                        break;
+                    case "Address":
+                        str = order.Address;
+                        break;
+                    default:
+                        str = "";
+                        break;
+                }
+                return str;
+            }
         }
 
         //private ---------------------------------------------------------------------------------
