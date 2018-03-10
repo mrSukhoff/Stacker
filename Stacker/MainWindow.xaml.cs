@@ -56,6 +56,13 @@ namespace Stacker
         //направления сортировки списка заявок
         bool[] SortDirection = new bool[6];
 
+        const string Header1 = " Тип ";
+        const string Header2 = " Номер заказа ";
+        const string Header3 = " Кодовое обозначение ";
+        const string Header4 = " Описание ";
+        const string Header5 = " Кол-во ";
+        const string Header6 = " Ячейка ";
+
         //#####################################################################################################
         //Основная точка входа -------------------------------------------------------------------------------!
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -169,22 +176,22 @@ namespace Stacker
             GridViewColumn gvc4 = new GridViewColumn();
             GridViewColumn gvc5 = new GridViewColumn();
             
-            gvc0.Header = " Тип ";
+            gvc0.Header = Header1;
             gvc0.DisplayMemberBinding = new Binding("OrderType");
             
-            gvc1.Header = " Номер заказа ";
+            gvc1.Header = Header2;
             gvc1.DisplayMemberBinding = new Binding("OrderNumber");
 
-            gvc2.Header = " Кодовое обозначение ";
+            gvc2.Header = Header3;
             gvc2.DisplayMemberBinding = new Binding("ProductCode");
                         
-            gvc3.Header = " Описание ";
+            gvc3.Header = Header4;
             gvc3.DisplayMemberBinding = new Binding("ProductDescription");
 
-            gvc4.Header = " Кол-во ";
+            gvc4.Header = Header5;
             gvc4.DisplayMemberBinding = new Binding("Amount");
 
-            gvc5.Header = " Ячейка ";
+            gvc5.Header = Header6;
             gvc5.DisplayMemberBinding = new Binding("Address");
 
             OrdersGridView.Columns.Add(gvc0);
@@ -780,27 +787,27 @@ namespace Stacker
             string str = (e.OriginalSource as GridViewColumnHeader).Content.ToString();
             switch (str)
             {
-                case " Тип ":
+                case Header1:
                     OrderManager.SortList("OrderType", SortDirection[0]);
                     SortDirection[0] = !SortDirection[0];
                     break;
-                case " Номер заказа ":
+                case Header2:
                     OrderManager.SortList("OrderNumber", SortDirection[1]);
                     SortDirection[1] = !SortDirection[1];
                     break;
-                case " Кодовое обозначение ":
+                case Header3:
                     OrderManager.SortList("ProductCode", SortDirection[2]);
                     SortDirection[2] = !SortDirection[2];
                     break;
-                case " Описание ":
+                case Header4:
                     OrderManager.SortList("ProductDescription", SortDirection[3]);
                     SortDirection[3] = !SortDirection[3];
                     break;
-                case " Кол-во ":
+                case Header5:
                     OrderManager.SortList("Amount", SortDirection[4]);
                     SortDirection[4] = !SortDirection[4];
                     break;
-                case " Ячейка ":
+                case Header6:
                     OrderManager.SortList("Address", SortDirection[5]);
                     SortDirection[5] = !SortDirection[5];
                     break;

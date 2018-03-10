@@ -108,7 +108,7 @@ namespace Stacker.Model
                 {
                     str1 = GetField(Orders[i - 1], sortField);
                     str2 = GetField(Orders[i], sortField);
-                    needsSorting = !direction & str1.CompareTo(str2) > 0 || direction & str1.CompareTo(str2) < 0;
+                    needsSorting = !direction & String.Compare(str1,str2) > 0 || direction & String.Compare(str1,str2) < 0;
                     if (needsSorting)
                     {
                         if (direction) Orders.Move(i-1, i);
@@ -117,7 +117,7 @@ namespace Stacker.Model
                     }
                 }
             }
-
+            //возвращает значение поля заявки
             string GetField(Order order, string field)
             {
                 string str;
