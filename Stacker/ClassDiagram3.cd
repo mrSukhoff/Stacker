@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Stacker.Model.StackerModel">
+    <Position X="3.5" Y="3.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>QAIGQAAAQCAAAABAAAIAAAAAACAAAAABgAIAAAAAAAA=</HashCode>
+      <FileName>Model\StackerModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="Crane" />
+      <Field Name="OrderManager" />
+      <Field Name="Settings" />
+      <Field Name="Stacker" />
+      <Field Name="CraneState" />
+      <Field Name="PLC" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Stacker.Model.CraneCommands">
+    <Position X="6" Y="0.5" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AkACQAAAAAAQIAKCkAAgQACAACAAAQAAgAIAAAAAAIA=</HashCode>
+      <FileName>Model\CraneCommands.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="PLC" />
+      <Field Name="Settings" />
+      <Field Name="OrderManager" />
+      <Field Name="Stacker" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Stacker.Model.OrdersManager">
+    <Position X="5.5" Y="6.75" Width="2" />
+    <Compartments>
+      <Compartment Name="Properties" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAcACBAQACAABAIAAAAAAAAQIAAgASAAAAAAAhAAAAA=</HashCode>
+      <FileName>Model\OrdersManager.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="sk" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Stacker.Model.ControllerWatcher">
+    <Position X="0.5" Y="5.25" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Properties" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Events" Collapsed="true" />
+    </Compartments>
+    <NestedTypes>
+      <Delegate Name="Stacker.Model.ControllerWatcher.StackerModelEventHandler" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Model\ControllerWatcher.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>BAICSQAACCAAACAAAAAwAACAAKAACBAgAAAAAQAAoIA=</HashCode>
+      <FileName>Model\ControllerWatcher.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="PLC" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Stacker.Model.Controller">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAYAQAAAACAAABAAIIAAAAAAAAAAAAAEAAABAAAAAAA=</HashCode>
+      <FileName>Model\Controller.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Stacker.Model.SettingsKeeper">
+    <Position X="5.75" Y="2.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Properties" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>MAwAACACAAAEAAAAIAICAAQQACAAAQAABAAAAAQEIAA=</HashCode>
+      <FileName>Model\SettingsKeeper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Stacker.Model.CellsGrid">
+    <Position X="9" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAIAAAAACAAAAIAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\CellsGrid.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="grid" />
+      <Property Name="this[System.Int32, System.Int32]" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Stacker.Model.Cell">
+    <Position X="11.5" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Properties" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAABAAYAA=</HashCode>
+      <FileName>Model\Cell.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
