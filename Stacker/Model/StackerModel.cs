@@ -14,7 +14,7 @@ namespace Stacker.Model
         //команды управления краном
         public CraneCommands Crane;
         //состояние крана
-        public ControllerWatcher CraneState;
+        public CraneWatcher CraneState;
 
         //флаг успешности подключения
         public bool IsConnected = false;
@@ -69,7 +69,7 @@ namespace Stacker.Model
             }
 
             //включаем мониторинг состояния крана
-            CraneState = new ControllerWatcher(PLC);
+            CraneState = new CraneWatcher(PLC);
             //и его управление
             Crane = new CraneCommands(this);
         }

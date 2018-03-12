@@ -8,6 +8,7 @@ namespace Stacker.Model
         private SettingsKeeper Settings;
         private CellsGrid Stacker;
         private OrdersManager OrderManager;
+        private CraneWatcher CraneState;
 
         public CraneCommands(StackerModel master)
         {
@@ -15,12 +16,13 @@ namespace Stacker.Model
             Settings = master.Settings;
             Stacker = master.Stacker;
             OrderManager = master.OrderManager;
+            CraneState = master.CraneState;
         }
 
         //*команда подтверждения ошибок в ПЛК и очистка списка ошибок
         public void SubmitError()
         {
-            //ErrorList.Clear();
+            CraneState.ErrorList.Clear();
             if (PLC != null)
             {
                 PLC.WriteDword(8, 0);

@@ -116,7 +116,7 @@
     <Compile Include="Model\Cell.cs" />
     <Compile Include="Model\CellsGrid.cs" />
     <Compile Include="Model\Controller.cs" />
-    <Compile Include="Model\ControllerWatcher.cs" />
+    <Compile Include="Model\CraneWatcher.cs" />
     <Compile Include="Model\CraneCommands.cs" />
     <Compile Include="Model\ModelIterface.cs" />
     <Compile Include="Model\OrdersManager.cs" />
