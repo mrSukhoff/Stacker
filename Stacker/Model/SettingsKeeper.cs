@@ -16,14 +16,7 @@ namespace Stacker.Model
         //закрыть при ошибке открытия порта
         public bool CloseOrInform { get; }
         
-        //показывать вкладку "взвесить"
-        public bool ShowWeightTab { get; }
-        
-        //коэффициенты для пересчета тока ПЧ в вес
-        public UInt16 WeightAlpha1 { get; }
-        public UInt16 WeightBeta1 { get; }
-        public UInt16 WeightAlpha2 { get; }
-        public UInt16 WeightBeta2 { get; }
+       
         
         //имя порта, к которому подключен контроллер
         public string ComPort { get; }
@@ -45,7 +38,17 @@ namespace Stacker.Model
         
         //Максимальный вес груза
         public UInt16 MaxWeight { get; }
+        
+        //view
+        //показывать вкладку "взвесить"
+        public bool ShowWeightTab { get; }
 
+        //коэффициенты для пересчета тока ПЧ в вес
+        public UInt16 WeightAlpha1 { get; }
+        public UInt16 WeightBeta1 { get; }
+        public UInt16 WeightAlpha2 { get; }
+        public UInt16 WeightBeta2 { get; }
+        
         //Читаем настройки
         public SettingsKeeper()
         {
