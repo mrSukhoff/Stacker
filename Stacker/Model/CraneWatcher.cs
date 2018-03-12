@@ -6,7 +6,7 @@ using System.Windows;
 
 namespace Stacker.Model
 {
-    public class ControllerWatcher : IDisposable
+    public class CraneWatcher : IDisposable
     {
         //список ошибок контроллера
         public ObservableCollection<string> ErrorList { get; private set; } = new ObservableCollection<string>();
@@ -60,14 +60,14 @@ namespace Stacker.Model
         //флаг уничтожения объектов
         private bool disposed = false;
 
-        internal ControllerWatcher(Controller plc)
+        internal CraneWatcher(Controller plc)
         {
             PLC = plc;
             if (plc != null) PlcTimer = new Timer(ReadStateWord, null, 0, 500);
         }
 
         //деструктор
-        ~ControllerWatcher()
+        ~CraneWatcher()
         {
             Dispose(false);
         }
