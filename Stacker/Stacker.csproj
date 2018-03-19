@@ -118,7 +118,6 @@
     <Compile Include="Model\Controller.cs" />
     <Compile Include="Model\CraneWatcher.cs" />
     <Compile Include="Model\CraneCommands.cs" />
-    <Compile Include="Model\ModelIterface.cs" />
     <Compile Include="Model\OrdersManager.cs" />
     <Compile Include="Model\SettingsKeeper.cs" />
     <Compile Include="Model\StackerModel.cs" />
