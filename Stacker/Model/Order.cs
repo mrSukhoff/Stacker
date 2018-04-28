@@ -46,7 +46,25 @@ namespace Stacker.Model
             WarehouseNumber = strings[0];
             OrderNumber = strings[1];
             LineNumberInOrder = strings[2];
-            OrderType = strings[3];
+
+            if (UInt16.TryParse(strings[3], out ushort r))
+            {
+                string oType;
+                switch (r)
+                {
+                    case 1:
+                        oType = "Поступление";
+                        break;
+                    case 2:
+                        oType = "Отпуск";
+                        break;
+                    default:
+                        throw new ArgumentException("Неверный тип заявки");
+                }
+                OrderType = oType;
+            }
+            else throw new ArgumentException("Неверный тип заявки");
+
             ProductCode = strings[4];
             ProductDescription = strings[5];
             BatchERPLN = strings[6];

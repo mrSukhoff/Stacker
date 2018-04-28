@@ -58,10 +58,9 @@ namespace Stacker
 
         const string Header1 = " Тип ";
         const string Header2 = " Номер заказа ";
-        const string Header3 = " Кодовое обозначение ";
-        const string Header4 = " Описание ";
-        const string Header5 = " Кол-во ";
-        const string Header6 = " Ячейка ";
+        const string Header3 = " Описание ";
+        const string Header4 = " Кол-во ";
+        const string Header5 = " Ячейка ";
 
         //#####################################################################################################
         //Основная точка входа -------------------------------------------------------------------------------!
@@ -174,32 +173,28 @@ namespace Stacker
             GridViewColumn gvc2 = new GridViewColumn();
             GridViewColumn gvc3 = new GridViewColumn();
             GridViewColumn gvc4 = new GridViewColumn();
-            GridViewColumn gvc5 = new GridViewColumn();
-            
+
             gvc0.Header = Header1;
             gvc0.DisplayMemberBinding = new Binding("OrderType");
+            gvc0.Width = 160;
             
             gvc1.Header = Header2;
             gvc1.DisplayMemberBinding = new Binding("OrderNumber");
 
             gvc2.Header = Header3;
-            gvc2.DisplayMemberBinding = new Binding("ProductCode");
-                        
+            gvc2.DisplayMemberBinding = new Binding("ProductDescription");
+
             gvc3.Header = Header4;
-            gvc3.DisplayMemberBinding = new Binding("ProductDescription");
+            gvc3.DisplayMemberBinding = new Binding("Amount");
 
             gvc4.Header = Header5;
-            gvc4.DisplayMemberBinding = new Binding("Amount");
-
-            gvc5.Header = Header6;
-            gvc5.DisplayMemberBinding = new Binding("Address");
+            gvc4.DisplayMemberBinding = new Binding("Address");
 
             OrdersGridView.Columns.Add(gvc0);
             OrdersGridView.Columns.Add(gvc1);
             OrdersGridView.Columns.Add(gvc2);
             OrdersGridView.Columns.Add(gvc3);
             OrdersGridView.Columns.Add(gvc4);
-            OrdersGridView.Columns.Add(gvc5);
 
             OrdersLitsView.View = OrdersGridView;
          }
@@ -291,15 +286,15 @@ namespace Stacker
         //при изменении размеров окна меняем размеры колонок
         private void OrdersLitsView_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (OrdersGridView.Columns.Count < 6) return;
+            if (OrdersGridView.Columns.Count < 5) return;
             double s = 0;
-            for (ushort i = 0; i < 5; i++)
+            for (ushort i = 0; i < 4; i++)
             {
-                if (i == 3) continue;
+                if (i == 2) continue;
                 s = s + OrdersGridView.Columns[i].ActualWidth;
             }
             //и не спрашивайте почему 107 :-)
-            OrdersGridView.Columns[3].Width = OrdersLitsView.ActualWidth - s - 107;
+            OrdersGridView.Columns[2].Width = OrdersLitsView.ActualWidth - s - 107;
         }
 
         //запускает подбор ширины столбцов
@@ -796,20 +791,16 @@ namespace Stacker
                     SortDirection[1] = !SortDirection[1];
                     break;
                 case Header3:
-                    OrderManager.SortList("ProductCode", SortDirection[2]);
-                    SortDirection[2] = !SortDirection[2];
+                    OrderManager.SortList("ProductDescription", SortDirection[3]);
+                    SortDirection[2] = !SortDirection[3];
                     break;
                 case Header4:
-                    OrderManager.SortList("ProductDescription", SortDirection[3]);
-                    SortDirection[3] = !SortDirection[3];
+                    OrderManager.SortList("Amount", SortDirection[4]);
+                    SortDirection[3] = !SortDirection[4];
                     break;
                 case Header5:
-                    OrderManager.SortList("Amount", SortDirection[4]);
-                    SortDirection[4] = !SortDirection[4];
-                    break;
-                case Header6:
                     OrderManager.SortList("Address", SortDirection[5]);
-                    SortDirection[5] = !SortDirection[5];
+                    SortDirection[4] = !SortDirection[5];
                     break;
             }
         }
