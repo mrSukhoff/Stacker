@@ -1,0 +1,195 @@
+﻿<Window x:Name="StackerWindow" x:Class="Stacker.SimpleWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Stacker"
+        mc:Ignorable="d"
+        Title="Штабелёр" MinWidth="900" MinHeight="450" Width="900" Height="450" Icon="Stacker.ico" WindowStartupLocation="CenterScreen" Background="#FF193441" ForceCursor="True">
+    
+    <Window.Resources>
+        <!-- Убираем подсветку фокуса-->
+        <Style x:Key="NoFocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Border>
+                            <Rectangle Margin="2" 
+                                       StrokeThickness="1" 
+                                       Stroke="#60000000" 
+                                       StrokeDashArray="1 2"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    
+    <Grid Background="#FF193441" Margin="0,0,0,1">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="37"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Button Grid.Column="1" Grid.RowSpan="2" Content="СТОП!" FontSize="20" Background="#FF9E2E2E" Height="35" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="112" BorderBrush="#FF193441"/>
+        <GroupBox x:Name="AutoGroupBox" Header="Автоматичесий режим" Margin="5,0,5,5" Foreground="#FFD5DFE5" FontSize="16" Background="#FF193441">
+            <Grid Margin="0" Background="#FF193441">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30*"/>
+                    <RowDefinition Height="15*"/>
+                    <RowDefinition Height="15*"/>
+                    <RowDefinition Height="30*"/>
+                    <RowDefinition Height="20*"/>
+                    <RowDefinition Height="10*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="71*"/>
+                    <ColumnDefinition Width="141*"/>
+                    <ColumnDefinition Width="141*"/>
+                    <ColumnDefinition Width="71*"/>
+                </Grid.ColumnDefinitions>
+                <ComboBox HorizontalAlignment="Left" Margin="21,7,0,0" VerticalAlignment="Top" Width="100" Height="75" Grid.ColumnSpan="2" Grid.RowSpan="2" Grid.Row="1">
+                    <ComboBox.Background>
+                        <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                            <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                            <GradientStop Color="#FFEBEBEB" Offset="0.5"/>
+                            <GradientStop Color="#FFDDDDDD" Offset="0.5"/>
+                            <GradientStop Color="#FFCBDBB7" Offset="1"/>
+                        </LinearGradientBrush>
+                    </ComboBox.Background>
+                </ComboBox>
+                <ComboBox HorizontalAlignment="Left" Margin="91,7,0,0" VerticalAlignment="Top" Width="100" Height="75" Grid.ColumnSpan="2" Grid.Column="1" Grid.RowSpan="2" Grid.Row="1">
+                    <ComboBox.Background>
+                        <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                            <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                            <GradientStop Color="#FFEBEBEB" Offset="0.5"/>
+                            <GradientStop Color="#FFDDDDDD" Offset="0.5"/>
+                            <GradientStop Color="#FFCBDBB7" Offset="1"/>
+                        </LinearGradientBrush>
+                    </ComboBox.Background>
+                </ComboBox>
+                <ComboBox HorizontalAlignment="Left" Margin="91,7,0,0" VerticalAlignment="Top" Width="100" Height="75" Grid.Column="2" Grid.ColumnSpan="2" Grid.RowSpan="2" Grid.Row="1">
+                    <ComboBox.Background>
+                        <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                            <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                            <GradientStop Color="#FFEBEBEB" Offset="0.5"/>
+                            <GradientStop Color="#FFDDDDDD" Offset="0.5"/>
+                            <GradientStop Color="#FFCBDBB7" Offset="1"/>
+                        </LinearGradientBrush>
+                    </ComboBox.Background>
+                </ComboBox>
+                <Button Content="_Привезти" HorizontalAlignment="Left" Grid.Row="4" VerticalAlignment="Top" Width="100" Height="50" FontSize="16" Margin="70,8,0,0" Grid.ColumnSpan="2">
+                    <Button.Background>
+                        <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                            <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                            <GradientStop Color="#FFEBEBEB" Offset="0.5"/>
+                            <GradientStop Color="#FFDDDDDD" Offset="0.5"/>
+                            <GradientStop Color="#FF91AAB4" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Button.Background>
+                </Button>
+                <Button Content="_Увезти" Grid.Column="2" HorizontalAlignment="Left" Margin="42,8,0,0" Grid.Row="4" VerticalAlignment="Top" Width="100" Height="50" FontSize="16" Grid.ColumnSpan="2" ForceCursor="True">
+                    <Button.Background>
+                        <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                            <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                            <GradientStop Color="#FFEBEBEB" Offset="0.5"/>
+                            <GradientStop Color="#FFDDDDDD" Offset="0.5"/>
+                            <GradientStop Color="#FF91AAB4" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Button.Background>
+                </Button>
+            </Grid>
+        </GroupBox>
+        <GroupBox x:Name="ManualGroupBox" Grid.Column="1" Header="Ручной режим" Foreground="#FFD5DFE5" FontSize="16" Background="#FF193441" Margin="5,0,5,5">
+            <Grid Margin="0" Background="#FF193441">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="3*"/>
+                    <RowDefinition Height="3*"/>
+                    <RowDefinition Height="3*"/>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Button HorizontalAlignment="Left" Margin="13,47,0,0" VerticalAlignment="Top" Width="80" Height="80" Grid.RowSpan="2" Grid.Row="1" Content="ДАЛЬШЕ" FontSize="16" Foreground="#FFFCFFF5" BorderBrush="#FFFCFFF5" Grid.Column="1" Grid.ColumnSpan="2">
+                    <Button.Background>
+                        <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                            <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                            <GradientStop Color="#FFEBEBEB" Offset="0.5"/>
+                            <GradientStop Color="#FFDDDDDD" Offset="0.5"/>
+                            <GradientStop Color="#FF91AAB4" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Button.Background>
+                </Button>
+                <Button Content="ВВЕРХ" HorizontalAlignment="Left" VerticalAlignment="Top" Width="80" Height="80" Margin="66,47,0,0" Grid.Column="2" Grid.RowSpan="2" FontSize="16" Foreground="#FFFCFFF5" BorderBrush="#FFFCFFF5" Grid.ColumnSpan="2">
+                    <Button.Background>
+                        <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                            <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                            <GradientStop Color="#FFEBEBEB" Offset="0.5"/>
+                            <GradientStop Color="#FFDDDDDD" Offset="0.5"/>
+                            <GradientStop Color="#FF91AAB4" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Button.Background>
+                </Button>
+                <Button HorizontalAlignment="Left" Margin="66,48,0,0" VerticalAlignment="Top" Width="80" Height="80" Grid.Row="2" Grid.Column="2" Grid.RowSpan="2" Content="ВНИЗ" FontSize="16" Foreground="#FFFCFFF5" BorderBrush="#FFFCFFF5" Grid.ColumnSpan="2">
+                    <Button.Background>
+                        <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                            <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                            <GradientStop Color="#FFEBEBEB" Offset="0.5"/>
+                            <GradientStop Color="#FFDDDDDD" Offset="0.5"/>
+                            <GradientStop Color="#FF91AAB4" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Button.Background>
+                </Button>
+                <Button HorizontalAlignment="Left" Margin="66,47,0,0" VerticalAlignment="Top" Width="80" Height="80" Grid.Column="3" Grid.RowSpan="2" Grid.Row="1" Content="БЛИЖЕ" FontSize="16" Foreground="#FFFCFFF5" BorderBrush="#FFFCFFF5" Grid.ColumnSpan="2">
+                    <Button.Background>
+                        <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                            <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                            <GradientStop Color="#FFEBEBEB" Offset="0.5"/>
+                            <GradientStop Color="#FFDDDDDD" Offset="0.5"/>
+                            <GradientStop Color="#FF91AAB4" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Button.Background>
+                </Button>
+                <Button Content="X" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Height="50" Margin="28,8,0,0" Grid.Row="3" FontSize="20" Grid.ColumnSpan="2">
+                    <Button.Background>
+                        <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                            <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                            <GradientStop Color="#FFEBEBEB" Offset="0.5"/>
+                            <GradientStop Color="#FFDDDDDD" Offset="0.5"/>
+                            <GradientStop Color="#FF91AAB4" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Button.Background>
+                </Button>
+                <Button Content="Y" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Height="50" Margin="28,8,0,0" Grid.Column="4" Grid.Row="3" FontSize="20" Grid.ColumnSpan="2">
+                    <Button.Background>
+                        <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                            <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                            <GradientStop Color="#FFEBEBEB" Offset="0.5"/>
+                            <GradientStop Color="#FFDDDDDD" Offset="0.5"/>
+                            <GradientStop Color="#FF91AAB4" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Button.Background>
+                </Button>
+            </Grid>
+        </GroupBox>
+        <StatusBar Height="35" VerticalAlignment="Bottom" Grid.ColumnSpan="2" Grid.Row="1" Margin="5,0,117,0" Background="#FF3E606F" VerticalContentAlignment="Center">
+            <Label x:Name="RowLabel" Content="Ряд : 00"/>
+            <Label x:Name="FloorLabel" Content="Этаж : 00"/>
+            <Label x:Name="XLabel" Content="X : 000000"/>
+            <Label x:Name="YLabel" Content="Y : 000000"/>
+            <Label x:Name="SPLabel" Content="Нач.Поз." IsEnabled="False"/>
+            <Label x:Name="RLabel" Content="Ряд"/>
+            <Label x:Name="FLabel" Content="Этаж"/>
+        </StatusBar>
+    </Grid>
+</Window>
