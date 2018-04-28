@@ -9,19 +9,8 @@
     
     <Window.Resources>
         <!-- Убираем подсветку фокуса-->
-        <Style x:Key="NoFocusVisual">
-            <Setter Property="Control.Template">
-                <Setter.Value>
-                    <ControlTemplate>
-                        <Border>
-                            <Rectangle Margin="2" 
-                                       StrokeThickness="1" 
-                                       Stroke="#60000000" 
-                                       StrokeDashArray="1 2"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
+        <Style x:Key="ButtonStyle" TargetType="{x:Type Button}">
+            <!--Setter Property=""/-->
         </Style>
     </Window.Resources>
     
