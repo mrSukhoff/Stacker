@@ -297,35 +297,6 @@
                     <Label x:Name="MeasuredWeightLabel2" Content="000 кг" HorizontalAlignment="Left" Margin="768,215,0,0" VerticalAlignment="Top" Width="88" FontSize="24" Foreground="#FFFCFFF5" Height="42"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="TabItem" Height="30" Margin="0">
-                <Grid Background="#FFE5E5E5">
-                    <Grid Background="#FF193441">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-                        <Button x:Name="CloserButton1" Content="БЛИЖЕ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="97,32,95,33" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" ClickMode="Press" Grid.Column="3" Grid.Row="2" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
-                        <Button x:Name="DownButton1" Content="ВНИЗ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="97,10,96,87" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" ClickMode="Press" Grid.Column="2" Grid.Row="3" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
-                        <Button x:Name="UpButton1" Content="ВВЕРХ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="97,34,96,32" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" ClickMode="Press" Grid.ColumnSpan="2" Grid.Column="2" Grid.RowSpan="2" Grid.Row="1" />
-                        <Button x:Name="FartherButton1" Content="ДАЛЬШЕ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="96,32,97,33" Height="100" FontWeight="Bold" FontSize="20" Background="#FF91AAB4" BorderBrush="#FFCBDBD7" ClickMode="Press" Grid.Row="2" Grid.RowSpan="2" Grid.ColumnSpan="2" Grid.Column="1"/>
-                        <Button x:Name="StopButton1" Content="СТОП!" Grid.Column="5" Margin="0,0,10,9" Grid.Row="4" BorderBrush="#FFCBDBD7" Background="#FF9E2E2E" FontSize="24" HorizontalAlignment="Right" Width="100" Height="50" VerticalAlignment="Bottom" Foreground="Black" Style="{DynamicResource StopButtonStyle}" ClickMode="Press" IsCancel="True" Click="StopButton_Click" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" RenderTransformOrigin="2.06,2.18"/>
-                        <Button x:Name="ManPlatformLeftButton1" Content="X" Margin="33,40,0,0" FontSize="20" Click="ManPlatformLeftButton_Checked" Height="35" HorizontalAlignment="Left" Width="35" Foreground="Black" VerticalAlignment="Top" Grid.Row="4"/>
-                        <Button x:Name="ManPlatformRightButton1" Content="Y" Margin="101,40,0,0" HorizontalAlignment="Left" Width="35" FontSize="20" Click="ManPlatformRightButton_Checked" Height="35" Foreground="Black" VerticalAlignment="Top" Grid.Row="4"/>
-                        <Label Content="СТОЛ" Margin="33,4,0,0" VerticalAlignment="Top" Foreground="#FFFCFFF5" HorizontalAlignment="Left" Width="103" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.Row="4"/>
-                    </Grid>
-                </Grid>
-            </TabItem>
         </TabControl>
     </Grid>
 </Window>
