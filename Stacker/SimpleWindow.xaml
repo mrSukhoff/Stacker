@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Stacker"
         mc:Ignorable="d"
-        Title="Штабелёр" MinWidth="900" MinHeight="450" Width="900" Height="450" Icon="Stacker.ico" WindowStartupLocation="CenterScreen" Background="#FF193441" ForceCursor="True">
+        Title="Штабелёр" Icon="Stacker.ico" WindowStartupLocation="CenterScreen" Background="#FF193441" ForceCursor="True" Width="800" Height="800" ResizeMode="CanMinimize" SnapsToDevicePixels="True" MinWidth="3">
 
     <Window.Resources>
         <SolidColorBrush x:Key="Color1" Color="#FFD5DFE5"/>
@@ -13,84 +13,79 @@
         <SolidColorBrush x:Key="Color3" Color="#FF91AAB4"/>
         <SolidColorBrush x:Key="Color4" Color="#FF3E606F"/>
         <SolidColorBrush x:Key="Color5" Color="#FF193441"/>
-
+        <SolidColorBrush x:Key="ColorX" Color="#e00"/>
     </Window.Resources>
 
-    <Grid Background="#FF193441">
+    <!--Main Grid-->
+    <Grid Background="{StaticResource Color5}">
         <Grid.RowDefinitions>
-            <RowDefinition/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
 
-        <!-- -Auto GrouBox-->
-        <GroupBox x:Name="AutoGroupBox" Header="Автоматичесий режим" Margin="5,0,5,42" FontSize="16" Foreground="{StaticResource Color1}" Background="{StaticResource Color5}">
-            <Grid Margin="0" Background="{StaticResource Color5}">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="1*" />
-                    <RowDefinition Height="2*"/>
-                    <RowDefinition Height="1*"/>
-                </Grid.RowDefinitions>
+        <TabControl Grid.Row="0" Margin="5 5 5 5" BorderThickness="1">
+            <!-- -Auto Tab-->
+            <TabItem Header="Автоматичесий режим" Margin="0 0 0 0" FontSize="24" Background="{DynamicResource Color3}" BorderBrush="{StaticResource Color5}">
+                <Grid Background="{StaticResource Color5}">
 
-                <!-- Selected Cell Label-->
-                <TextBlock Text="X-10-10" Grid.Row="0" FontSize="36" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{DynamicResource Color5}" />
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
 
-                <!-- Comboboxes-->
-                <Grid Grid.Row="1">
-                    <ComboBox HorizontalAlignment="Left"   VerticalAlignment="Center" Margin="20 0 0 0" Width="100" Height="75" Background="{StaticResource Color2}" />
-                    <ComboBox HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 0"  Width="100" Height="75" Background="{StaticResource Color2}"/>
-                    <ComboBox HorizontalAlignment="Right"  VerticalAlignment="Center" Margin="0 0 20 0" Width="100" Height="75" Background="{StaticResource Color2}"/>
+                    <!-- Selected Cell Label-->
+                    <TextBlock Text="X-10-10" Grid.Row="0" FontSize="72" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{StaticResource Color5}" Foreground="{StaticResource Color2}"/>
+
+                    <!-- Comboboxes-->
+                    <Grid Grid.Row="1">
+                        <ComboBox HorizontalAlignment="Left"   VerticalAlignment="Center" Margin="100,0,0,0" Width="125" Height="100" Background="{StaticResource Color2}" />
+                        <ComboBox HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 0"  Width="125" Height="100" Background="{StaticResource Color2}"/>
+                        <ComboBox HorizontalAlignment="Right"  VerticalAlignment="Center" Margin="0,0,100,0" Width="125" Height="100" Background="{StaticResource Color2}"/>
+                    </Grid>
+
+                    <!--Buttons-->
+                    <Grid Grid.Row="2" >
+                        <Button Content="_Привезти" VerticalAlignment="Center" HorizontalAlignment="Left"  Margin="120,0,0,0" Width="125" Height="75" FontSize="24" Background="{StaticResource Color3}"/>
+                        <Button Content="_Увезти"   VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,120,0" Width="125" Height="75" FontSize="24" Background="{StaticResource Color3}"/>
+                    </Grid>
+
                 </Grid>
+            </TabItem>
 
-                <!--Buttons-->
-                <Grid Grid.Row="2" >
-                    <Button Content="_Привезти" VerticalAlignment="Center" HorizontalAlignment="Left"  Margin="40 0 0 0" Width="100" Height="50" FontSize="20" Background="{StaticResource Color3}"/>
-                    <Button Content="_Увезти"   VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0 0 40 0" Width="100" Height="50" FontSize="20" Background="{StaticResource Color3}"/>
+            <!-- Manual Tab-->
+            <TabItem Header="Ручной режим"   Margin="0 0 0 0" FontSize="24"  Background="{DynamicResource Color3}" BorderBrush="{StaticResource Color5}" >
+                <Grid Background="{StaticResource Color5}">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="1.5*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="1.5*"/>
+                    </Grid.RowDefinitions>
+
+                    <Button Content="ВВЕРХ"  HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Row="1" Margin="0 0 0 0"   Width="120" Height="120" FontSize="16" Foreground="{StaticResource Color1}" BorderBrush="{StaticResource Color1}" Background="{StaticResource Color3}"/>
+                    <Button Content="ДАЛЬШЕ" HorizontalAlignment="Left"   VerticalAlignment="Center" Grid.Row="2" Margin="160,0,0,0"  Width="120" Height="120" FontSize="16" Foreground="{StaticResource Color1}" BorderBrush="{StaticResource Color1}" Background="{StaticResource Color3}"/>
+                    <Button Content="БЛИЖЕ"  HorizontalAlignment="Right"  VerticalAlignment="Center" Grid.Row="2" Margin="0,0,160,0" Width="120" Height="120" FontSize="16" Foreground="{StaticResource Color1}" BorderBrush="{StaticResource Color1}" Background="{StaticResource Color3}" />
+                    <Button Content="ВНИЗ"   HorizontalAlignment="Center" VerticalAlignment="Top"    Grid.Row="3" Margin="0 0 0 0"   Width="120" Height="120" FontSize="16" Foreground="{StaticResource Color1}" BorderBrush="{StaticResource Color1}" Background="{StaticResource Color3}" />
+
+                    <Button Content="X"      HorizontalAlignment="Left"  VerticalAlignment="Bottom" Grid.Row="0" Margin="180,0,0,0" Width="80" Height="80" FontSize="20" Background="{StaticResource Color3}"/>
+                    <Button Content="Y"      HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Row="0" Margin="0,0,180,0" Width="80" Height="80" FontSize="20" Background="{StaticResource Color3}"/>
+
                 </Grid>
-            </Grid>
-        </GroupBox>
-
-        <!-- Manual GroupBox-->
-        <GroupBox x:Name="ManualGroupBox" Grid.Column="1" Header="Ручной режим" FontSize="16" Margin="5,0,5,42" Foreground="{DynamicResource Color1}" Background="{DynamicResource Color5}" BorderBrush="{DynamicResource Color1}" >
-            <Grid Margin="0" Background="{StaticResource Color5}">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="3*"/>
-                    <RowDefinition Height="3*"/>
-                    <RowDefinition Height="3*"/>
-                    <RowDefinition Height="2*"/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Button Content="ДАЛЬШЕ" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="13,47,0,0"  Width="80" Height="80" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="2" FontSize="16" Foreground="{StaticResource Color1}" BorderBrush="{StaticResource Color1}" Background="{StaticResource Color3}"/>
-                <Button Content="ВВЕРХ"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="66,47,0,0"  Width="80" Height="80" Grid.Column="2"              Grid.RowSpan="2" Grid.ColumnSpan="2" FontSize="16" Foreground="{StaticResource Color1}" BorderBrush="{StaticResource Color1}" Background="{StaticResource Color3}"/>
-                <Button Content="ВНИЗ"   HorizontalAlignment="Left" VerticalAlignment="Top" Margin="66,48,0,0"  Width="80" Height="80" Grid.Column="2" Grid.Row="2" Grid.RowSpan="2" Grid.ColumnSpan="2" FontSize="16" Foreground="{StaticResource Color1}" BorderBrush="{StaticResource Color1}" Background="{StaticResource Color3}" />
-                <Button Content="БЛИЖЕ"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="66,47,0,0"  Width="80" Height="80" Grid.Column="3" Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="2" FontSize="16" Foreground="{StaticResource Color1}" BorderBrush="{StaticResource Color1}" Background="{StaticResource Color3}" />
-                <Button Content="X"      HorizontalAlignment="Left" VerticalAlignment="Top" Margin="28,8,0,0"   Width="50" Height="50" Grid.ColumnSpan="2" Grid.Row="3"                 FontSize="20" Background="{StaticResource Color3}"/>
-                <Button Content="Y"      HorizontalAlignment="Left" VerticalAlignment="Top" Margin="28,8,0,0"   Width="50" Height="50" Grid.ColumnSpan="2" Grid.Row="3" Grid.Column="4" FontSize="20" Background="{StaticResource Color3}"/>
-            </Grid>
-        </GroupBox>
+            </TabItem>
+        </TabControl>
 
         <!-- Statusbar-->
-        <StatusBar Height="35" VerticalAlignment="Bottom" Grid.ColumnSpan="2" Margin="0,0,117,0" Background="{StaticResource Color4}" VerticalContentAlignment="Center">
-            <Label x:Name="RowLabel"    Content="Ряд : 00"/>
-            <Label x:Name="FloorLabel"  Content="Этаж : 00"/>
-            <Label x:Name="XLabel"      Content="X : 000000"/>
-            <Label x:Name="YLabel"      Content="Y : 000000"/>
-            <Label x:Name="SPLabel"     Content="Нач.Поз." IsEnabled="False"/>
-            <Label x:Name="RLabel"      Content="Ряд"/>
-            <Label x:Name="FLabel"      Content="Этаж"/>
+        <StatusBar Height="50" VerticalAlignment="Bottom" Margin="0,0,117,0" Grid.Row="1" Background="{StaticResource Color4}" VerticalContentAlignment="Center">
+            <Label x:Name="RowLabel"   FontSize="20" Content="Ряд : 00"/>
+            <Label x:Name="FloorLabel" FontSize="20" Content="Этаж : 00"/>
+            <Label x:Name="SPLabel"    FontSize="20" Content="Нач.Поз."/>
+            <Label x:Name="RLabel"     FontSize="20" Content="Ряд"/>
+            <Label x:Name="FLabel"     FontSize="20" Content="Этаж"/>
         </StatusBar>
 
         <!-- Stop Button-->
-        <Button Grid.Column="1" Content="СТОП!" FontSize="20" Background="#FF9E2E2E" Height="35" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="112" BorderBrush="{DynamicResource Color1}" BorderThickness="1"/>
+        <Button  Content="СТОП!" VerticalAlignment="Bottom" HorizontalAlignment="Right" Grid.Row="1" FontSize="32" Background="#FF9E2E2E" Height="50"  Width="112" BorderBrush="{StaticResource Color1}" BorderThickness="1"/>
     </Grid>
 </Window>

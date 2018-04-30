@@ -130,6 +130,7 @@
             <RowDefinition/>
             <RowDefinition Height="Auto" MinHeight="23"/>
         </Grid.RowDefinitions>
+        
         <StatusBar x:Name="StatusPlane" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="14" Background="#FF3E606F" Grid.Row="1" Margin="0,0,0,-4" Height="35">
             <Label x:Name="RowLabel" Content="Ряд : 00"/>
             <Label x:Name="FloorLabel" Content="Этаж : 00"/>
@@ -139,6 +140,7 @@
             <Label x:Name="RLabel" Content="Ряд"/>
             <Label x:Name="FLabel" Content="Этаж"/>
         </StatusBar>
+        
         <TabControl x:Name="Tabs" Margin="1" FontSize="16" Background="#FF193441" BorderBrush="{x:Null}">
             <TabItem x:Name="AutoTabItrm" Header="_Автоматический режим " Margin="0" BorderBrush="#FF91AAB4" Background="#FFCBDBD7" Height="30">
                 <Grid Background="#FF193441" Margin="0">
@@ -157,6 +159,7 @@
                     <Button x:Name="AutoStopButton" Content="СТОП!" Grid.Column="1" Margin="0,0,10,10" BorderBrush="#FFCBDBD7" Background="#FF9E2E2E" FontSize="24" Grid.Row="1" RenderTransformOrigin="0.44,-0.04" Height="50" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="100" Style="{DynamicResource StopButtonStyle}" Click="StopButton_Click"/>
                 </Grid>
             </TabItem>
+            
             <TabItem x:Name="SemiAutoTabItem" Header="_Полуавтоматический режим" Background="#FFCBDBD7" BorderBrush="#FF91AAB4" Height="30" Margin="0">
                 <Grid Margin="0" Background="#FF193441">
                     <Grid.RowDefinitions>
@@ -183,6 +186,7 @@
                     <Label x:Name="IsNotAvailableLabel" Content="" Grid.Column="1" HorizontalAlignment="Center" Margin="80,112,82,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="278" Foreground="#FFCF3D3D" FontSize="24" HorizontalContentAlignment="Center"/>
                 </Grid>
             </TabItem>
+            
             <TabItem x:Name="SettingTab" Header="Ручное управление" BorderBrush="#FF91AAB4" Height="30" Background="#FFCBDBD7" Margin="0" Width="159">
                 <Grid Background="#FF193441">
                     <Grid.ColumnDefinitions>
@@ -274,6 +278,7 @@
                     </GroupBox>
                 </Grid>
             </TabItem>
+            
             <TabItem x:Name="ErrorTabItem" Header="Ошибки" BorderBrush="#FF91AAB4" Foreground="Black" Height="30" Background="#FFCBDBD7" Margin="0">
                 <Grid Background="#FF193441" Style="{DynamicResource ButtonFocusVisual}">
                     <Grid.ColumnDefinitions>
@@ -287,6 +292,7 @@
                     <Button x:Name="SubmitErrorButton" Content="Сбросить" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="286,0,285,10" Grid.Row="1" FontSize="24" FontWeight="Bold" BorderBrush="#FFCBDBD7" Background="#FF91AAB4" UseLayoutRounding="False" BorderThickness="3,0" MinWidth="175" MinHeight="50" MaxWidth="175" MaxHeight="50" Click="SubmitErrorButton_Click" Foreground="#FFFCFFF5"/>
                 </Grid>
             </TabItem>
+            
             <TabItem x:Name="WeightTabItem" Header="Взвешивание" BorderBrush="#FF91AAB4" Foreground="Black" Background="#FFCBDBD7" Height="30" Width="116" Margin="0">
                 <Grid x:Name="WeightGrid" Background="#FF193441" Margin="0,0,2,0">
                     <Grid.ColumnDefinitions>
@@ -297,6 +303,7 @@
                     <Label x:Name="MeasuredWeightLabel2" Content="000 кг" HorizontalAlignment="Left" Margin="768,215,0,0" VerticalAlignment="Top" Width="88" FontSize="24" Foreground="#FFFCFFF5" Height="42"/>
                 </Grid>
             </TabItem>
+        
         </TabControl>
     </Grid>
 </Window>
