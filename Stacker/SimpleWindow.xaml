@@ -64,14 +64,24 @@
                         <RowDefinition Height="1.5*"/>
                     </Grid.RowDefinitions>
 
-                    <Button Content="ВВЕРХ"  HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Row="1" Margin="0 0 0 0"   Width="120" Height="120" FontSize="16" Foreground="{StaticResource Color1}" BorderBrush="{StaticResource Color1}" Background="{StaticResource Color3}"/>
-                    <Button Content="ДАЛЬШЕ" HorizontalAlignment="Left"   VerticalAlignment="Center" Grid.Row="2" Margin="160,0,0,0"  Width="120" Height="120" FontSize="16" Foreground="{StaticResource Color1}" BorderBrush="{StaticResource Color1}" Background="{StaticResource Color3}"/>
-                    <Button Content="БЛИЖЕ"  HorizontalAlignment="Right"  VerticalAlignment="Center" Grid.Row="2" Margin="0,0,160,0" Width="120" Height="120" FontSize="16" Foreground="{StaticResource Color1}" BorderBrush="{StaticResource Color1}" Background="{StaticResource Color3}" />
-                    <Button Content="ВНИЗ"   HorizontalAlignment="Center" VerticalAlignment="Top"    Grid.Row="3" Margin="0 0 0 0"   Width="120" Height="120" FontSize="16" Foreground="{StaticResource Color1}" BorderBrush="{StaticResource Color1}" Background="{StaticResource Color3}" />
+                    <!--Platform Control-->
+                    <Label Content="СТОЛ" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,14,0,0" Foreground="{DynamicResource Color3}" HorizontalContentAlignment="Center" Width="220" FontSize="20"/>
+                    <Button Content="X"   HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Row="0" Margin="60,0,0,0"  Width="80" Height="80" FontSize="20" Background="{StaticResource Color3}"/>
+                    <Button Content="Y"   HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Row="0" Margin="200,0,0,0" Width="80" Height="80" FontSize="20" Background="{StaticResource Color3}"/>
 
-                    <Button Content="X"      HorizontalAlignment="Left"  VerticalAlignment="Bottom" Grid.Row="0" Margin="180,0,0,0" Width="80" Height="80" FontSize="20" Background="{StaticResource Color3}"/>
-                    <Button Content="Y"      HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Row="0" Margin="0,0,180,0" Width="80" Height="80" FontSize="20" Background="{StaticResource Color3}"/>
+                    <!--To Start Position-->
+                    <TextBlock Text="В начало"     HorizontalAlignment="Right"  VerticalAlignment="Bottom"    Margin="0,0,79,84" FontSize="20" Foreground="{DynamicResource Color3}" />
+                    <Button    Content="&gt;0&lt;" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,80,0"   FontSize="24" Grid.Row="0" Width="80" Height="80" Background="{StaticResource Color3}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Padding="1,1,1,5"/>
 
+                    <!--Crane Movement-->
+                    <Button Content="ВВЕРХ"  HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Row="1" Margin="0 0 0 0"   Width="120" Height="120" FontSize="24" Foreground="{StaticResource Color1}" BorderBrush="{StaticResource Color1}" Background="{StaticResource Color3}"/>
+                    <Button Content="ДАЛЬШЕ" HorizontalAlignment="Left"   VerticalAlignment="Center" Grid.Row="2" Margin="160,0,0,0"  Width="120" Height="120" FontSize="24" Foreground="{StaticResource Color1}" BorderBrush="{StaticResource Color1}" Background="{StaticResource Color3}"/>
+                    <Button Content="БЛИЖЕ"  HorizontalAlignment="Right"  VerticalAlignment="Center" Grid.Row="2" Margin="0,0,160,0" Width="120" Height="120" FontSize="24" Foreground="{StaticResource Color1}" BorderBrush="{StaticResource Color1}" Background="{StaticResource Color3}" />
+                    <Button Content="ВНИЗ"   HorizontalAlignment="Center" VerticalAlignment="Top"    Grid.Row="3" Margin="0 0 0 0"   Width="120" Height="120" FontSize="24" Foreground="{StaticResource Color1}" BorderBrush="{StaticResource Color1}" Background="{StaticResource Color3}" />
+
+                    <!--Reset Button-->
+                    <Button Content=" _Сбросить " HorizontalAlignment="Left"  VerticalAlignment="Bottom" Grid.Row="3" Margin="20,0,0,20" Height="50" FontSize="20" Background="{StaticResource Color3}"/>
+                    
                 </Grid>
             </TabItem>
         </TabControl>
