@@ -9,18 +9,20 @@
         <SolidColorBrush x:Key="Color5" Color="#FF324d5c"/-->
 
     <!--Color Set-->
-    <SolidColorBrush x:Key="Color1" Color="#FFD5DFE5"/>
-    <SolidColorBrush x:Key="Color2" Color="#FFCBDBB7"/>
-    <SolidColorBrush x:Key="Color3" Color="#FF91AAB4"/>
-    <SolidColorBrush x:Key="Color4" Color="#FF3E606F"/>
-    <SolidColorBrush x:Key="Color5" Color="#FF193441"/>
-    <SolidColorBrush x:Key="ColorX" Color="#e00"/>
+    <SolidColorBrush x:Key="Color1" Color="#FCFFF5"/>
+    <SolidColorBrush x:Key="Color2" Color="#CBDBB7"/>
+    <SolidColorBrush x:Key="Color3" Color="#91AAB4"/>
+    <SolidColorBrush x:Key="Color4" Color="#3E606F"/>
+    <SolidColorBrush x:Key="Color5" Color="#193441"/>
+
+    <SolidColorBrush x:Key="StopLightColor" Color="#9E2E2E"/>
+    <SolidColorBrush x:Key="StopDarkColor"  Color="#5F1515"/>
 
     <!--Regular Button Style-->
     <Style TargetType="{x:Type Button}" x:Key="RegularButtonStyle">
         <Setter Property="FontSize" Value="24"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
-        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="Foreground" Value="{DynamicResource Color1}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
@@ -57,16 +59,16 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
-                    <Border x:Name="Border" BorderBrush="{DynamicResource Color1}" BorderThickness="3" Background="#FF9E2E2E" CornerRadius="2" UseLayoutRounding="True" >
+                    <Border x:Name="Border" BorderBrush="{DynamicResource Color1}" BorderThickness="3" Background="{StaticResource StopLightColor}" CornerRadius="2" UseLayoutRounding="True" >
                         <ContentPresenter HorizontalAlignment="Center" Margin="5 10 0 0" RecognizesAccessKey="True" UseLayoutRounding="True" VerticalAlignment="Center" />
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" TargetName="Border" Value="#FF9E2E2E"/>
+                            <Setter Property="Background" TargetName="Border" Value="{StaticResource StopLightColor}"/>
                             <Setter Property="BorderBrush" TargetName="Border" Value="{DynamicResource Color1}"/>
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter Property="Background" TargetName="Border" Value="#FF5F1515"/>
+                            <Setter Property="Background" TargetName="Border" Value="{StaticResource StopDarkColor}"/>
                             <Setter Property="BorderBrush" TargetName="Border" Value="{DynamicResource Color1}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
@@ -80,7 +82,8 @@
         <Setter Property="Background" Value="{DynamicResource Color2}"/>
         <Setter Property="Foreground" Value="Black"/>
         <Setter Property="IsEditable" Value="False"/>
-
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
         <!--Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ComboBox}">

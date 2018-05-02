@@ -533,12 +533,14 @@ namespace Stacker
 
             DownButton.PreviewMouseLeftButtonUp += DirectButtonControl;
             DownButton.PreviewMouseLeftButtonDown += DirectButtonControl;
-            
+
             //закрашиваем надписи белым
-            FartherButton.Foreground = new SolidColorBrush(Color.FromArgb(0xFF, 0xFC, 0xFF, 0xF5));
-            CloserButton.Foreground = new SolidColorBrush(Color.FromArgb(0xFF, 0xFC, 0xFF, 0xF5));
-            UpButton.Foreground = new SolidColorBrush(Color.FromArgb(0xFF, 0xFC, 0xFF, 0xF5));
-            DownButton.Foreground = new SolidColorBrush(Color.FromArgb(0xFF, 0xFC, 0xFF, 0xF5));
+            Brush brush = new SolidColorBrush(Color.FromArgb(0xFF, 0xFC, 0xFF, 0xF5));
+
+            FartherButton.Foreground = brush;
+            CloserButton.Foreground = brush;
+            UpButton.Foreground = brush;
+            DownButton.Foreground = brush;
         }
 
         //Обработчик нажатия кнопки "ближе"
