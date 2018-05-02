@@ -17,7 +17,7 @@
 
 
 
-    <Grid Margin="1,1,1,3" Background="{DynamicResource Color3}">
+    <Grid Margin="1,1,1,3" Background="{DynamicResource Color5}">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
@@ -35,7 +35,7 @@
         </StatusBar>
 
         <!--TabControl-->
-        <TabControl x:Name="Tabs" Margin="1" FontSize="16" Background="{DynamicResource Color5}" BorderBrush="{DynamicResource Color2}">
+        <TabControl x:Name="Tabs" Margin="1" FontSize="16" Background="{DynamicResource Color5}" BorderBrush="{DynamicResource Color2}" >
             <!--Auto Mode Tab-->
             <TabItem x:Name="AutoTabItrm" Header="_Автоматический режим " Margin="0" BorderBrush="{DynamicResource Color3}" Background="{DynamicResource Color4}" Height="30">
                 <Grid Background="{DynamicResource Color5}" Margin="0">
@@ -66,7 +66,7 @@
             </TabItem>
 
             <!--SemiAuto Tab-->
-            <TabItem x:Name="SemiAutoTabItem" Header="_Полуавтоматический режим" Background="{DynamicResource Color4}" BorderBrush="{DynamicResource Color3}" Height="30" Margin="0">
+            <TabItem x:Name="SemiAutoTabItem" Header="_Полуавтоматический режим" BorderBrush="{DynamicResource Color3}" Background="{DynamicResource Color4}"  Height="30" Margin="0">
                 <Grid Margin="0" Background="{DynamicResource Color5}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="1*"/>
