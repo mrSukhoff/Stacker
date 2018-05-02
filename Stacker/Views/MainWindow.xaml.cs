@@ -62,7 +62,6 @@ namespace Stacker
         const string Header4 = " Кол-во ";
         const string Header5 = " Ячейка ";
 
-        Window SimpleWindow;
 
         //#####################################################################################################
         //Основная точка входа -------------------------------------------------------------------------------!
@@ -105,8 +104,7 @@ namespace Stacker
             OrderManager.Orders.CollectionChanged += OrdersCollectionChanged;
             OrderManager.StartTimer();
 
-            SimpleWindow = new SimpleWindow();
-            SimpleWindow.Show();
+
         }
 
         //Настраиваем визуальные компоненты

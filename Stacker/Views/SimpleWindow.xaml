@@ -1,0 +1,114 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:Stacker.ViewModel"
+        x:Name="StackerWindow" x:Class="Stacker.SimpleWindow"
+        mc:Ignorable="d"
+        Title="Штабелёр" 
+        Icon="/Stacker;component/Resources/Stacker.ico"
+        WindowStartupLocation="CenterScreen"
+        Width="800"
+        Height="800"
+        ResizeMode="CanMinimize"
+        SnapsToDevicePixels="True"
+        Background="{DynamicResource Color5}"
+        BorderBrush="{DynamicResource Color5}">
+
+    <Window.DataContext>
+        <vm:ViewModel/>
+    </Window.DataContext>
+
+    <!--Main Grid-->
+    <Grid Background="{StaticResource Color5}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TabControl Grid.Row="0" Margin="5 5 5 5" BorderThickness="1" Background="{DynamicResource Color5}" BorderBrush="{DynamicResource Color1}">
+            <!-- -Auto Tab-->
+            <TabItem Header=" Автоматичесий режим " FontSize="24" Background="{DynamicResource Color3}" BorderBrush="{DynamicResource Color5}">
+                <Grid Background="{StaticResource Color5}">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Selected Cell Label-->
+                    <TextBlock Text="X-10-10" Grid.Row="0" FontSize="72" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{StaticResource Color5}" Foreground="{StaticResource Color2}"/>
+
+                    <!--IsNotAvailableLabel-->
+                    <Label Content="!!!" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0 0 0 20" Width="278" Foreground="#FFCF3D3D" FontSize="24" HorizontalContentAlignment="Center"/>
+
+                    <!--Comboboxes Labels-->
+                    <Label Content="Стеллаж" Grid.Row="1" HorizontalAlignment="Left"   VerticalAlignment="Top" Margin="100 0 0 0" Width="125" Height="45" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Bold" Foreground="{DynamicResource Color2}"/>
+                    <Label Content="Ряд"     Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0 0 0 0"   Width="125" Height="45" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Bold" Foreground="{DynamicResource Color2}"/>
+                    <Label Content="Этаж"    Grid.Row="1" HorizontalAlignment="Right"  VerticalAlignment="Top" Margin="0 0 100 0" Width="125" Height="45" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Bold" Foreground="{DynamicResource Color2}"/>
+                    
+                    <!-- Comboboxes-->
+                    <Grid Grid.Row="1">
+                        <ComboBox Grid.Row="1" HorizontalAlignment="Left"   VerticalAlignment="Center" Margin="100,0,0,0" Width="125" Height="100" />
+                        <ComboBox Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 0"   Width="125" Height="100"/>
+                        <ComboBox Grid.Row="1" HorizontalAlignment="Right"  VerticalAlignment="Center" Margin="0,0,100,0" Width="125" Height="100"/>
+                    </Grid>
+
+                    <!--Buttons-->
+                    <Grid Grid.Row="2" >
+                        <Button Content="_Привезти" VerticalAlignment="Center" HorizontalAlignment="Left"  Margin="120,0,0,0" Width="125" Height="75" Style="{DynamicResource RegularButtonStyle}" />
+                        <Button Content="_Увезти"   VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,120,0" Width="125" Height="75" IsEnabled="False" Style="{DynamicResource RegularButtonStyle}"/>
+                    </Grid>
+
+                </Grid>
+            </TabItem>
+
+            <!-- Manual Tab-->
+            <TabItem Header=" Ручной режим " FontSize="24"  Background="{DynamicResource Color3}" BorderBrush="{StaticResource Color5}">
+
+                <Grid Background="{StaticResource Color5}">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="1.5*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="1.5*"/>
+                    </Grid.RowDefinitions>
+
+                    <!--Platform Control-->
+                    <Label Content="СТОЛ" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,14,0,0" Foreground="{DynamicResource Color2}" HorizontalContentAlignment="Center" Width="220" FontSize="20"/>
+                    <Button Content="X"   HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Row="0" Margin="60,0,0,0"  Width="80" Height="80" FontSize="20" Style="{DynamicResource RegularButtonStyle}"/>
+                    <Button Content="Y"   HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Row="0" Margin="200,0,0,0" Width="80" Height="80" FontSize="20" Style="{DynamicResource RegularButtonStyle}"/>
+
+                    <!--To Start Position-->
+                    <TextBlock Text="В начало"     HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,79,84"  FontSize="20" Foreground="{DynamicResource Color2}" />
+                    <Button    Content="&gt;0&lt;" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,80,0"   FontSize="24" Grid.Row="0" Width="80" Height="80" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Padding="1,1,1,5" Style="{DynamicResource RegularButtonStyle}"/>
+
+                    <!--Crane Movement-->
+                    <Button Content="ВВЕРХ"  HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Row="1" Margin="0 0 0 0"   Width="120" Height="120" Style="{DynamicResource RegularButtonStyle}"/>
+                    <Button Content="ДАЛЬШЕ" HorizontalAlignment="Left"   VerticalAlignment="Center" Grid.Row="2" Margin="160,0,0,0" Width="120" Height="120" Style="{DynamicResource RegularButtonStyle}"/>
+                    <Button Content="БЛИЖЕ"  HorizontalAlignment="Right"  VerticalAlignment="Center" Grid.Row="2" Margin="0,0,160,0" Width="120" Height="120" Style="{DynamicResource RegularButtonStyle}"/>
+                    <Button Content="ВНИЗ"   HorizontalAlignment="Center" VerticalAlignment="Top"    Grid.Row="3" Margin="0 0 0 0"   Width="120" Height="120" Style="{DynamicResource RegularButtonStyle}"/>
+
+                    <!--Reset Button-->
+                    <Button Content=" _Сбросить " HorizontalAlignment="Left"  VerticalAlignment="Bottom" Grid.Row="3" Margin="20,0,0,20" Height="50" Style="{DynamicResource RegularButtonStyle}"/>
+
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <!-- Statusbar-->
+        <StatusBar Height="50" VerticalAlignment="Bottom" Margin="0,0,112,0" Grid.Row="1" Background="{StaticResource Color4}" VerticalContentAlignment="Center" BorderBrush="{DynamicResource Color4}" Foreground="{DynamicResource Color2}">
+            <Label x:Name="RowLabel"   FontSize="20" Content="Ряд : 00"/>
+            <Label x:Name="FloorLabel" FontSize="20" Content="Этаж : 00"/>
+            <Label x:Name="SPLabel"    FontSize="20" Content="Нач.Поз."/>
+            <Label x:Name="RLabel"     FontSize="20" Content="Ряд"/>
+            <Label x:Name="FLabel"     FontSize="20" Content="Этаж"/>
+        </StatusBar>
+
+        <!-- Stop Button-->
+        <Button  Content="СТОП!" VerticalAlignment="Bottom" HorizontalAlignment="Right" Grid.Row="1"  Height="50"  Width="112" Style="{DynamicResource StopButtonStyle}"/>
+    </Grid>
+</Window>
