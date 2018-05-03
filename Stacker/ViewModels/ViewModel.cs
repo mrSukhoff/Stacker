@@ -12,6 +12,51 @@ namespace Stacker.ViewModel
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        public string SelectedAddress { get { return _selectedRack + "-" + _selectedRow + "-" + _selectedFloor; } }
+
+        public char[] RackItems { get => _rackItems; }
+
+        public int[] RowItems { get => _rowItems; }
+
+        public int[] FloorItems { get => _floorItems; }
+
+        public char SelectedRack
+        {
+            get => _selectedRack;
+            set { _selectedRack = value; OnPropertyChahged("SelectedAddress"); OnPropertyChahged("IsCellNotAvailable"); }
+        }
+
+        public int SelectedRow
+        {
+            get => _selectedRow;
+            set { _selectedRow = value; OnPropertyChahged("SelectedAddress"); OnPropertyChahged("IsCellNotAvailable"); }
+        }
+
+        public int SelectedFloor
+        {
+            get => _selectedFloor;
+            set { _selectedFloor = value; OnPropertyChahged("SelectedAddress"); OnPropertyChahged("IsCellNotAvailable"); }
+        }
+
+        public string IsCellNotAvailable
+        { get
+            { return Model.IsCellNotAvailable(_selectedRack, _selectedRow, _selectedFloor) == true ? "Ячейка не доступна!" : ""; }
+        }
+
+        public bool IsTakeAwayButtonAvailable
+        {
+            get => isTakeAwayButtonAvailable;
+            set => isTakeAwayButtonAvailable = value;
+        }
+
+        public bool IsBringButtonAvailable
+        {
+            get => isBringButtonAvailable;
+            set => isBringButtonAvailable = value;
+        }
+
+
+        //Внутренние поля класса
         //Модель штабелёра
         StackerModel Model;
 
@@ -24,6 +69,9 @@ namespace Stacker.ViewModel
         int _selectedRow;
         int _selectedFloor;
 
+        bool isTakeAwayButtonAvailable;
+        bool isBringButtonAvailable;
+
         //конструктор
         public ViewModel()
         {
@@ -31,6 +79,7 @@ namespace Stacker.ViewModel
             FillItems();
         }
 
+        //заполняем комбобоксы
         private void FillItems()
         {
             _rackItems = new char[]{Model.Settings.LeftRackName, Model.Settings.RightRackName};
@@ -39,15 +88,7 @@ namespace Stacker.ViewModel
             _floorItems = new int[Model.Settings.StackerHight];
             for (int i = 0; i < _floorItems.Length; i++) { _floorItems[i] = i + 1; }
         }
-
-        private string _selectedAddress="X-0-0";
-
-        public string SelectedAddress { get {  return _selectedAddress = _selectedRack + "-" + _selectedRow + 1 + "-" + _selectedFloor + 1; } }
-        public char[] RackItems  { get => _rackItems; }
-        public int[] RowItems    { get => _rowItems; }
-        public int[] FloorItems  { get => _floorItems; }
-        public char SelectedRack  { get => _selectedRack; set { _selectedRack = value; OnPropertyChahged("SelectedAddress"); } }
-        public int SelectedRow   { get => _selectedRow; set { _selectedRow = value; OnPropertyChahged("SelectedAddress"); } }
-        public int SelectedFloor { get => _selectedFloor; set { _selectedFloor = value; OnPropertyChahged("SelectedAddress"); } }
+                
+        
     }
 }
