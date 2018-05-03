@@ -213,6 +213,7 @@
                                     <ColumnDefinition Width="10*"/>
                                     <ColumnDefinition Width="5*"/>
                                 </Grid.ColumnDefinitions>
+                                
                                 <Button x:Name="CloserButton"  Content="БЛИЖЕ"  HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="52,4,52,3"     Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="2" Height="100" FontSize="20" ClickMode="Press" Foreground="{DynamicResource Color1}" Style="{DynamicResource RegularButtonStyle}"/>
                                 <Button x:Name="DownButton"    Content="ВНИЗ"   HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="52,4.5,52,2.5" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="2" Grid.RowSpan="2" Height="100" FontSize="20" ClickMode="Press" Foreground="{DynamicResource Color1}" Style="{DynamicResource RegularButtonStyle}"/>
                                 <Button x:Name="UpButton"      Content="ВВЕРХ"  HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="52,4,52,3.5"   Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="2"              Height="100" FontSize="20" ClickMode="Press" Foreground="{DynamicResource Color1}" Style="{DynamicResource RegularButtonStyle}" />
@@ -220,8 +221,8 @@
                                 
                                 <Button x:Name="StopButton"    Content="СТОП!" Grid.Column="3" Margin="0,0,1,1" Grid.Row="3" BorderBrush="{DynamicResource Color2}" Background="#FF9E2E2E" FontSize="24" HorizontalAlignment="Right" Width="100" Height="50" VerticalAlignment="Bottom" Foreground="Black" Style="{DynamicResource StopButtonStyle}" ClickMode="Press" IsCancel="True" Click="StopButton_Click" Grid.ColumnSpan="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
                                 
-                                <Button x:Name="ManPlatformLeftButton" Content="X" Margin="10,31,0,0" FontSize="20" Click="ManPlatformLeftButton_Checked" Height="35" HorizontalAlignment="Left" Width="35" Foreground="Black" VerticalAlignment="Top" Style="{DynamicResource RegularButtonStyle}"/>
-                                <Button x:Name="ManPlatformRightButton" Content="Y" Margin="78,31,0,0" HorizontalAlignment="Left" Width="35" FontSize="20" Click="ManPlatformRightButton_Checked" Height="35" Foreground="Black" VerticalAlignment="Top" Style="{DynamicResource RegularButtonStyle}"/>
+                                <Button x:Name="ManPlatformLeftButton" Content="X" Margin="10,29,0,0" FontSize="20" Click="ManPlatformLeftButton_Checked" Height="35" HorizontalAlignment="Left" Width="35" Foreground="Black" VerticalAlignment="Top" Style="{DynamicResource RegularButtonStyle}"/>
+                                <Button x:Name="ManPlatformRightButton" Content="Y" Margin="78,29,0,0" HorizontalAlignment="Left" Width="35" FontSize="20" Click="ManPlatformRightButton_Checked" Height="35" Foreground="Black" VerticalAlignment="Top" Style="{DynamicResource RegularButtonStyle}" RenderTransformOrigin="0.487,-0.076"/>
                                 
                                 <CheckBox x:Name="LineMotionCheckbox" Content="По рядам" Grid.Column="3" HorizontalAlignment="Right" Margin="0,16,10,0" VerticalAlignment="Top" Height="32" Checked="LineMotionCheckbox_Checked" Foreground="#FFFCFFF5" Unchecked="LineMotionCheckbox_Unchecked" Grid.ColumnSpan="2" FontSize="20"/>
                                 

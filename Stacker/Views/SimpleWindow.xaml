@@ -9,8 +9,8 @@
         Title="Штабелёр" 
         Icon="/Stacker;component/Resources/Stacker.ico"
         WindowStartupLocation="CenterScreen"
-        Width="800"
-        Height="800"
+        Width="750"
+        Height="750"
         ResizeMode="CanMinimize"
         SnapsToDevicePixels="True"
         Background="{DynamicResource Color5}"
@@ -41,7 +41,7 @@
                     </Grid.RowDefinitions>
 
                     <!-- Selected Cell Label-->
-                    <TextBlock Text="X-10-10" Grid.Row="0" FontSize="72" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{StaticResource Color5}" Foreground="{StaticResource Color2}"/>
+                    <TextBlock Grid.Row="0" FontSize="72" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{StaticResource Color5}" Foreground="{StaticResource Color2}" Text="{Binding SelectedAddress, Mode=OneWay}"/>
 
                     <!--IsNotAvailableLabel-->
                     <Label Content="!!!" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0 0 0 20" Width="278" Foreground="#FFCF3D3D" FontSize="24" HorizontalContentAlignment="Center"/>
@@ -52,9 +52,9 @@
                     <Label Content="Этаж"    Grid.Row="1" HorizontalAlignment="Right"  VerticalAlignment="Top" Margin="0 0 100 0" Width="125" Height="45" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Bold" Foreground="{DynamicResource Color2}"/>
 
                     <!-- Comboboxes-->
-                    <ComboBox Grid.Row="1" HorizontalAlignment="Left"   VerticalAlignment="Center" Margin="100 0 0 0" Width="125" Height="100" />
-                    <ComboBox Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 0"   Width="125" Height="100"/>
-                    <ComboBox Grid.Row="1" HorizontalAlignment="Right"  VerticalAlignment="Center" Margin="0 0 100 0" Width="125" Height="100"/>
+                    <ComboBox Grid.Row="1" HorizontalAlignment="Left"   VerticalAlignment="Center" Margin="100 0 0 0" Width="125" Height="100" FontSize="36" ItemsSource="{Binding RackItems, Mode=OneWay}" SelectedIndex="{Binding SelectedRack}" />
+                    <ComboBox Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 0"   Width="125" Height="100" FontSize="36" ItemsSource="{Binding RowItems}" SelectedIndex="{Binding SelectedRow}"/>
+                    <ComboBox Grid.Row="1" HorizontalAlignment="Right"  VerticalAlignment="Center" Margin="0 0 100 0" Width="125" Height="100" FontSize="36" ItemsSource="{Binding FloorItems}" SelectedIndex="{Binding SelectedFloor}"/>
 
 
                     <!--Buttons-->
@@ -79,13 +79,13 @@
                     </Grid.RowDefinitions>
 
                     <!--Platform Control-->
-                    <Label Content="СТОЛ" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,14,0,0" Foreground="{DynamicResource Color2}" HorizontalContentAlignment="Center" Width="220" FontSize="20"/>
-                    <Button Content="X"   HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Row="0" Margin="60,0,0,0"  Width="80" Height="80" FontSize="20" Style="{DynamicResource RegularButtonStyle}"/>
-                    <Button Content="Y"   HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Row="0" Margin="200,0,0,0" Width="80" Height="80" FontSize="20" Style="{DynamicResource RegularButtonStyle}"/>
+                    <Label Content="СТОЛ" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top"    Margin="60 0 0 0"  Width="220" Foreground="{DynamicResource Color2}" HorizontalContentAlignment="Center" FontSize="20"/>
+                    <Button Content="X"   Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="60,0,0,0"  Width="80"  Height="80" FontSize="20" Style="{DynamicResource RegularButtonStyle}"/>
+                    <Button Content="Y"   Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="200,0,0,0" Width="80"  Height="80" FontSize="20" Style="{DynamicResource RegularButtonStyle}"/>
 
                     <!--To Start Position-->
-                    <TextBlock Text="В начало"     HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,79,84"  FontSize="20" Foreground="{DynamicResource Color2}" />
-                    <Button    Content="&gt;0&lt;" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,80,0"   FontSize="24" Grid.Row="0" Width="80" Height="80" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Padding="1,1,1,5" Style="{DynamicResource RegularButtonStyle}"/>
+                    <TextBlock Text="В начало"     Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top"    Margin="0,0,79,84" FontSize="20" Foreground="{DynamicResource Color2}" />
+                    <Button    Content="&gt;0&lt;" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,80,0"  Width="80" Height="80" FontSize="24" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Padding="1,1,1,5" Style="{DynamicResource RegularButtonStyle}"/>
 
                     <!--Crane Movement-->
                     <Button Content="ВВЕРХ"  HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Row="1" Margin="0 0 0 0"   Width="120" Height="120" Style="{DynamicResource RegularButtonStyle}"/>

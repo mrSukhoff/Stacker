@@ -79,7 +79,7 @@
     <!--Combobox Style-->
     <Style TargetType="{x:Type ComboBox}">
         <Setter Property="Background" Value="{DynamicResource Color2}"/>
-        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="Foreground" Value="#000"/>
         <Setter Property="IsEditable" Value="False"/>
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
