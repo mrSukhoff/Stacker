@@ -80,8 +80,8 @@
 
                     <!--Platform Control-->
                     <Label Content="СТОЛ" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top"    Margin="60 0 0 0"  Width="220" Foreground="{DynamicResource Color2}" HorizontalContentAlignment="Center" FontSize="20"/>
-                    <Button Content="X"   Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="60,0,0,0"  Width="80"  Height="80" FontSize="20" Style="{DynamicResource RegularButtonStyle}"/>
-                    <Button Content="Y"   Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="200,0,0,0" Width="80"  Height="80" FontSize="20" Style="{DynamicResource RegularButtonStyle}"/>
+                    <Button Content="{Binding LeftPlatformButtonName}"   Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="60,0,0,0"  Width="80"  Height="80" FontSize="32" Style="{DynamicResource RegularButtonStyle}" IsEnabled="{Binding IsLeftPlatformButtonAvailable}"/>
+                    <Button Content="{Binding RightPlatformButtonName}"  Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="200,0,0,0" Width="80"  Height="80" FontSize="32" Style="{DynamicResource RegularButtonStyle}" IsEnabled="{Binding IsRightPlatformButtonAvailable}"/>
 
                     <!--To Start Position-->
                     <TextBlock Text="В начало"     Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top"    Margin="0,0,79,84" FontSize="20" Foreground="{DynamicResource Color2}" />
@@ -102,11 +102,11 @@
 
         <!-- Statusbar-->
         <StatusBar Height="50" VerticalAlignment="Bottom" Margin="0,0,112,0" Grid.Row="1" Background="{StaticResource Color4}" VerticalContentAlignment="Center" BorderBrush="{DynamicResource Color4}" Foreground="{DynamicResource Color2}">
-            <Label x:Name="RowLabel"   FontSize="20" Content="Ряд : 00"/>
-            <Label x:Name="FloorLabel" FontSize="20" Content="Этаж : 00"/>
-            <Label x:Name="SPLabel"    FontSize="20" Content="Нач.Поз."/>
-            <Label x:Name="RLabel"     FontSize="20" Content="Ряд"/>
-            <Label x:Name="FLabel"     FontSize="20" Content="Этаж"/>
+            <Label x:Name="RowLabel"   FontSize="20" Content="{Binding CurrentRow, Mode=OneWay}"/>
+            <Label x:Name="FloorLabel" FontSize="20" Content="{Binding CurrentFloor}"/>
+            <Label x:Name="SPLabel"    FontSize="20" Content="Нач.Поз." IsEnabled="{Binding IsStartPosition}"/>
+            <Label x:Name="RLabel"     FontSize="20" Content="Ряд" IsEnabled="{Binding IsRowMark}"/>
+            <Label x:Name="FLabel"     FontSize="20" Content="Этаж" IsEnabled="{Binding IsFloorMark}"/>
         </StatusBar>
 
         <!-- Stop Button-->

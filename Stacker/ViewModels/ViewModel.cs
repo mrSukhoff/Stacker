@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using Stacker.Model;
 
 
@@ -12,7 +13,35 @@ namespace Stacker.ViewModel
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public string SelectedAddress { get { return _selectedRack + "-" + _selectedRow + "-" + _selectedFloor; } }
+        //StatusBar
+        public string CurrentRow
+        {
+            get => String.Concat("Ряд: ", Model.CraneState.ActualRow.ToString().PadLeft(2, '0'));
+        }
+
+        public string CurrentFloor
+        {
+            get => String.Concat("Этаж: ", Model.CraneState.ActualFloor.ToString().PadLeft(2, '0'));
+        }
+
+        public bool IsStartPosition
+        {
+            get => Model.CraneState.IsStartPosiotion;
+        }
+
+        public bool IsRowMark
+        {
+            get => Model.CraneState.IsRowMark;
+        }
+
+        public bool IsFloorMark
+        {
+            get => Model.CraneState.IsFloorMark;
+        }
+
+        //SemiAutoTab
+
+        public string SelectedAddress { get => String.Concat(_selectedRack, "-", _selectedRow, "-", _selectedFloor); }
 
         public char[] RackItems { get => _rackItems; }
 
@@ -43,18 +72,36 @@ namespace Stacker.ViewModel
             { return Model.IsCellNotAvailable(_selectedRack, _selectedRow, _selectedFloor) == true ? "Ячейка не доступна!" : ""; }
         }
 
-        public bool IsTakeAwayButtonAvailable
-        {
-            get => isTakeAwayButtonAvailable;
-            set => isTakeAwayButtonAvailable = value;
-        }
-
         public bool IsBringButtonAvailable
         {
-            get => isBringButtonAvailable;
-            set => isBringButtonAvailable = value;
+            get => !Model.IsCellNotAvailable(_selectedRack, _selectedRow, _selectedFloor);
         }
 
+        public bool IsTakeAwayButtonAvailable
+        {
+            get => !Model.IsCellNotAvailable(_selectedRack, _selectedRow, _selectedFloor);
+        }
+
+        //ManualModeTab
+        public char LeftPlatformButtonName
+        {
+            get => Model.Settings.LeftRackName;
+        }
+
+        public char RightPlatformButtonName
+        {
+            get => Model.Settings.RightRackName;
+        }
+
+        public bool IsLeftPlatformButtonAvailable //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        {
+            get => true;
+        }
+
+        public bool IsRightPlatformButtonAvailable //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        {
+            get => true;
+        }
 
         //Внутренние поля класса
         //Модель штабелёра
@@ -68,9 +115,6 @@ namespace Stacker.ViewModel
         char _selectedRack;
         int _selectedRow;
         int _selectedFloor;
-
-        bool isTakeAwayButtonAvailable;
-        bool isBringButtonAvailable;
 
         //конструктор
         public ViewModel()
