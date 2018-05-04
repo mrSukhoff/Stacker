@@ -52,19 +52,32 @@ namespace Stacker.ViewModel
         public char SelectedRack
         {
             get => _selectedRack;
-            set { _selectedRack = value; OnPropertyChahged("SelectedAddress"); OnPropertyChahged("IsCellNotAvailable"); }
+            set
+            {
+                _selectedRack = value;
+                availabilityChanged();
+                
+            }
         }
 
         public int SelectedRow
         {
             get => _selectedRow;
-            set { _selectedRow = value; OnPropertyChahged("SelectedAddress"); OnPropertyChahged("IsCellNotAvailable"); }
+            set
+            {
+                _selectedRow = value;
+                availabilityChanged();
+            }
         }
 
         public int SelectedFloor
         {
             get => _selectedFloor;
-            set { _selectedFloor = value; OnPropertyChahged("SelectedAddress"); OnPropertyChahged("IsCellNotAvailable"); }
+            set
+            {
+                _selectedFloor = value;
+                availabilityChanged();
+            }
         }
 
         public string IsCellNotAvailable
@@ -103,6 +116,13 @@ namespace Stacker.ViewModel
             get => true;
         }
 
+        //комманды
+
+        /*public RelayCommand BringCommand
+        {
+            get { };
+        }*/
+
         //Внутренние поля класса
         //Модель штабелёра
         StackerModel Model;
@@ -133,6 +153,12 @@ namespace Stacker.ViewModel
             for (int i = 0; i < _floorItems.Length; i++) { _floorItems[i] = i + 1; }
         }
                 
-        
+        void availabilityChanged()
+        {
+            OnPropertyChahged("SelectedAddress");
+            OnPropertyChahged("IsCellNotAvailable");
+            OnPropertyChahged("IsBringButtonAvailable");
+            OnPropertyChahged("IsTakeAwayButtonAvailable");
+        }
     }
 }
