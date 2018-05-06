@@ -55,7 +55,7 @@ namespace Stacker.ViewModel
             set
             {
                 _selectedRack = value;
-                availabilityChanged();
+                SelectionChanged();
                 
             }
         }
@@ -66,7 +66,7 @@ namespace Stacker.ViewModel
             set
             {
                 _selectedRow = value;
-                availabilityChanged();
+                SelectionChanged();
             }
         }
 
@@ -76,21 +76,24 @@ namespace Stacker.ViewModel
             set
             {
                 _selectedFloor = value;
-                availabilityChanged();
+                SelectionChanged();
             }
         }
 
         public string IsCellNotAvailable
-        { get
-            { return Model.IsCellNotAvailable(_selectedRack, _selectedRow, _selectedFloor) == true ? "Ячейка не доступна!" : ""; }
+        {
+            get
+            {
+                return Model.IsCellNotAvailable(_selectedRack, _selectedRow, _selectedFloor) == true ? "Ячейка не доступна!" : "";
+            }
         }
 
-        public bool IsBringButtonAvailable
+        public bool IsBringButtonAvailable //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         {
             get => !Model.IsCellNotAvailable(_selectedRack, _selectedRow, _selectedFloor);
         }
 
-        public bool IsTakeAwayButtonAvailable
+        public bool IsTakeAwayButtonAvailable //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         {
             get => !Model.IsCellNotAvailable(_selectedRack, _selectedRow, _selectedFloor);
         }
@@ -106,7 +109,7 @@ namespace Stacker.ViewModel
             get => Model.Settings.RightRackName;
         }
 
-        public bool IsLeftPlatformButtonAvailable //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        public bool IsLeftPlatformButtonAvailable //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         {
             get => true;
         }
@@ -118,10 +121,13 @@ namespace Stacker.ViewModel
 
         //комманды
 
-        /*public RelayCommand BringCommand
+        public RelayCommand BringCommand = new RelayCommand(BringCommandExecute,null);
+
+        private static void BringCommandExecute(object obj)
         {
-            get { };
-        }*/
+            throw new NotImplementedException();
+        }
+
 
         //Внутренние поля класса
         //Модель штабелёра
@@ -153,7 +159,7 @@ namespace Stacker.ViewModel
             for (int i = 0; i < _floorItems.Length; i++) { _floorItems[i] = i + 1; }
         }
                 
-        void availabilityChanged()
+        void SelectionChanged()
         {
             OnPropertyChahged("SelectedAddress");
             OnPropertyChahged("IsCellNotAvailable");
