@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using Stacker.Model;
 
@@ -87,17 +89,7 @@ namespace Stacker.ViewModel
                 return Model.IsCellNotAvailable(_selectedRack, _selectedRow, _selectedFloor) == true ? "Ячейка не доступна!" : "";
             }
         }
-
-        public bool IsBringButtonAvailable //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        {
-            get => !Model.IsCellNotAvailable(_selectedRack, _selectedRow, _selectedFloor);
-        }
-
-        public bool IsTakeAwayButtonAvailable //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        {
-            get => !Model.IsCellNotAvailable(_selectedRack, _selectedRow, _selectedFloor);
-        }
-
+ 
         //ManualModeTab
         public char LeftPlatformButtonName
         {
@@ -109,29 +101,19 @@ namespace Stacker.ViewModel
             get => Model.Settings.RightRackName;
         }
 
-        public bool IsLeftPlatformButtonAvailable //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        {
-            get => true;
-        }
-
-        public bool IsRightPlatformButtonAvailable //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        {
-            get => true;
-        }
-
         //комманды
+        public RelayCommand BringCmd           { get => _bringCmd;           set => _bringCmd = value; }
+        public RelayCommand TakeAwayCmd        { get => _takeAwayCmd;        set => _takeAwayCmd = value; }
+        public RelayCommand PlatformToLeftCmd  { get => _platformToLeftCmd;  set => _platformToLeftCmd = value; }
+        public RelayCommand PlatformToRightCmd { get => _platformToRightCmd; set => _platformToRightCmd = value; }
+        public RelayCommand ToStartPositionCmd { get => _toStartPositionCmd; set => _toStartPositionCmd = value; }
+        public RelayCommand ResetCmd           { get => _resetCmd;           set => _resetCmd = value; }
+        public RelayCommand StopCmd            { get => _stopCmd;            set => _stopCmd = value; }
 
-        public RelayCommand BringCommand = new RelayCommand(BringCommandExecute,null);
-
-        private static void BringCommandExecute(object obj)
-        {
-            throw new NotImplementedException();
-        }
-
-
-        //Внутренние поля класса
+        //Внутренние поля класса-----------------------------------------------------------------------------
         //Модель штабелёра
         StackerModel Model;
+        ObservableCollection<string> Errors;
 
         //Наборы значений для комбобоксов
         char[] _rackItems;
@@ -142,14 +124,83 @@ namespace Stacker.ViewModel
         int _selectedRow;
         int _selectedFloor;
 
+        RelayCommand _bringCmd;
+        RelayCommand _takeAwayCmd;
+        RelayCommand _platformToLeftCmd;
+        RelayCommand _platformToRightCmd;
+        RelayCommand _toStartPositionCmd;
+        RelayCommand _resetCmd;
+        RelayCommand _stopCmd;
+
+
         //конструктор
         public ViewModel()
         {
             Model = new StackerModel();
             FillItems();
+            InitCommands();
+            Errors = Model.CraneState.ErrorList;
+            Errors.CollectionChanged += ErrorAppeared;
         }
 
-        //заполняем комбобоксы
+        private void ErrorAppeared(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            Window ErrorWindow = new ErrorWindow();
+        }
+
+        //команда "Привезти"
+        void DoBringCommand(object obj)
+        {
+            bool rack = _selectedRack == Model.Settings.RightRackName;
+            Model.Crane.BringOrTakeAway( rack, _selectedRow, _selectedFloor, true);
+        }
+        bool CanExecuteBringCommand(object obj)
+        {
+            return Model.CraneState.IsStartPosiotion & !Model.CraneState.IsBinOnPlatform;
+        }
+
+        //команда "Увезти"
+        private void DoTakeAwayCmd(object obj)
+        {
+            bool rack = _selectedRack == Model.Settings.RightRackName;
+            Model.Crane.BringOrTakeAway(rack, _selectedRow, _selectedFloor, false);
+        }
+        private bool CanExecuteTakeAwayCmd(object arg)
+        {
+            return Model.CraneState.IsStartPosiotion & Model.CraneState.IsBinOnPlatform;
+        }
+
+        //команда "Платформа влево"
+        private void DoPlatformToLeftCmd(object obj) => Model.Crane.PlatformToRight();
+        private bool CanExecutePlatformToLeftCmd(object arg)
+        {
+            return IsStartPosition | ( IsRowMark & IsFloorMark );
+        }
+
+        //команда "Платформа вправо"
+        private void DoPlatformToRightCmd(object obj) => Model.Crane.PlatformToLeft();
+        private bool CanExecutePlatformToRightCmd(object obj)
+        {
+            return IsStartPosition | (IsRowMark & IsFloorMark);
+        }
+
+        //команда "переместить на начальную позицию"
+        private void DoToStartPositionCmd(object obj)
+        {
+            Model.Crane.GotoXY(0, 0);
+        }
+        private bool CanExecuteToStartPositionCmd(object arg)
+        {
+            return true;
+        }
+
+        //Команда "Сбросить"
+        private void DoResetCmd(object obj) => Model.Crane.SubmitError();
+
+        //команда "СТОП"
+        private void DoStopCmd(object obj) => Model.Crane.StopButton();
+
+        //готовим списки для комбобоксов
         private void FillItems()
         {
             _rackItems = new char[]{Model.Settings.LeftRackName, Model.Settings.RightRackName};
@@ -158,7 +209,20 @@ namespace Stacker.ViewModel
             _floorItems = new int[Model.Settings.StackerHight];
             for (int i = 0; i < _floorItems.Length; i++) { _floorItems[i] = i + 1; }
         }
-                
+
+        //инициализируем команды
+        private void InitCommands()
+        {
+            BringCmd = new RelayCommand(DoBringCommand, CanExecuteBringCommand);
+            TakeAwayCmd = new RelayCommand(DoTakeAwayCmd, CanExecuteTakeAwayCmd);
+            PlatformToLeftCmd = new RelayCommand(DoPlatformToLeftCmd, CanExecutePlatformToLeftCmd);
+            PlatformToRightCmd = new RelayCommand(DoPlatformToRightCmd, CanExecutePlatformToRightCmd);
+            ToStartPositionCmd = new RelayCommand(DoToStartPositionCmd, CanExecuteToStartPositionCmd);
+            ResetCmd = new RelayCommand(DoResetCmd);
+            StopCmd = new RelayCommand(DoStopCmd);
+        }
+
+        //оповещене кого требуется при изменении выбранной ячейки
         void SelectionChanged()
         {
             OnPropertyChahged("SelectedAddress");
@@ -166,5 +230,28 @@ namespace Stacker.ViewModel
             OnPropertyChahged("IsBringButtonAvailable");
             OnPropertyChahged("IsTakeAwayButtonAvailable");
         }
+
+        //управления движением крана
+        public void DirectButtonControl(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            bool state = e.ButtonState == System.Windows.Input.MouseButtonState.Pressed ? true : false;
+            switch (((System.Windows.Controls.Button)sender).Name)
+            {
+                case "FartherButton":
+                    Model.Crane.FartherButton(state);
+                    break;
+                case "CloserButton":
+                    Model.Crane.CloserButton(state);
+                    break;
+                case "UpButton":
+                    Model.Crane.UpButton(state);
+                    break;
+                case "DownButton":
+                    Model.Crane.DownButton(state);
+                    break;
+                default: return;
+            }
+        }
+
     }
 }

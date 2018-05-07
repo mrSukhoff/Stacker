@@ -4,8 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:Stacker.ViewModel"
-        xmlns:c="clr-namespace:Stacker.ViewModel"
-        xmlns:c="clr-namespace:Stacker.ViewModels"
         x:Name="StackerWindow" x:Class="Stacker.SimpleWindow"
         mc:Ignorable="d"
         Title="Штабелёр" 
@@ -16,16 +14,8 @@
         ResizeMode="CanMinimize"
         SnapsToDevicePixels="True"
         Background="{DynamicResource Color5}"
-        BorderBrush="{DynamicResource Color5}">
-
-
-    <Window.DataContext>
-        <vm:ViewModel/>
-    </Window.DataContext>
-
-    <Window.CommandBindings>
-        <CommandBinding Command="{c:Commands}" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed" />
-    </Window.CommandBindings>
+        BorderBrush="{DynamicResource Color5}" 
+        d:DataContext="{d:DesignInstance {x:Type vm:ViewModel}}">
 
     <!--Main Grid-->
     <Grid Background="{StaticResource Color5}">
@@ -49,7 +39,7 @@
                     <TextBlock Grid.Row="0" FontSize="72" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{StaticResource Color5}" Foreground="{StaticResource Color2}" Text="{Binding SelectedAddress, Mode=OneWay}"/>
 
                     <!--IsNotAvailableLabel-->
-                    <Label Content="{Binding IsCellNotAvailable}" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0 0 0 20" Width="278" Foreground="#FFCF3D3D" FontSize="24" HorizontalContentAlignment="Center"/>
+                    <Label Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0 0 0 20" Width="278" Foreground="#FFCF3D3D" FontSize="24" HorizontalContentAlignment="Center" Content="{Binding IsCellNotAvailable}" />
 
                     <!--Comboboxes Labels-->
                     <Label Content="Стеллаж" Grid.Row="1" HorizontalAlignment="Left"   VerticalAlignment="Top" Margin="100 0 0 0" Width="125" Height="45" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Bold" Foreground="{DynamicResource Color2}"/>
@@ -64,8 +54,8 @@
 
                     <!--Buttons-->
                     <Grid Grid.Row="2" >
-                        <Button Content="_Привезти" VerticalAlignment="Center" HorizontalAlignment="Left"  Margin="120,0,0,0" Width="125" Height="75" Style="{DynamicResource RegularButtonStyle}" />
-                        <Button Content="_Увезти"   VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,120,0" Width="125" Height="75" IsEnabled="{Binding IsTakeAwayButtonAvailable}" Style="{DynamicResource RegularButtonStyle}"/>
+                        <Button Content="_Привезти" VerticalAlignment="Center" HorizontalAlignment="Left"  Margin="120,0,0,0" Width="125" Height="75" Style="{DynamicResource RegularButtonStyle}" Command="{Binding BringCmd}" />
+                        <Button Content="_Увезти"   VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,120,0" Width="125" Height="75" Style="{DynamicResource RegularButtonStyle}" Command="{Binding TakeAwayCmd}" />
                     </Grid>
 
                 </Grid>
@@ -85,21 +75,21 @@
 
                     <!--Platform Control-->
                     <Label Content="СТОЛ" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top"    Margin="60 0 0 0"  Width="220" Foreground="{DynamicResource Color2}" HorizontalContentAlignment="Center" FontSize="20"/>
-                    <Button Content="{Binding LeftPlatformButtonName}"   Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="60,0,0,0"  Width="80"  Height="80" FontSize="32" Style="{DynamicResource RegularButtonStyle}" IsEnabled="{Binding IsLeftPlatformButtonAvailable}"/>
-                    <Button Content="{Binding RightPlatformButtonName}"  Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="200,0,0,0" Width="80"  Height="80" FontSize="32" Style="{DynamicResource RegularButtonStyle}" IsEnabled="{Binding IsRightPlatformButtonAvailable}"/>
+                    <Button  Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="60,0,0,0"  Width="80"  Height="80" FontSize="32" Style="{DynamicResource RegularButtonStyle}" Content="{Binding LeftPlatformButtonName}"  Command="{Binding PlatformToLeftCmd}"/>
+                    <Button  Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="200,0,0,0" Width="80"  Height="80" FontSize="32" Style="{DynamicResource RegularButtonStyle}" Content="{Binding RightPlatformButtonName}" Command="{Binding PlatformToRightCmd}"/>
 
                     <!--To Start Position-->
                     <TextBlock Text="В начало"     Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top"    Margin="0,0,79,84" FontSize="20" Foreground="{DynamicResource Color2}" />
-                    <Button    Content="&gt;0&lt;" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,80,0"  Width="80" Height="80" FontSize="24" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Padding="1,1,1,5" Style="{DynamicResource RegularButtonStyle}"/>
+                    <Button    Content="&gt;0&lt;" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,80,0"  Width="80" Height="80" FontSize="24" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Padding="1,1,1,5" Style="{DynamicResource RegularButtonStyle}" Command="{Binding ToStartPositionCmd}"/>
 
                     <!--Crane Movement-->
-                    <Button Content="ВВЕРХ"  HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Row="1" Margin="0 0 0 0"   Width="120" Height="120" Style="{DynamicResource RegularButtonStyle}"/>
-                    <Button Content="ДАЛЬШЕ" HorizontalAlignment="Left"   VerticalAlignment="Center" Grid.Row="2" Margin="160,0,0,0" Width="120" Height="120" Style="{DynamicResource RegularButtonStyle}"/>
-                    <Button Content="БЛИЖЕ"  HorizontalAlignment="Right"  VerticalAlignment="Center" Grid.Row="2" Margin="0,0,160,0" Width="120" Height="120" Style="{DynamicResource RegularButtonStyle}"/>
-                    <Button Content="ВНИЗ"   HorizontalAlignment="Center" VerticalAlignment="Top"    Grid.Row="3" Margin="0 0 0 0"   Width="120" Height="120" Style="{DynamicResource RegularButtonStyle}"/>
+                    <Button x:Name="UpButton"      Content="ВВЕРХ"  HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Row="1" Margin="0 0 0 0"   Width="120" Height="120" Style="{DynamicResource RegularButtonStyle}" PreviewMouseLeftButtonUp="DirectButtonControl" PreviewMouseLeftButtonDown="DirectButtonControl"/>
+                    <Button x:Name="FartherButton" Content="ДАЛЬШЕ" HorizontalAlignment="Left"   VerticalAlignment="Center" Grid.Row="2" Margin="160,0,0,0" Width="120" Height="120" Style="{DynamicResource RegularButtonStyle}" PreviewMouseLeftButtonDown="DirectButtonControl" PreviewMouseLeftButtonUp="DirectButtonControl"/>
+                    <Button x:Name="CloserButton"  Content="БЛИЖЕ"  HorizontalAlignment="Right"  VerticalAlignment="Center" Grid.Row="2" Margin="0,0,160,0" Width="120" Height="120" Style="{DynamicResource RegularButtonStyle}" PreviewMouseLeftButtonDown="DirectButtonControl" PreviewMouseLeftButtonUp="DirectButtonControl"/>
+                    <Button x:Name="DownButton"    Content="ВНИЗ"   HorizontalAlignment="Center" VerticalAlignment="Top"    Grid.Row="3" Margin="0 0 0 0"   Width="120" Height="120" Style="{DynamicResource RegularButtonStyle}" PreviewMouseLeftButtonDown="DirectButtonControl" PreviewMouseLeftButtonUp="DirectButtonControl"/>
 
                     <!--Reset Button-->
-                    <Button Content=" _Сбросить " HorizontalAlignment="Left"  VerticalAlignment="Bottom" Grid.Row="3" Margin="20,0,0,20" Height="50" Style="{DynamicResource RegularButtonStyle}"/>
+                    <Button Content=" _Сбросить " HorizontalAlignment="Left"  VerticalAlignment="Bottom" Grid.Row="3" Margin="20,0,0,20" Height="50" Style="{DynamicResource RegularButtonStyle}" Command="{Binding ResetCmd}"/>
 
                 </Grid>
             </TabItem>
@@ -115,6 +105,6 @@
         </StatusBar>
 
         <!-- Stop Button-->
-        <Button  Content="СТОП!" VerticalAlignment="Bottom" HorizontalAlignment="Right" Grid.Row="1"  Height="50"  Width="112" Style="{DynamicResource StopButtonStyle}"/>
+        <Button  Content="СТОП!" VerticalAlignment="Bottom" HorizontalAlignment="Right" Grid.Row="1"  Height="50"  Width="112" Style="{DynamicResource StopButtonStyle}" Command="{Binding StopCmd}"/>
     </Grid>
 </Window>

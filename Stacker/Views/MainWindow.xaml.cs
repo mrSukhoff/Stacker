@@ -543,7 +543,7 @@ namespace Stacker
             DownButton.Foreground = brush;
         }
 
-        //Обработчик нажатия кнопки "ближе"
+        //Обработчик нажатия кнопки
         private void DirectButtonControl(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             bool state = e.ButtonState == System.Windows.Input.MouseButtonState.Pressed ? true : false;
