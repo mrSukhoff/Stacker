@@ -110,10 +110,12 @@ namespace Stacker.ViewModel
         public RelayCommand ResetCmd           { get => _resetCmd;           set => _resetCmd = value; }
         public RelayCommand StopCmd            { get => _stopCmd;            set => _stopCmd = value; }
 
+        public ObservableCollection<string> Errors;
+
         //Внутренние поля класса-----------------------------------------------------------------------------
         //Модель штабелёра
         StackerModel Model;
-        ObservableCollection<string> Errors;
+        
 
         //Наборы значений для комбобоксов
         char[] _rackItems;
@@ -145,7 +147,7 @@ namespace Stacker.ViewModel
 
         private void ErrorAppeared(object sender, NotifyCollectionChangedEventArgs e)
         {
-            Window ErrorWindow = new ErrorWindow();
+           //Window ErrorWindow = new ErrorWindow();
         }
 
         //команда "Привезти"

@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:Stacker.ViewModel"
-        xmlns:local="clr-namespace:Stacker" x:Class="Stacker.ErrorWindow"
+        x:Class="Stacker.ErrorWindow"
         mc:Ignorable="d"
         Title="Ошибка!" 
         Width="750"
@@ -12,15 +12,20 @@
         ResizeMode="NoResize"
         SnapsToDevicePixels="True"
         Background="{DynamicResource Color5}"
-        BorderBrush="{DynamicResource Color5}" >
-    
+        BorderBrush="{DynamicResource Color5}">
+
     <Window.DataContext>
         <vm:ViewModel/>
     </Window.DataContext>
 
     <Grid>
-    
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="75"/>
+        </Grid.RowDefinitions>
 
+        <ListView Grid.Row="0" Background="{StaticResource Color4}" FontSize="48" />
+        <Button Grid.Row="1" Content="С Б Р О С И Т Ь"  FontSize="50" Background="{StaticResource StopLightColor}" Command="{Binding ResetCmd}"/>
+    </Grid>
 
-    <Grid/>
 </Window>

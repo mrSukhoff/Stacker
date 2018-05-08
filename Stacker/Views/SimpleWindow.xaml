@@ -4,7 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:Stacker.ViewModel"
-        x:Name="StackerWindow" x:Class="Stacker.SimpleWindow"
+        x:Name="StackerWindow" 
+        x:Class="Stacker.SimpleWindow"
         mc:Ignorable="d"
         Title="Штабелёр" 
         Icon="/Stacker;component/Resources/Stacker.ico"
@@ -15,7 +16,7 @@
         SnapsToDevicePixels="True"
         Background="{DynamicResource Color5}"
         BorderBrush="{DynamicResource Color5}" 
-        d:DataContext="{d:DesignInstance {x:Type vm:ViewModel}}">
+        >
 
     <!--Main Grid-->
     <Grid Background="{StaticResource Color5}">
