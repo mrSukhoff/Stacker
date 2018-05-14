@@ -10,7 +10,7 @@ namespace Stacker
     {
         public SimpleWindow()
         {
-            DataContext = new ViewModel.ViewModel();
+            DataContext = SimpleWindow.DataContextProperty;
             InitializeComponent();
         }
 

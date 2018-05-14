@@ -115,7 +115,8 @@ namespace Stacker.ViewModel
         //Внутренние поля класса-----------------------------------------------------------------------------
         //Модель штабелёра
         StackerModel Model;
-        
+        ErrorWindow ErrorWindow;
+
 
         //Наборы значений для комбобоксов
         char[] _rackItems;
@@ -147,7 +148,9 @@ namespace Stacker.ViewModel
 
         private void ErrorAppeared(object sender, NotifyCollectionChangedEventArgs e)
         {
-           //Window ErrorWindow = new ErrorWindow();
+            ErrorWindow = new ErrorWindow();
+            //ErrorWindow.DataContext = this;
+            ErrorWindow.Show();
         }
 
         //команда "Привезти"
@@ -200,7 +203,11 @@ namespace Stacker.ViewModel
         private void DoResetCmd(object obj) => Model.Crane.SubmitError();
 
         //команда "СТОП"
-        private void DoStopCmd(object obj) => Model.Crane.StopButton();
+        private void DoStopCmd(object obj)
+        {
+            Model.Crane.StopButton();
+
+        }
 
         //готовим списки для комбобоксов
         private void FillItems()

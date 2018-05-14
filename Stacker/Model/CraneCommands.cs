@@ -154,6 +154,9 @@ namespace Stacker.Model
         public void StopButton()
         {
             if (PLC != null) PLC.SetMerker(0, true);
+#if DEBUG
+            CraneState.ErrorList.Add("Test");
+#endif
         }
 
         //*команда "Перейти на координаты"

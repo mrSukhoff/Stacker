@@ -1,7 +1,6 @@
 ﻿using System.Windows;
-using Stacker.ViewModel;
 
-namespace Stacker.Views
+namespace Stacker
 {
     /// <summary>
     /// Логика взаимодействия для ErrorWindow.xaml
@@ -10,7 +9,8 @@ namespace Stacker.Views
     {
         public ErrorWindow()
         {
-            //InitializeComponent();
+            InitializeComponent();
         }
+
     }
 }
