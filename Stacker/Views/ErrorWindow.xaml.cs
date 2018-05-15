@@ -12,5 +12,10 @@ namespace Stacker
             InitializeComponent();
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Owner.
+            this.Close();
+        }
     }
 }

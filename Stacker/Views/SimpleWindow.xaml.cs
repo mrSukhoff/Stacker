@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Input;
+using Stacker.ViewModels;
 
 namespace Stacker
 {
@@ -10,13 +11,13 @@ namespace Stacker
     {
         public SimpleWindow()
         {
-            DataContext = SimpleWindow.DataContextProperty;
+            
             InitializeComponent();
         }
 
         private void DirectButtonControl(object sender, MouseButtonEventArgs e)
         {
-            ((ViewModel.ViewModel)DataContext).DirectButtonControl(sender, e);
+            (DataContext as ViewModel).DirectButtonControl(sender, e);
         }
     }
 }

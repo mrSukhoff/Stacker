@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace Stacker.ViewModel
+namespace Stacker.ViewModels
 {
     public class RelayCommand:ICommand
 

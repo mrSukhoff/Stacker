@@ -2,10 +2,11 @@
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Windows;
 using Stacker.Model;
 
 
-namespace Stacker.ViewModel
+namespace Stacker.ViewModels
 {
     class ViewModel : INotifyPropertyChanged
     {
@@ -135,7 +136,6 @@ namespace Stacker.ViewModel
         RelayCommand _resetCmd;
         RelayCommand _stopCmd;
 
-
         //конструктор
         public ViewModel()
         {
@@ -149,8 +149,10 @@ namespace Stacker.ViewModel
         private void ErrorAppeared(object sender, NotifyCollectionChangedEventArgs e)
         {
             ErrorWindow = new ErrorWindow();
-            //ErrorWindow.DataContext = this;
+            ErrorWindow.DataContext = this;
+            ErrorWindow.Owner;
             ErrorWindow.Show();
+
         }
 
         //команда "Привезти"
