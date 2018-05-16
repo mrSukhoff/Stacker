@@ -23,7 +23,7 @@
         </Grid.RowDefinitions>
 
         <ListView Grid.Row="0" Background="{StaticResource Color4}" FontSize="48" ItemsSource="{Binding Errors}"/>
-        <Button Grid.Row="1" Content="С Б Р О С И Т Ь"  FontSize="50" Background="{StaticResource StopLightColor}" Click="Button_Click" Command="{Binding ResetCmd}"/>
+        <Button Grid.Row="1" Content="С Б Р О С И Т Ь"  FontSize="48" Background="{StaticResource StopLightColor}" Click="Button_Click" />
     </Grid>
 
 </Window>

@@ -27,6 +27,9 @@ namespace Stacker.Model
             {
                 PLC.WriteDword(8, 0);
                 PLC.SetMerker(101, true);
+#if DEBUG
+                System.Windows.MessageBox.Show("Cleared!");
+#endif
             }
         }
 

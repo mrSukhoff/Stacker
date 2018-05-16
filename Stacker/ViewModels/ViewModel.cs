@@ -150,9 +150,8 @@ namespace Stacker.ViewModels
         {
             ErrorWindow = new ErrorWindow();
             ErrorWindow.DataContext = this;
-            ErrorWindow.Owner;
+            ErrorWindow.Owner = App.Current.MainWindow;
             ErrorWindow.Show();
-
         }
 
         //команда "Привезти"

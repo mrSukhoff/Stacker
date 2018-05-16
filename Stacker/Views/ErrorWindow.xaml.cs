@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using Stacker.ViewModels;
+using System.Windows;
 
 namespace Stacker
 {
@@ -14,8 +15,8 @@ namespace Stacker
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Owner.
-            this.Close();
+            (DataContext as ViewModel).ResetCmd.Execute(this);
+            Close();
         }
     }
 }
