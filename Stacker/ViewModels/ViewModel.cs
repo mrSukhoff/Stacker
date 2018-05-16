@@ -148,10 +148,27 @@ namespace Stacker.ViewModels
 
         private void ErrorAppeared(object sender, NotifyCollectionChangedEventArgs e)
         {
-            ErrorWindow = new ErrorWindow();
-            ErrorWindow.DataContext = this;
-            ErrorWindow.Owner = App.Current.MainWindow;
+            ErrorWindow = new ErrorWindow
+            {
+                DataContext = this,
+                Owner = App.Current.MainWindow
+            };
             ErrorWindow.Show();
+        }
+
+        //Команда "Сбросить"
+        private void DoResetCmd(object obj)
+        {
+            Model.Crane.SubmitError();
+            try
+            {
+                foreach (Window window in App.Current.Windows)
+                {
+                    if (window != App.Current.MainWindow) window.Close();
+                }
+            }
+            catch (Exception ex)
+            { MessageBox.Show(ex.Message); }
         }
 
         //команда "Привезти"
@@ -200,8 +217,7 @@ namespace Stacker.ViewModels
             return true;
         }
 
-        //Команда "Сбросить"
-        private void DoResetCmd(object obj) => Model.Crane.SubmitError();
+        
 
         //команда "СТОП"
         private void DoStopCmd(object obj)

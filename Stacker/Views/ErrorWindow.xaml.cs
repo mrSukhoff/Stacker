@@ -16,7 +16,7 @@ namespace Stacker
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             (DataContext as ViewModel).ResetCmd.Execute(this);
-            Close();
+            //Close();
         }
     }
 }
