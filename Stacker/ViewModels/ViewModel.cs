@@ -143,7 +143,7 @@ namespace Stacker.ViewModels
             FillItems();
             InitCommands();
             Errors = Model.CraneState.ErrorList;
-            Errors.CollectionChanged += ErrorAppeared;
+            //Errors.CollectionChanged += ErrorAppeared;
         }
 
         private void ErrorAppeared(object sender, NotifyCollectionChangedEventArgs e)
@@ -160,15 +160,7 @@ namespace Stacker.ViewModels
         private void DoResetCmd(object obj)
         {
             Model.Crane.SubmitError();
-            try
-            {
-                foreach (Window window in App.Current.Windows)
-                {
-                    if (window != App.Current.MainWindow) window.Close();
-                }
-            }
-            catch (Exception ex)
-            { MessageBox.Show(ex.Message); }
+            if (ErrorWindow != null ) ErrorWindow.Close();
         }
 
         //команда "Привезти"
@@ -217,13 +209,10 @@ namespace Stacker.ViewModels
             return true;
         }
 
-        
-
         //команда "СТОП"
         private void DoStopCmd(object obj)
         {
             Model.Crane.StopButton();
-
         }
 
         //готовим списки для комбобоксов
