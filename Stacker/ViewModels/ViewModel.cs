@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -149,28 +150,31 @@ namespace Stacker.ViewModels
 
         private void ErrorAppeared(object sender, NotifyCollectionChangedEventArgs e)
         {
+            if (Errors.Count == 0) return;
             ErrorWindow = new ErrorWindow
             {
                 DataContext = this,
                 Owner = App.Current.MainWindow
             };
-            ErrorWindow.Show();
+            ErrorWindow.ErrorsLitsView.ItemsSource = Errors;
+            ErrorWindow.ShowDialog();
+            //App.Current.MainWindow.IsEnabled = false;
         }
 
         //Команда "Сбросить"
         private void DoResetCmd(object obj)
         {
             Model.Crane.SubmitError();
-            
         }
 
         //Команда на закрытие окна со списком ошибок
         private void DoCloseErrorWindow (object obj)
         {
-            foreach (Window window in App.Current.Windows)
-            {
-                if (window.Name == "ErrorWindowInstance") window.Close();
-            }
+            ErrorWindow.Close();
+            Model.Crane.SubmitError();
+            
+            //App.Current.MainWindow.IsEnabled = true;
+            //App.Current.MainWindow.;
         }
 
         //команда "Привезти"

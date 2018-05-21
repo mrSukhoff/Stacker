@@ -28,6 +28,7 @@ namespace Stacker.Model
                 PLC.WriteDword(8, 0);
                 PLC.SetMerker(101, true);
             }
+            //System.Windows.MessageBox.Show("List must be cleared!");
         }
 
         //*команда дальше
@@ -155,7 +156,7 @@ namespace Stacker.Model
         {
             if (PLC != null) PLC.SetMerker(0, true);
 #if DEBUG
-            CraneState.ErrorList.Add("Test");
+            CraneState.ErrorList.Add("Нажата кнопка аварийной остановки");
 #endif
         }
 
