@@ -6,7 +6,7 @@
 
     xmlns:ViewModels="clr-namespace:Stacker.ViewModels"
 
-    x:Name="StackerWindow" 
+    x:Name="SimpleWindow1" 
     x:Class="Stacker.SimpleWindow"
     mc:Ignorable="d"
     Title="Штабелёр" 

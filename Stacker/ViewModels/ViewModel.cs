@@ -43,7 +43,6 @@ namespace Stacker.ViewModels
         }
 
         //SemiAutoTab
-
         public string SelectedAddress { get => String.Concat(_selectedRack, "-", _selectedRow, "-", _selectedFloor); }
 
         public char[] RackItems { get => _rackItems; }
@@ -102,7 +101,7 @@ namespace Stacker.ViewModels
             get => Model.Settings.RightRackName;
         }
 
-        //комманды
+        //команды
         public RelayCommand BringCmd           { get => _bringCmd;           set => _bringCmd = value; }
         public RelayCommand TakeAwayCmd        { get => _takeAwayCmd;        set => _takeAwayCmd = value; }
         public RelayCommand PlatformToLeftCmd  { get => _platformToLeftCmd;  set => _platformToLeftCmd = value; }
@@ -110,6 +109,7 @@ namespace Stacker.ViewModels
         public RelayCommand ToStartPositionCmd { get => _toStartPositionCmd; set => _toStartPositionCmd = value; }
         public RelayCommand ResetCmd           { get => _resetCmd;           set => _resetCmd = value; }
         public RelayCommand StopCmd            { get => _stopCmd;            set => _stopCmd = value; }
+        public RelayCommand CloseErrorWindowCmd{ get => _closeErrorWindow;   set => _closeErrorWindow = value; }
 
         public ObservableCollection<string> Errors;
 
@@ -135,6 +135,7 @@ namespace Stacker.ViewModels
         RelayCommand _toStartPositionCmd;
         RelayCommand _resetCmd;
         RelayCommand _stopCmd;
+        RelayCommand _closeErrorWindow;
 
         //конструктор
         public ViewModel()
@@ -143,7 +144,7 @@ namespace Stacker.ViewModels
             FillItems();
             InitCommands();
             Errors = Model.CraneState.ErrorList;
-            //Errors.CollectionChanged += ErrorAppeared;
+            Errors.CollectionChanged += ErrorAppeared;
         }
 
         private void ErrorAppeared(object sender, NotifyCollectionChangedEventArgs e)
@@ -160,7 +161,16 @@ namespace Stacker.ViewModels
         private void DoResetCmd(object obj)
         {
             Model.Crane.SubmitError();
-            if (ErrorWindow != null ) ErrorWindow.Close();
+            
+        }
+
+        //Команда на закрытие окна со списком ошибок
+        private void DoCloseErrorWindow (object obj)
+        {
+            foreach (Window window in App.Current.Windows)
+            {
+                if (window.Name == "ErrorWindowInstance") window.Close();
+            }
         }
 
         //команда "Привезти"
@@ -235,6 +245,7 @@ namespace Stacker.ViewModels
             ToStartPositionCmd = new RelayCommand(DoToStartPositionCmd, CanExecuteToStartPositionCmd);
             ResetCmd = new RelayCommand(DoResetCmd);
             StopCmd = new RelayCommand(DoStopCmd);
+            CloseErrorWindowCmd = new RelayCommand(DoCloseErrorWindow);
         }
 
         //оповещене кого требуется при изменении выбранной ячейки
