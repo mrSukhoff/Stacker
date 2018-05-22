@@ -147,18 +147,22 @@ namespace Stacker.ViewModels
             Errors = Model.CraneState.ErrorList;
             Errors.CollectionChanged += ErrorAppeared;
         }
-
+        
+        //вызывается при изменении списка ошибок
         private void ErrorAppeared(object sender, NotifyCollectionChangedEventArgs e)
         {
+            //если ошибок нет, выходим
             if (Errors.Count == 0) return;
+            //создаем окно с ошибками
             ErrorWindow = new ErrorWindow
             {
                 DataContext = this,
                 Owner = App.Current.MainWindow
             };
             ErrorWindow.ErrorsLitsView.ItemsSource = Errors;
-            ErrorWindow.ShowDialog();
-            //App.Current.MainWindow.IsEnabled = false;
+            ErrorWindow.Show();
+            //выключаем основное окно
+            App.Current.MainWindow.IsEnabled = false;
         }
 
         //Команда "Сбросить"
@@ -170,11 +174,11 @@ namespace Stacker.ViewModels
         //Команда на закрытие окна со списком ошибок
         private void DoCloseErrorWindow (object obj)
         {
-            ErrorWindow.Close();
             Model.Crane.SubmitError();
-            
-            //App.Current.MainWindow.IsEnabled = true;
-            //App.Current.MainWindow.;
+            ErrorWindow.Close();
+            //закрываем окно с ошибками и активируем основное окно            
+            App.Current.MainWindow.IsEnabled = true;
+            App.Current.MainWindow.Activate();
         }
 
         //команда "Привезти"

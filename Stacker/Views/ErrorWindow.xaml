@@ -22,7 +22,7 @@
             <RowDefinition Height="75"/>
         </Grid.RowDefinitions>
 
-        <ListView x:Name="ErrorsLitsView" Grid.Row="0"   FontSize="24" Background="{StaticResource Color4}"  Foreground="{DynamicResource StopDarkColor}" ItemsSource="{Binding Errors}"/>
+        <ListView x:Name="ErrorsLitsView" Grid.Row="0"   FontSize="24" Background="{StaticResource Color4}"  Foreground="{DynamicResource Color1}" ItemsSource="{Binding Errors}"/>
         <Button   Content="С Б Р О С И Т Ь" Grid.Row="1" FontSize="36" Background="{StaticResource StopLightColor}" FontWeight="Bold"  Style="{DynamicResource RegularButtonStyle}" Command="{Binding CloseErrorWindowCmd}" />
     </Grid>
 
