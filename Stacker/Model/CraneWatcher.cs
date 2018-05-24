@@ -47,7 +47,7 @@ namespace Stacker.Model
 
         //флаг нахождения крана на начальной позиции
         public bool IsFloorMark;
-
+        //---------------------------------------------------------------------------------------------------
         //Контроллер крана
         private Controller PLC;
 
@@ -60,6 +60,7 @@ namespace Stacker.Model
         //флаг уничтожения объектов
         private bool disposed = false;
 
+        //конструктор
         internal CraneWatcher(Controller plc)
         {
             PLC = plc;

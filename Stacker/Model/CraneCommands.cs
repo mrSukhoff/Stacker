@@ -28,7 +28,6 @@ namespace Stacker.Model
                 PLC.WriteDword(8, 0);
                 PLC.SetMerker(101, true);
             }
-            //System.Windows.MessageBox.Show("List must be cleared!");
         }
 
         //*команда дальше

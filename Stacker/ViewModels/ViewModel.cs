@@ -11,12 +11,6 @@ namespace Stacker.ViewModels
 {
     class ViewModel : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChahged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
         //StatusBar
         public string CurrentRow
         {
@@ -138,16 +132,28 @@ namespace Stacker.ViewModels
         RelayCommand _stopCmd;
         RelayCommand _closeErrorWindow;
 
-        //конструктор
+        //конструктор ---------------------------------------------------------------------------------------
         public ViewModel()
         {
             Model = new StackerModel();
+            if (!Model.IsConnected && !Model.Settings.CloseOrInform) App.Current.Shutdown(1);
             FillItems();
             InitCommands();
             Errors = Model.CraneState.ErrorList;
             Errors.CollectionChanged += ErrorAppeared;
+            Model.CraneState.StateWordChanged += UpdatePosition;
+            Model.CraneState.CommandDone += UpdateButtonState;
         }
-        
+
+ 
+
+        //реализация INotifyPropertyChanged
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void OnPropertyChahged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         //вызывается при изменении списка ошибок
         private void ErrorAppeared(object sender, NotifyCollectionChangedEventArgs e)
         {
@@ -165,6 +171,77 @@ namespace Stacker.ViewModels
             App.Current.MainWindow.IsEnabled = false;
         }
 
+        //готовим списки для комбобоксов
+        private void FillItems()
+        {
+            _rackItems = new char[] { Model.Settings.LeftRackName, Model.Settings.RightRackName };
+            _rowItems = new int[Model.Settings.StackerDepth];
+            for (int i = 0; i < _rowItems.Length; i++) { _rowItems[i] = i + 1; }
+            _floorItems = new int[Model.Settings.StackerHight];
+            for (int i = 0; i < _floorItems.Length; i++) { _floorItems[i] = i + 1; }
+        }
+
+        //инициализируем команды
+        private void InitCommands()
+        {
+            BringCmd = new RelayCommand(DoBringCommand, CanExecuteBringCommand);
+            TakeAwayCmd = new RelayCommand(DoTakeAwayCmd, CanExecuteTakeAwayCmd);
+            PlatformToLeftCmd = new RelayCommand(DoPlatformToLeftCmd, CanExecutePlatformToLeftCmd);
+            PlatformToRightCmd = new RelayCommand(DoPlatformToRightCmd, CanExecutePlatformToRightCmd);
+            ToStartPositionCmd = new RelayCommand(DoToStartPositionCmd, CanExecuteToStartPositionCmd);
+            ResetCmd = new RelayCommand(DoResetCmd);
+            StopCmd = new RelayCommand(DoStopCmd);
+            CloseErrorWindowCmd = new RelayCommand(DoCloseErrorWindow);
+        }
+
+        //оповещене кого требуется при изменении выбранной ячейки
+        void SelectionChanged()
+        {
+            OnPropertyChahged("SelectedAddress");
+            OnPropertyChahged("IsCellNotAvailable");
+            OnPropertyChahged("IsBringButtonAvailable");
+            OnPropertyChahged("IsTakeAwayButtonAvailable");
+        }
+
+        //Оповещение о изменении координат
+        private void UpdatePosition()
+        {
+            OnPropertyChahged("CurrentRow");
+            OnPropertyChahged("CurrentFloor");
+            OnPropertyChahged("IsStartPosition");
+            OnPropertyChahged("IsRowMark");
+            OnPropertyChahged("IsFloorMark");
+        }
+
+        //
+        private void UpdateButtonState()
+        {
+
+        }
+
+        //управления движением крана
+        public void DirectButtonControl(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            bool state = e.ButtonState == System.Windows.Input.MouseButtonState.Pressed ? true : false;
+            switch (((System.Windows.Controls.Button)sender).Name)
+            {
+                case "FartherButton":
+                    Model.Crane.FartherButton(state);
+                    break;
+                case "CloserButton":
+                    Model.Crane.CloserButton(state);
+                    break;
+                case "UpButton":
+                    Model.Crane.UpButton(state);
+                    break;
+                case "DownButton":
+                    Model.Crane.DownButton(state);
+                    break;
+                default: return;
+            }
+        }
+
+        //Команды -------------------------------------------------------------------------------------------
         //Команда "Сбросить"
         private void DoResetCmd(object obj)
         {
@@ -232,60 +309,5 @@ namespace Stacker.ViewModels
         {
             Model.Crane.StopButton();
         }
-
-        //готовим списки для комбобоксов
-        private void FillItems()
-        {
-            _rackItems = new char[]{Model.Settings.LeftRackName, Model.Settings.RightRackName};
-            _rowItems = new int[Model.Settings.StackerDepth];
-            for (int i = 0; i < _rowItems.Length; i++) { _rowItems[i] = i + 1; }
-            _floorItems = new int[Model.Settings.StackerHight];
-            for (int i = 0; i < _floorItems.Length; i++) { _floorItems[i] = i + 1; }
-        }
-
-        //инициализируем команды
-        private void InitCommands()
-        {
-            BringCmd = new RelayCommand(DoBringCommand, CanExecuteBringCommand);
-            TakeAwayCmd = new RelayCommand(DoTakeAwayCmd, CanExecuteTakeAwayCmd);
-            PlatformToLeftCmd = new RelayCommand(DoPlatformToLeftCmd, CanExecutePlatformToLeftCmd);
-            PlatformToRightCmd = new RelayCommand(DoPlatformToRightCmd, CanExecutePlatformToRightCmd);
-            ToStartPositionCmd = new RelayCommand(DoToStartPositionCmd, CanExecuteToStartPositionCmd);
-            ResetCmd = new RelayCommand(DoResetCmd);
-            StopCmd = new RelayCommand(DoStopCmd);
-            CloseErrorWindowCmd = new RelayCommand(DoCloseErrorWindow);
-        }
-
-        //оповещене кого требуется при изменении выбранной ячейки
-        void SelectionChanged()
-        {
-            OnPropertyChahged("SelectedAddress");
-            OnPropertyChahged("IsCellNotAvailable");
-            OnPropertyChahged("IsBringButtonAvailable");
-            OnPropertyChahged("IsTakeAwayButtonAvailable");
-        }
-
-        //управления движением крана
-        public void DirectButtonControl(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            bool state = e.ButtonState == System.Windows.Input.MouseButtonState.Pressed ? true : false;
-            switch (((System.Windows.Controls.Button)sender).Name)
-            {
-                case "FartherButton":
-                    Model.Crane.FartherButton(state);
-                    break;
-                case "CloserButton":
-                    Model.Crane.CloserButton(state);
-                    break;
-                case "UpButton":
-                    Model.Crane.UpButton(state);
-                    break;
-                case "DownButton":
-                    Model.Crane.DownButton(state);
-                    break;
-                default: return;
-            }
-        }
-
     }
 }
