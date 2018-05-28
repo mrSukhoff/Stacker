@@ -113,7 +113,6 @@ namespace Stacker.ViewModels
         StackerModel Model;
         ErrorWindow ErrorWindow;
 
-
         //Наборы значений для комбобоксов
         char[] _rackItems;
         int[]  _rowItems;
@@ -144,9 +143,7 @@ namespace Stacker.ViewModels
             Model.CraneState.StateWordChanged += UpdatePosition;
             Model.CraneState.CommandDone += UpdateButtonState;
         }
-
- 
-
+         
         //реализация INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChahged(string propertyName)
