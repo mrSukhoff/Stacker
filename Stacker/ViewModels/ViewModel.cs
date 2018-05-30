@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Input;
 using Stacker.Model;
 
 
@@ -210,10 +211,12 @@ namespace Stacker.ViewModels
             OnPropertyChahged("IsFloorMark");
         }
 
-        //
+        //оповещение о выполнении команды
         private void UpdateButtonState()
         {
-
+            OnPropertyChahged("CurrentRow");
+            OnPropertyChahged("CurrentRow");
+            CommandManager.InvalidateRequerySuggested();
         }
 
         //управления движением крана
@@ -265,6 +268,7 @@ namespace Stacker.ViewModels
         {
             return Model.CraneState.IsStartPosiotion & !Model.CraneState.IsBinOnPlatform;
         }
+        //void CanExecuteBringCommandChanged(object sender, System.EventArgs e) { }
 
         //команда "Увезти"
         private void DoTakeAwayCmd(object obj)
