@@ -24,9 +24,6 @@ namespace Stacker.Model
         //Координаты ячеек
         internal CellsGrid Stacker;
 
-        private char LeftRackName;
-        private char RightRackName;
-
         //флаг уничтожения объектов
         private bool disposed = false;
         
@@ -38,9 +35,6 @@ namespace Stacker.Model
 
             //Создаем менеджер заявок
             OrderManager = new OrdersManager(this);
-
-            LeftRackName = Settings.LeftRackName;
-            RightRackName = Settings.RightRackName;
 
             //Загружаем таблицы координат ячеек
             string path = Environment.CurrentDirectory+"\\"+Settings.CellsFile;
@@ -109,12 +103,12 @@ namespace Stacker.Model
         public void GetCell(char r, int row, int floor, out int x, out int y, out bool isNotAvailable)
         {
             //if (r != LeftRackName & r != RightRackName) throw new ArgumentException("Неправильное имя стойки");
-            if (r == '\0') r = LeftRackName;
+            if (r == '\0') r = Settings.LeftRackName;
             if (row < 1) row = 1;
             if (floor < 1) floor = 1;
             x = Stacker[row, floor].X;
             y = Stacker[row, floor].Y;
-            isNotAvailable = r == LeftRackName ? Stacker[row, floor].LeftSideIsNotAvailable : Stacker[row, floor].RightSideIsNotAvailable;
+            isNotAvailable = r == Settings.LeftRackName ? Stacker[row, floor].LeftSideIsNotAvailable : Stacker[row, floor].RightSideIsNotAvailable;
         }
         
         //устанавливает для ячейки её координаты и доступность
