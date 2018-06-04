@@ -332,11 +332,11 @@ namespace Stacker
             {
                 //вычисляем адрес ячейки
                 char stack = (char)RackComboBox.SelectedItem;
-                int row = RowComboBox.SelectedIndex+1;
-                int floor = FloorComboBox.SelectedIndex+1;
+                uint row = (uint)RowComboBox.SelectedIndex+1;
+                uint floor = (uint)FloorComboBox.SelectedIndex+1;
 
                 //получаем координаты
-                Model.GetCell(stack, row, floor, out int x, out int y, out bool isNOTAvailable);
+                Model.GetCell(stack, row, floor, out uint x, out uint y, out bool isNOTAvailable);
 
                 //отключаем обработчики на изменение координат
                 CoordinateXTextBox.TextChanged -= CoordinateChanged;
@@ -366,16 +366,16 @@ namespace Stacker
             {
                 //вычисляем адрес ячейки
                 bool stacker = RackComboBox.SelectedIndex != 0;
-                int row = RowComboBox.SelectedIndex + 1;
-                int floor = FloorComboBox.SelectedIndex + 1;
+                uint row = (uint)RowComboBox.SelectedIndex + 1;
+                uint floor = (uint)FloorComboBox.SelectedIndex + 1;
 
                 //если поле пустое, то записываем в него ноль
                 CoordinateXTextBox.Text = CoordinateXTextBox.Text == "" ? "0" : CoordinateXTextBox.Text;
                 CoordinateYTextBox.Text = CoordinateYTextBox.Text == "" ? "0" : CoordinateYTextBox.Text;
 
                 //получаем целые значения координат
-                int x = Convert.ToInt32(CoordinateXTextBox.Text);
-                int y = Convert.ToInt32(CoordinateYTextBox.Text);
+                uint x = Convert.ToUInt32(CoordinateXTextBox.Text);
+                uint y = Convert.ToUInt32(CoordinateYTextBox.Text);
                 
                 //если координата больше максимальноразрешшенной, устанавливаем ее максимальной
                 if (x > Model.Settings.MaxX)
@@ -429,9 +429,9 @@ namespace Stacker
         {
             //получаем из базы координаты и доступность ячеек
             char stack = (char)RackComboBox.SelectedItem;
-            int r = RowSemiAutoComboBox.SelectedIndex + 1;
-            int f = FloorSemiAutoCombobox.SelectedIndex + 1;
-            Model.GetCell(stack, r, f, out int x, out int y, out bool isNotAvailable);
+            uint r = (uint)RowSemiAutoComboBox.SelectedIndex + 1;
+            uint f = (uint)FloorSemiAutoCombobox.SelectedIndex + 1;
+            Model.GetCell(stack, r, f, out uint x, out uint y, out bool isNotAvailable);
 
             //устанавливаем доступность кнопок в зависимости от состояния ячейки
             bool state = Model.CraneState.IsBinOnPlatform;
@@ -447,10 +447,10 @@ namespace Stacker
         //в разделе "движение по координатам" при выборе ячейки записываем её координаты в поля ввода
         private void XYComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            int r = RowXComboBox.SelectedIndex + 1;
-            int f = FloorYComboBox.SelectedIndex + 1;
+            uint r = (uint)RowXComboBox.SelectedIndex + 1;
+            uint f = (uint)FloorYComboBox.SelectedIndex + 1;
             if (r < 1 | f < 1) return;
-            Model.GetCell(Settings.LeftRackName, r, f, out int x, out int y, out bool z);
+            Model.GetCell(Settings.LeftRackName, r, f, out uint x, out uint y, out bool z);
             GotoXTextBox.Text = x.ToString();
             GotoYTextBox.Text = y.ToString();
         }
@@ -611,8 +611,8 @@ namespace Stacker
         private void BringOrTakeAwaySemiAutoButton_Click(object sender, RoutedEventArgs e)
         {
             bool stack = RackSemiAutoComboBox.SelectedIndex == 1;
-            int r = RowSemiAutoComboBox.SelectedIndex + 1;
-            int f = FloorSemiAutoCombobox.SelectedIndex + 1;
+            uint r = (uint)RowSemiAutoComboBox.SelectedIndex + 1;
+            uint f = (uint)FloorSemiAutoCombobox.SelectedIndex + 1;
             
             //если была нажата кнопка привезти устанавливае переменную в true
             bool bring = sender == BringSemiAutoButton ? true : false;
@@ -748,10 +748,10 @@ namespace Stacker
                 CancelAutoButton.IsEnabled = false;
                 return;
             }
-            int r = OrderManager.Orders[index].Row;
-            int f = OrderManager.Orders[index].Floor;
+            uint r = OrderManager.Orders[index].Row;
+            uint f = OrderManager.Orders[index].Floor;
             char n = OrderManager.Orders[index].StackerName;
-            Model.GetCell(n, r, f, out int x, out int y, out bool isNotAvailable);
+            Model.GetCell(n, r, f, out uint x, out uint y, out bool isNotAvailable);
             BringAutoButton.IsEnabled = !isNotAvailable & !Model.CraneState.IsBinOnPlatform;
             CancelAutoButton.IsEnabled = true;
         }

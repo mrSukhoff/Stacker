@@ -49,24 +49,24 @@ namespace Stacker.Model
         }
 
         //Записывает 32-битное число в контроллер
-        internal bool WriteDword(int adr, int d)
+        internal bool WriteDword(int adr, uint d)
         {
             ushort dlo = (ushort)(d % 0x10000);
             ushort dhi = (ushort)(d / 0x10000);
             UInt16 address = Convert.ToUInt16(adr);
-            address += 0x1000;
+            address += 0x1000; //сдвиг адреса в пространстве ПЛК
             PLC.WriteSingleRegister(1, address, dlo);
             PLC.WriteSingleRegister(1, ++address, dhi);
             return true;
         }
 
         //Читает 32-битное число из контроллера
-        internal bool ReadDword(ushort address, out int d)
+        internal bool ReadDword(ushort address, out uint d)
         {
             d = 0;
             address += 0x1000;
             ushort[] x = PLC.ReadHoldingRegisters(1, address, 2);
-            d = x[0] + x[1] * 0x10000;
+            d = (uint)(x[0] + x[1] * 0x10000);
             return true;
         }
 

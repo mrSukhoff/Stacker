@@ -55,11 +55,12 @@ namespace Stacker.Model
         private Timer PlcTimer;
         
         //Слово состояния контроллера
-        private int StateWord = 0;
+        private ushort StateWord = 0;
         
         //флаг уничтожения объектов
         private bool disposed = false;
 
+        //конструктор
         internal CraneWatcher(Controller plc)
         {
             PLC = plc;
@@ -106,7 +107,7 @@ namespace Stacker.Model
                 //читаем слово состояния ПЛК
                 word = PLC.ReadHoldingRegisters(0x1064, 8);
 
-                int stateWord = word[0];
+                ushort stateWord = word[0];
                 Weight = word[2] > 32767 ? 0 : word[2];
                 MeasuredWeight = word[4];
                 MeasuredWeight2 = word[6];
@@ -142,7 +143,7 @@ namespace Stacker.Model
         //вызывается при появления флага ошибки в слове состояния
         private void ErrorHandler()
         {
-            PLC.ReadDword(110, out int ErrorWord);
+            PLC.ReadDword(110, out uint ErrorWord);
             if (GetBitState(ErrorWord, 0)) addAlarm("Нажата кнопка аварийной остановки");
             if (GetBitState(ErrorWord, 1)) addAlarm("Одновременное включение контакторов");
             if (GetBitState(ErrorWord, 2)) addAlarm("Попытка загрузки на занятый кран");
@@ -173,16 +174,9 @@ namespace Stacker.Model
         }
 
         //метод возвращает состояния указанного бита
-        private bool GetBitState(int b, int num)
+        private bool GetBitState(uint b, byte num)
         {
-            bool[] bits = new bool[16];
-            int z = 1;
-            for (int i = 0; i < 16; i++)
-            {
-                bits[i] = ((b & z) == z);
-                z *= 2;
-            }
-            return bits[num];
+            return (b & (ushort)Math.Pow(2,num)) > 0 ;
         }
     }
 }
