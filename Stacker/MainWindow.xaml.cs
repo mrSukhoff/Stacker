@@ -791,16 +791,16 @@ namespace Stacker
                     SortDirection[1] = !SortDirection[1];
                     break;
                 case Header3:
-                    OrderManager.SortList("ProductDescription", SortDirection[3]);
-                    SortDirection[2] = !SortDirection[3];
+                    OrderManager.SortList("ProductDescription", SortDirection[2]);
+                    SortDirection[2] = !SortDirection[2];
                     break;
                 case Header4:
-                    OrderManager.SortList("Amount", SortDirection[4]);
-                    SortDirection[3] = !SortDirection[4];
+                    OrderManager.SortList("Amount", SortDirection[3]);
+                    SortDirection[3] = !SortDirection[3];
                     break;
                 case Header5:
-                    OrderManager.SortList("Address", SortDirection[5]);
-                    SortDirection[4] = !SortDirection[5];
+                    OrderManager.SortList("Address", SortDirection[4]);
+                    SortDirection[4] = !SortDirection[4];
                     break;
             }
         }

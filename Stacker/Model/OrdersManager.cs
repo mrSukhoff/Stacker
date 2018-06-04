@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Threading;
 using System.Windows;
@@ -106,8 +107,9 @@ namespace Stacker.Model
                 sorted = true;
                 for (int i = 1; i < Orders.Count; i++)
                 {
-                    str1 = GetField(Orders[i - 1], sortField);
-                    str2 = GetField(Orders[i], sortField);
+                    PropertyDescriptor descr = TypeDescriptor.GetProperties(Orders[i])[sortField];
+                    str1 = descr?.GetValue(Orders[i-1]).ToString();
+                    str2 = descr?.GetValue(Orders[i]).ToString();
                     needsSorting = !direction & String.Compare(str1,str2) > 0 || direction & String.Compare(str1,str2) < 0;
                     if (needsSorting)
                     {
@@ -116,36 +118,6 @@ namespace Stacker.Model
                         sorted = false;
                     }
                 }
-            }
-            //возвращает значение поля заявки
-            string GetField(Order order, string field)
-            {
-                string str;
-                switch (field)
-                {
-                    case "OrderType":
-                        str = order.OrderType;
-                        break;
-                    case "OrderNumber":
-                        str = order.OrderNumber;
-                        break;
-                    case "ProductCode":
-                        str = order.ProductCode;
-                        break;
-                    case "ProductDescription":
-                        str = order.ProductDescription;
-                        break;
-                    case "Amount":
-                        str = order.Amount;
-                        break;
-                    case "Address":
-                        str = order.Address;
-                        break;
-                    default:
-                        str = "";
-                        break;
-                }
-                return str;
             }
         }
 
