@@ -23,9 +23,6 @@ namespace Stacker.Model
         internal Controller PLC;
         //Координаты ячеек
         internal CellsGrid Stacker;
-
-        //флаг уничтожения объектов
-        private bool disposed = false;
         
         //Конструктор класса **********************************************************************************
         public StackerModel()
@@ -80,16 +77,13 @@ namespace Stacker.Model
         }
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposed)
+            if (disposing)
             {
-                if (disposing)
-                {
                     CraneState.Dispose();
-                    PLC?.Dispose();
+                    PLC.Dispose();
                     OrderManager.Dispose();
-                }
-                disposed = true;
             }
+    
         }
         
         //Сохранение массивов координат ячеек в файлы

@@ -36,9 +36,6 @@ namespace Stacker.Model
         //хранит номер выбранной заявки для автоматического режима
         private int _selectedOrderNumber = -1;
 
-        //флаг уничтожения неуправляемых ресурсов
-        bool disposed;
-
         SettingsKeeper sk;
 
         //методы ----------------------------------------------------------------------------------
@@ -57,19 +54,11 @@ namespace Stacker.Model
         public void Dispose()
         {
             Dispose(true);
-            // подавляем финализацию
             GC.SuppressFinalize(this);
         }
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposed)
-            {
-                if (disposing)
-                {
-                    FileTimer?.Dispose();
-                }
-                disposed = true;
-            }
+            if (disposing) FileTimer.Dispose();
         }
 
         public void StartTimer()
@@ -134,13 +123,8 @@ namespace Stacker.Model
                     List<string> lines = new List<string>();
                     using (FileStream fs = new FileStream(OrdersFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     {
-                        using (StreamReader sr = new StreamReader(fs, System.Text.Encoding.Default))
-                        {
-                            while (sr.Peek()>=0)
-                            {
-                                lines.Add(sr.ReadLine());
-                            }
-                        }
+                        StreamReader sr = new StreamReader(fs, System.Text.Encoding.Default);
+                        while (sr.Peek()>=0) lines.Add(sr.ReadLine());
                     }
 
                     Order order = null;
@@ -193,13 +177,8 @@ namespace Stacker.Model
                 List<string> lines = new List<string>();
                 using (FileStream fs = new FileStream(OrdersFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
-                    using (StreamReader sr = new StreamReader(fs, System.Text.Encoding.Default))
-                    {
-                        while (sr.Peek() >= 0)
-                        {
-                            lines.Add(sr.ReadLine());
-                        }
-                    }
+                    StreamReader sr = new StreamReader(fs, System.Text.Encoding.Default);
+                    while (sr.Peek() >= 0) lines.Add(sr.ReadLine());
                 }
 
                 //и удаляем из списка строку с нашей заявкой

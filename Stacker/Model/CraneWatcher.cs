@@ -12,15 +12,15 @@ namespace Stacker.Model
         public ObservableCollection<string> ErrorList { get; private set; } = new ObservableCollection<string>();
 
         //События
-        public delegate void StackerModelEventHandler();
+        public delegate void StackerModelEventHandler(object sender, EventArgs e);
         //появился флаг завершения выполнения команды
-        public event StackerModelEventHandler CommandDone = (() => { });
+        public event StackerModelEventHandler CommandDone = ((sender,e) => { });
         //флаг ошибки
-        public event StackerModelEventHandler ErrorAppeared = (() => { });
+        public event StackerModelEventHandler ErrorAppeared = ((sender, e) => { });
         //происходит после очередного считывания текущих координат крана
-        public event StackerModelEventHandler CoordinateReaded = (() => { });
+        public event StackerModelEventHandler CoordinateReaded = ((sender, e) => { });
         //изменилось слово состояния контроллера
-        public event StackerModelEventHandler StateWordChanged = (() => { });
+        public event StackerModelEventHandler StateWordChanged = ((sender, e) => { });
 
         //Актуальные координаты крана
         public int ActualX { get; private set; }
@@ -56,9 +56,6 @@ namespace Stacker.Model
         
         //Слово состояния контроллера
         private ushort StateWord = 0;
-        
-        //флаг уничтожения объектов
-        private bool disposed = false;
 
         //конструктор
         internal CraneWatcher(Controller plc)
@@ -79,14 +76,7 @@ namespace Stacker.Model
         }
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposed)
-            {
-                if (disposing)
-                {
-                    PlcTimer.Dispose();
-                }
-                disposed = true;
-            }
+            if (disposing) PlcTimer.Dispose();
         }
 
         //По таймеру читаем слово состояния контроллера
@@ -113,7 +103,7 @@ namespace Stacker.Model
                 MeasuredWeight2 = word[6];
 
                 //вызываем событие по чтению координат
-                CoordinateReaded();
+                CoordinateReaded(this,null);
 
                 //если поменялось слово состояния
                 if (stateWord != StateWord)
@@ -122,11 +112,11 @@ namespace Stacker.Model
                     IsRowMark = GetBitState(stateWord, 8);
                     IsFloorMark = GetBitState(stateWord, 9);
                     IsBinOnPlatform = GetBitState(stateWord, 10);
-                    StateWordChanged();
+                    StateWordChanged(this,null);
                 }
 
                 //если появился флаг завершения
-                if (GetBitState(stateWord, 15) && !GetBitState(StateWord, 15)) CommandDone();
+                if (GetBitState(stateWord, 15) && !GetBitState(StateWord, 15)) CommandDone(this,null);
 
                 //если появился флаг ошибки вызываем обрабочик ошибок
                 if (GetBitState(stateWord, 13) && !GetBitState(StateWord, 13)) ErrorHandler();
@@ -157,7 +147,7 @@ namespace Stacker.Model
             if (GetBitState(ErrorWord, 10)) addAlarm("Ошибка позиционирования крана");
             if (GetBitState(ErrorWord, 11)) addAlarm("Помеха движению по горизонтали");
             if (GetBitState(ErrorWord, 12)) addAlarm("Превышен максимальный вес груза");
-            ErrorAppeared?.Invoke();
+            ErrorAppeared.Invoke(this,null);
 
             void addAlarm(string alarmText)
             {

@@ -12,7 +12,6 @@ namespace Stacker.Model
         //интерфейс контроллера
         private IModbusMaster PLC;
 
-        private bool disposed;
         internal Controller(string port)
         {
             //создаем порт
@@ -27,19 +26,14 @@ namespace Stacker.Model
         public void Dispose()
         {
             Dispose(true);
-            // подавляем финализацию
             GC.SuppressFinalize(this);
         }
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposed)
-            {
-                if (disposing)
-                {
-                    PLC?.Dispose();
-                    ComPort?.Dispose();
-                }
-                disposed = true;
+            if (disposing)
+            { 
+                PLC.Dispose();
+                ComPort.Dispose();
             }
         }
 

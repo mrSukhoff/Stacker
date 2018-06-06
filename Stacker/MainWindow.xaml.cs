@@ -50,9 +50,6 @@ namespace Stacker
         //стиль оттображения списка заявок
         GridView OrdersGridView = new GridView();
 
-        //флаг закрытия неуправляемых ресурсов
-        bool disposed = false;
-
         //направления сортировки списка заявок
         bool[] SortDirection = new bool[6];
 
@@ -233,7 +230,7 @@ namespace Stacker
         }
 
         //обработчик события "команда выполнена"
-        private void CommandDone()
+        private void CommandDone(object sender, EventArgs e)
         {
             //разблокируем все кнопки
             foreach (Button b in ButtonList)
@@ -248,14 +245,14 @@ namespace Stacker
         }
 
         //обработчик события "ошибка"
-        private void ErrorAppeared()
+        private void ErrorAppeared(object sender, EventArgs e)
         {
             Dispatcher.Invoke( () => { StatusPlane.Background = new SolidColorBrush(Colors.DarkRed); } );
             Dispatcher.Invoke( () => { ErrorTabItem.Background = new SolidColorBrush(Colors.DarkRed); } );
         }
 
         //Обновление координат и слова состояния
-        private void UpdateCoordinate()
+        private void UpdateCoordinate(object sender, EventArgs e)
         {
             string r = Model.CraneState.ActualRow.ToString();
             r = r.Length == 1 ? "0" + r : r;
@@ -275,7 +272,7 @@ namespace Stacker
         }
         
         //обработка изменений в слове состояния контроллера крана
-        private void SomethingChanged()
+        private void SomethingChanged(object sender, EventArgs e)
         {
             //устанавливаем индикатор начальной позиции
             Dispatcher.Invoke(() => SPLabel.IsEnabled = Model.CraneState.IsStartPosiotion);
@@ -318,7 +315,7 @@ namespace Stacker
             StatusPlane.Background = new SolidColorBrush(Color.FromArgb(0xFF, 0x3E, 0x60, 0x6F));
             ErrorTabItem.Background = new SolidColorBrush(Color.FromArgb(0xFF, 0xCB, 0xDB, 0xD7));
             //разблокируем кнопки
-            CommandDone();
+            CommandDone(this,null);
             ErrorListBox.Items.Refresh();
             Model.CraneState.CommandDone -= TakeAwayDone;
             BringAutoButton.IsEnabled = !Model.CraneState.IsBinOnPlatform;
@@ -656,7 +653,7 @@ namespace Stacker
         }
 
         //после доставки  на место разрешаем кнопкку "привезти"
-        private void TakeAwayDone()
+        private void TakeAwayDone(object sender, EventArgs e)
         {
             //возвращаем обработчик события
             Model.CraneState.CommandDone -= TakeAwayDone;
@@ -699,7 +696,7 @@ namespace Stacker
         }
 
         //по актуальному значению тока строим график
-        private void MakeGraph()
+        private void MakeGraph(object sender, EventArgs e)
         {
             double w = 450 - Model.CraneState.Weight;
             Point point = new Point(c*10, w);
@@ -708,7 +705,7 @@ namespace Stacker
         }
 
         //по окончании взвешивания рисуем 7 перпендикулярных красных линий ;-)
-        private void WeighDone()
+        private void WeighDone(object sender, EventArgs e)
         {
             int y = 450 - Model.CraneState.MeasuredWeight;
             Point point11 = new Point(0,y);
@@ -757,23 +754,19 @@ namespace Stacker
         }
 
         //закрываем неуправляемые ресурсы
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing) Model.Dispose();
+        }
+
         public void Dispose()
         {
             Dispose(true);
-            // подавляем финализацию
             GC.SuppressFinalize(this);
         }
-        protected virtual void Dispose(bool disposing)
+        ~MainWindow()
         {
-            if (!disposed)
-            {
-                if (disposing)
-                {
-                    Model?.Dispose();
-                    OrderManager?.Dispose();
-                }
-                disposed = true;
-            }
+            Dispose(false);
         }
 
         //сортировка списка заявок по заголоку
