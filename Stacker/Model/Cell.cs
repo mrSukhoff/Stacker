@@ -17,4 +17,3 @@
         internal bool RightSideIsNotAvailable { get; set; }
     }
 }
-//
