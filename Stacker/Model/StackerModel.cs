@@ -104,7 +104,15 @@ namespace Stacker.Model
             y = Stacker[row, floor].Y;
             isNotAvailable = r == Settings.LeftRackName ? Stacker[row, floor].LeftSideIsNotAvailable : Stacker[row, floor].RightSideIsNotAvailable;
         }
-        
+
+        //выдает по адресу ячейки её доступность
+        public bool IsCellNotAvailable(char r, uint row, uint floor)
+        {
+            bool isCellNotAvailable;
+            GetCell(r, row, floor, out uint x, out uint y, out isCellNotAvailable);
+            return isCellNotAvailable;
+        }
+
         //устанавливает для ячейки её координаты и доступность
         //левый стеллаж r = false
         public void SetCell(bool r, uint row, uint floor, uint x, uint y, bool isNotAvailable)

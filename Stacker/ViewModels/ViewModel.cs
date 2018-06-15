@@ -60,20 +60,21 @@ namespace Stacker.ViewModels
 
         public int SelectedRow
         {
-            get => _selectedRow;
+            get => (int)_selectedRow;
+
             set
             {
-                _selectedRow = value;
+                _selectedRow = (uint)value;
                 SelectionChanged();
             }
         }
 
         public int SelectedFloor
         {
-            get => _selectedFloor;
+            get => (int)_selectedFloor;
             set
             {
-                _selectedFloor = value;
+                _selectedFloor = (uint)value;
                 SelectionChanged();
             }
         }
@@ -120,8 +121,8 @@ namespace Stacker.ViewModels
         int[]  _floorItems;
 
         char _selectedRack;
-        int _selectedRow;
-        int _selectedFloor;
+        uint _selectedRow;
+        uint _selectedFloor;
 
         RelayCommand _bringCmd;
         RelayCommand _takeAwayCmd;
@@ -202,7 +203,7 @@ namespace Stacker.ViewModels
         }
 
         //Оповещение о изменении координат
-        private void UpdatePosition()
+        private void UpdatePosition(object sender, EventArgs e)
         {
             OnPropertyChahged("CurrentRow");
             OnPropertyChahged("CurrentFloor");
@@ -212,7 +213,7 @@ namespace Stacker.ViewModels
         }
 
         //оповещение о выполнении команды
-        private void UpdateButtonState()
+        private void UpdateButtonState(object sender, EventArgs e)
         {
             OnPropertyChahged("CurrentRow");
             OnPropertyChahged("CurrentRow");
