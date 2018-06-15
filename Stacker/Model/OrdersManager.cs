@@ -88,15 +88,16 @@ namespace Stacker.Model
         //dir=false по возрастанию
         public void SortList(string sortField, bool direction)
         {
+            if (Orders.Count < 2) return;
             bool sorted = false;
             bool needsSorting;
             string str1, str2;
+            PropertyDescriptor descr = TypeDescriptor.GetProperties(Orders[0])[sortField];
             while (!sorted)
             {
                 sorted = true;
                 for (int i = 1; i < Orders.Count; i++)
                 {
-                    PropertyDescriptor descr = TypeDescriptor.GetProperties(Orders[i])[sortField];
                     str1 = descr?.GetValue(Orders[i-1]).ToString();
                     str2 = descr?.GetValue(Orders[i]).ToString();
                     needsSorting = !direction & String.Compare(str1,str2) > 0 || direction & String.Compare(str1,str2) < 0;
