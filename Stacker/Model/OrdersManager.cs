@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Threading;
 using System.Windows;
@@ -35,9 +36,6 @@ namespace Stacker.Model
         //хранит номер выбранной заявки для автоматического режима
         private int _selectedOrderNumber = -1;
 
-        //флаг уничтожения неуправляемых ресурсов
-        bool disposed;
-
         SettingsKeeper sk;
 
         //методы ----------------------------------------------------------------------------------
@@ -56,19 +54,11 @@ namespace Stacker.Model
         public void Dispose()
         {
             Dispose(true);
-            // подавляем финализацию
             GC.SuppressFinalize(this);
         }
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposed)
-            {
-                if (disposing)
-                {
-                    FileTimer?.Dispose();
-                }
-                disposed = true;
-            }
+            if (disposing) FileTimer.Dispose();
         }
 
         public void StartTimer()
@@ -106,8 +96,9 @@ namespace Stacker.Model
                 sorted = true;
                 for (int i = 1; i < Orders.Count; i++)
                 {
-                    str1 = GetField(Orders[i - 1], sortField);
-                    str2 = GetField(Orders[i], sortField);
+                    PropertyDescriptor descr = TypeDescriptor.GetProperties(Orders[i])[sortField];
+                    str1 = descr?.GetValue(Orders[i-1]).ToString();
+                    str2 = descr?.GetValue(Orders[i]).ToString();
                     needsSorting = !direction & String.Compare(str1,str2) > 0 || direction & String.Compare(str1,str2) < 0;
                     if (needsSorting)
                     {
@@ -116,36 +107,6 @@ namespace Stacker.Model
                         sorted = false;
                     }
                 }
-            }
-            //возвращает значение поля заявки
-            string GetField(Order order, string field)
-            {
-                string str;
-                switch (field)
-                {
-                    case "OrderType":
-                        str = order.OrderType;
-                        break;
-                    case "OrderNumber":
-                        str = order.OrderNumber;
-                        break;
-                    case "ProductCode":
-                        str = order.ProductCode;
-                        break;
-                    case "ProductDescription":
-                        str = order.ProductDescription;
-                        break;
-                    case "Amount":
-                        str = order.Amount;
-                        break;
-                    case "Address":
-                        str = order.Address;
-                        break;
-                    default:
-                        str = "";
-                        break;
-                }
-                return str;
             }
         }
 
@@ -162,13 +123,8 @@ namespace Stacker.Model
                     List<string> lines = new List<string>();
                     using (FileStream fs = new FileStream(OrdersFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     {
-                        using (StreamReader sr = new StreamReader(fs, System.Text.Encoding.Default))
-                        {
-                            while (sr.Peek()>=0)
-                            {
-                                lines.Add(sr.ReadLine());
-                            }
-                        }
+                        StreamReader sr = new StreamReader(fs, System.Text.Encoding.Default);
+                        while (sr.Peek()>=0) lines.Add(sr.ReadLine());
                     }
 
                     Order order = null;
@@ -221,13 +177,8 @@ namespace Stacker.Model
                 List<string> lines = new List<string>();
                 using (FileStream fs = new FileStream(OrdersFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
-                    using (StreamReader sr = new StreamReader(fs, System.Text.Encoding.Default))
-                    {
-                        while (sr.Peek() >= 0)
-                        {
-                            lines.Add(sr.ReadLine());
-                        }
-                    }
+                    StreamReader sr = new StreamReader(fs, System.Text.Encoding.Default);
+                    while (sr.Peek() >= 0) lines.Add(sr.ReadLine());
                 }
 
                 //и удаляем из списка строку с нашей заявкой

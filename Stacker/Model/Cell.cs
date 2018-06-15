@@ -11,8 +11,8 @@
             RightSideIsNotAvailable = false;
         }
 
-        internal int X { get; set; }
-        internal int Y { get; set; }
+        internal uint X { get; set; }
+        internal uint Y { get; set; }
         internal bool LeftSideIsNotAvailable { get; set; }
         internal bool RightSideIsNotAvailable { get; set; }
     }

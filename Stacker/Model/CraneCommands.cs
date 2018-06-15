@@ -157,7 +157,7 @@ namespace Stacker.Model
         }
 
         //*команда "Перейти на координаты"
-        public void GotoXY(int x, int y)
+        public void GotoXY(uint x, uint y)
         {
             //проверяем аргументы на допустимость
             if ((x < 0) || (y < 0) || (x > Settings.MaxX) || (y > Settings.MaxY)) throw new ArgumentException();
@@ -176,14 +176,14 @@ namespace Stacker.Model
         }
 
         //*Команда "привезти/увезти" из/в конкретную ячейку. bring = true - привезти
-        public void BringOrTakeAway(bool rack, int row, int floor, bool bring)
+        public void BringOrTakeAway(bool rack, uint row, uint floor, bool bring)
         {
             if (PLC != null)
             {
                 if (rack ? Stacker[row, floor].RightSideIsNotAvailable : Stacker[row, floor].LeftSideIsNotAvailable)
                     throw new ArgumentException("Ячейка недоступна!");
-                int x = Stacker[row, floor].X;
-                int y = Stacker[row, floor].Y;
+                uint x = Stacker[row, floor].X;
+                uint y = Stacker[row, floor].Y;
                 //требуемая ячейка не может находится в начале штабелера или иметь вертикальную координату 0
                 if (x == 0 || (y == 0 && floor != 1)) throw new ArgumentException("Неверные координаты ячеейки");
 
@@ -211,8 +211,8 @@ namespace Stacker.Model
             if (order != null)
             {
                 bool rack = order.StackerName == Settings.RightRackName;
-                int row = order.Row;
-                int floor = order.Floor;
+                uint row = order.Row;
+                uint floor = order.Floor;
                 BringOrTakeAway(rack, row, floor, bring);
             }
         }
@@ -232,22 +232,9 @@ namespace Stacker.Model
         //*читает бит наличие ящика на платформе в слове состояния
         public bool ChekBinOnPlatform()
         {
-            int word = 0;
-            if (PLC != null) PLC.ReadDword(100, out word);
-            return GetBitState(word, 10);
-            
-            //метод возвращает состояния указанного бита
-            bool GetBitState(int b, int num)
-            {
-                bool[] bits = new bool[16];
-                int z = 1;
-                for (int i = 0; i < 16; i++)
-                {
-                    bits[i] = ((b & z) == z);
-                    z *= 2;
-                }
-                return bits[num];
-            }
+            uint word = 0;
+            PLC?.ReadDword(100, out word);
+            return (word & 1024) > 0; //проверяем десятый бит
         }
     }
 }

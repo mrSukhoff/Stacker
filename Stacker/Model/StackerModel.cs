@@ -23,12 +23,6 @@ namespace Stacker.Model
         internal Controller PLC;
         //Координаты ячеек
         internal CellsGrid Stacker;
-
-        private char LeftRackName;
-        private char RightRackName;
-
-        //флаг уничтожения объектов
-        private bool disposed = false;
         
         //Конструктор класса **********************************************************************************
         public StackerModel()
@@ -38,9 +32,6 @@ namespace Stacker.Model
 
             //Создаем менеджер заявок
             OrderManager = new OrdersManager(this);
-
-            LeftRackName = Settings.LeftRackName;
-            RightRackName = Settings.RightRackName;
 
             //Загружаем таблицы координат ячеек
             string path = Environment.CurrentDirectory+"\\"+Settings.CellsFile;
@@ -86,16 +77,13 @@ namespace Stacker.Model
         }
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposed)
+            if (disposing)
             {
-                if (disposing)
-                {
                     CraneState.Dispose();
-                    PLC?.Dispose();
+                    PLC.Dispose();
                     OrderManager.Dispose();
-                }
-                disposed = true;
             }
+    
         }
         
         //Сохранение массивов координат ячеек в файлы
@@ -106,28 +94,20 @@ namespace Stacker.Model
         }
 
         //выдает по адресу ячейки её координаты и доступность
-        public void GetCell(char r, int row, int floor, out int x, out int y, out bool isNotAvailable)
+        public void GetCell(char r, uint row, uint floor, out uint x, out uint y, out bool isNotAvailable)
         {
             //if (r != LeftRackName & r != RightRackName) throw new ArgumentException("Неправильное имя стойки");
-            if (r == '\0') r = LeftRackName;
+            if (r == '\0') r = Settings.LeftRackName;
             if (row < 1) row = 1;
             if (floor < 1) floor = 1;
             x = Stacker[row, floor].X;
             y = Stacker[row, floor].Y;
-            isNotAvailable = r == LeftRackName ? Stacker[row, floor].LeftSideIsNotAvailable : Stacker[row, floor].RightSideIsNotAvailable;
+            isNotAvailable = r == Settings.LeftRackName ? Stacker[row, floor].LeftSideIsNotAvailable : Stacker[row, floor].RightSideIsNotAvailable;
         }
-
-        //выдает по адресу ячейки её доступность
-        public bool IsCellNotAvailable(char r, int row, int floor)
-        {
-            bool isCellNotAvailable;
-            GetCell(r, row, floor,out int x, out int y,out isCellNotAvailable);
-            return isCellNotAvailable;
-        }
-
+        
         //устанавливает для ячейки её координаты и доступность
         //левый стеллаж r = false
-        public void SetCell(bool r, int row, int floor, int x, int y, bool isNotAvailable)
+        public void SetCell(bool r, uint row, uint floor, uint x, uint y, bool isNotAvailable)
         {
             if ((x < 0) || (y < 0) || (x > Settings.MaxX) || (y > Settings.MaxY)) throw new ArgumentException();
             

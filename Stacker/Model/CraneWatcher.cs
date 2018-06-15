@@ -12,15 +12,15 @@ namespace Stacker.Model
         public ObservableCollection<string> ErrorList { get; private set; } = new ObservableCollection<string>();
 
         //События
-        public delegate void StackerModelEventHandler();
+        public delegate void StackerModelEventHandler(object sender, EventArgs e);
         //появился флаг завершения выполнения команды
-        public event StackerModelEventHandler CommandDone = (() => { });
+        public event StackerModelEventHandler CommandDone = ((sender,e) => { });
         //флаг ошибки
-        public event StackerModelEventHandler ErrorAppeared = (() => { });
+        public event StackerModelEventHandler ErrorAppeared = ((sender, e) => { });
         //происходит после очередного считывания текущих координат крана
-        public event StackerModelEventHandler CoordinateReaded = (() => { });
+        public event StackerModelEventHandler CoordinateReaded = ((sender, e) => { });
         //изменилось слово состояния контроллера
-        public event StackerModelEventHandler StateWordChanged = (() => { });
+        public event StackerModelEventHandler StateWordChanged = ((sender, e) => { });
 
         //Актуальные координаты крана
         public int ActualX { get; private set; }
@@ -47,7 +47,8 @@ namespace Stacker.Model
 
         //флаг нахождения крана на начальной позиции
         public bool IsFloorMark;
-        //---------------------------------------------------------------------------------------------------
+
+
         //Контроллер крана
         private Controller PLC;
 
@@ -55,10 +56,7 @@ namespace Stacker.Model
         private Timer PlcTimer;
         
         //Слово состояния контроллера
-        private int StateWord = 0;
-        
-        //флаг уничтожения объектов
-        private bool disposed = false;
+        private ushort StateWord = 0;
 
         //конструктор
         internal CraneWatcher(Controller plc)
@@ -79,14 +77,7 @@ namespace Stacker.Model
         }
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposed)
-            {
-                if (disposing)
-                {
-                    PlcTimer.Dispose();
-                }
-                disposed = true;
-            }
+            if (disposing) PlcTimer.Dispose();
         }
 
         //По таймеру читаем слово состояния контроллера
@@ -107,13 +98,13 @@ namespace Stacker.Model
                 //читаем слово состояния ПЛК
                 word = PLC.ReadHoldingRegisters(0x1064, 8);
 
-                int stateWord = word[0];
+                ushort stateWord = word[0];
                 Weight = word[2] > 32767 ? 0 : word[2];
                 MeasuredWeight = word[4];
                 MeasuredWeight2 = word[6];
 
                 //вызываем событие по чтению координат
-                CoordinateReaded();
+                CoordinateReaded(this,null);
 
                 //если поменялось слово состояния
                 if (stateWord != StateWord)
@@ -122,11 +113,11 @@ namespace Stacker.Model
                     IsRowMark = GetBitState(stateWord, 8);
                     IsFloorMark = GetBitState(stateWord, 9);
                     IsBinOnPlatform = GetBitState(stateWord, 10);
-                    StateWordChanged();
+                    StateWordChanged(this,null);
                 }
 
                 //если появился флаг завершения
-                if (GetBitState(stateWord, 15) && !GetBitState(StateWord, 15)) CommandDone();
+                if (GetBitState(stateWord, 15) && !GetBitState(StateWord, 15)) CommandDone(this,null);
 
                 //если появился флаг ошибки вызываем обрабочик ошибок
                 if (GetBitState(stateWord, 13) && !GetBitState(StateWord, 13)) ErrorHandler();
@@ -143,7 +134,7 @@ namespace Stacker.Model
         //вызывается при появления флага ошибки в слове состояния
         private void ErrorHandler()
         {
-            PLC.ReadDword(110, out int ErrorWord);
+            PLC.ReadDword(110, out uint ErrorWord);
             if (GetBitState(ErrorWord, 0)) addAlarm("Нажата кнопка аварийной остановки");
             if (GetBitState(ErrorWord, 1)) addAlarm("Одновременное включение контакторов");
             if (GetBitState(ErrorWord, 2)) addAlarm("Попытка загрузки на занятый кран");
@@ -157,7 +148,7 @@ namespace Stacker.Model
             if (GetBitState(ErrorWord, 10)) addAlarm("Ошибка позиционирования крана");
             if (GetBitState(ErrorWord, 11)) addAlarm("Помеха движению по горизонтали");
             if (GetBitState(ErrorWord, 12)) addAlarm("Превышен максимальный вес груза");
-            ErrorAppeared?.Invoke();
+            ErrorAppeared.Invoke(this,null);
 
             void addAlarm(string alarmText)
             {
@@ -174,16 +165,9 @@ namespace Stacker.Model
         }
 
         //метод возвращает состояния указанного бита
-        private bool GetBitState(int b, int num)
+        private bool GetBitState(uint b, byte num)
         {
-            bool[] bits = new bool[16];
-            int z = 1;
-            for (int i = 0; i < 16; i++)
-            {
-                bits[i] = ((b & z) == z);
-                z *= 2;
-            }
-            return bits[num];
+            return (b & (ushort)Math.Pow(2,num)) > 0 ;
         }
     }
 }

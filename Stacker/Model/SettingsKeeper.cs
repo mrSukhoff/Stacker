@@ -26,8 +26,8 @@ namespace Stacker.Model
         public ushort StackerHight { get; } = 16;
         
         //Максимальные значения координат
-        public int MaxX { get; } = 55000;
-        public int MaxY { get; } = 14000;
+        public uint MaxX { get; } = 55000;
+        public uint MaxY { get; } = 14000;
 
         //имена стеллажей
         public char LeftRackName { get; }

@@ -8,20 +8,20 @@ namespace Stacker.Model
     internal class CellsGrid
     {
         //индексатор
-        internal Cell this[int rowIndex,int floorIndex]
+        internal Cell this[uint rowIndex,uint floorIndex]
         {
             //так как стеллажи нумируются с единицы вычитаем 1
             get
             {
-                int row = rowIndex - 1;
-                int floor = floorIndex - 1;
+                uint row = rowIndex - 1;
+                uint floor = floorIndex - 1;
                 return grid[row, floor];
             }
 
             set
             {
-                int row = rowIndex - 1;
-                int floor = floorIndex - 1;
+                uint row = rowIndex - 1;
+                uint floor = floorIndex - 1;
                 grid[row, floor] = value;
             }
         }
@@ -57,10 +57,10 @@ namespace Stacker.Model
             {
                 string[] line = lines[i].Split('~');
 
-                int r = Convert.ToInt32(line[0]) - 1;
-                int f = Convert.ToInt32(line[1]) - 1;
-                int x = Convert.ToInt32(line[2]);
-                int y = Convert.ToInt32(line[3]);
+                uint r = Convert.ToUInt32(line[0]) - 1;
+                uint f = Convert.ToUInt32(line[1]) - 1;
+                uint x = Convert.ToUInt32(line[2]);
+                uint y = Convert.ToUInt32(line[3]);
                 bool leftSideIsNotAvailable = Convert.ToBoolean(line[4]);
                 bool rightSideIsNotAvailable = Convert.ToBoolean(line[5]);
 
