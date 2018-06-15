@@ -262,7 +262,7 @@ namespace Stacker.ViewModels
         void DoBringCommand(object obj)
         {
             bool rack = _selectedRack == Model.Settings.RightRackName;
-            Model.Crane.BringOrTakeAway( rack, _selectedRow, _selectedFloor, true);
+            Model.Crane.BringOrTakeAway(rack, _selectedRow, _selectedFloor, true);
         }
         bool CanExecuteBringCommand(object obj)
         {
