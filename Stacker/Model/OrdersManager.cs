@@ -88,7 +88,7 @@ namespace Stacker.Model
         //dir=false по возрастанию
         public void SortList(string sortField, bool direction)
         {
-            if (Orders.Count == 0) return;
+            if (Orders.Count < 2) return;
             bool sorted = false;
             bool needsSorting;
             string str1, str2;
