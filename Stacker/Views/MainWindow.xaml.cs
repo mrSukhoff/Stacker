@@ -50,9 +50,6 @@ namespace Stacker
         //стиль оттображения списка заявок
         GridView OrdersGridView = new GridView();
 
-        //флаг закрытия неуправляемых ресурсов
-        bool disposed = false;
-
         //направления сортировки списка заявок
         bool[] SortDirection = new bool[6];
 
@@ -762,23 +759,19 @@ namespace Stacker
         }
 
         //закрываем неуправляемые ресурсы
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing) Model.Dispose();
+        }
+
         public void Dispose()
         {
             Dispose(true);
-            // подавляем финализацию
             GC.SuppressFinalize(this);
         }
-        protected virtual void Dispose(bool disposing)
+        ~MainWindow()
         {
-            if (!disposed)
-            {
-                if (disposing)
-                {
-                    Model?.Dispose();
-                    OrderManager?.Dispose();
-                }
-                disposed = true;
-            }
+            Dispose(false);
         }
 
         //сортировка списка заявок по заголоку
