@@ -96,8 +96,8 @@ namespace Stacker.Model
         //выдает по адресу ячейки её координаты и доступность
         public void GetCell(char r, uint row, uint floor, out uint x, out uint y, out bool isNotAvailable)
         {
-            //if (r != LeftRackName & r != RightRackName) throw new ArgumentException("Неправильное имя стойки");
-            if (r == '\0') r = Settings.LeftRackName;
+            if (r != Settings.LeftRackName & r != Settings.RightRackName) throw new ArgumentException("Неправильное имя стойки");
+            //if (r == '\0') r = Settings.LeftRackName;
             if (row < 1) row = 1;
             if (floor < 1) floor = 1;
             x = Stacker[row, floor].X;
