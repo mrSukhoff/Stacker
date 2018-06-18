@@ -37,16 +37,16 @@ namespace Stacker.Model
         public int MeasuredWeight2 { get; private set; }
 
         //флаг наличия контейнера на кране
-        public bool IsBinOnPlatform;
+        public bool IsBinOnPlatform { get; private set; }
 
         //флаг нахождения крана на начальной позиции
-        public bool IsStartPosiotion;
+        public bool IsStartPosiotion { get; private set; }
 
         //флаг нахождения крана на метке ряда
-        public bool IsRowMark;
+        public bool IsRowMark { get; private set; }
 
         //флаг нахождения крана на начальной позиции
-        public bool IsFloorMark;
+        public bool IsFloorMark { get; private set; }
 
 
         //Контроллер крана

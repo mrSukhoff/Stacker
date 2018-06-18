@@ -210,14 +210,13 @@ namespace Stacker.ViewModels
             OnPropertyChahged("IsStartPosition");
             OnPropertyChahged("IsRowMark");
             OnPropertyChahged("IsFloorMark");
+
         }
 
         //оповещение о выполнении команды
         private void UpdateButtonState(object sender, EventArgs e)
         {
-            OnPropertyChahged("CurrentRow");
-            OnPropertyChahged("CurrentRow");
-            CommandManager.InvalidateRequerySuggested();
+            //неплохо бы тут апдейтить CanExecute, но пока не знаю как
         }
 
         //управления движением крана
@@ -260,22 +259,23 @@ namespace Stacker.ViewModels
         }
 
         //команда "Привезти"
-        void DoBringCommand(object obj)
+        private void DoBringCommand(object obj)
         {
             bool rack = _selectedRack == Model.Settings.RightRackName;
             Model.Crane.BringOrTakeAway(rack, _selectedRow, _selectedFloor, true);
+            //MessageBox.Show("Row = " + _selectedRow.ToString() + " Floor = " + _selectedFloor.ToString());
         }
-        bool CanExecuteBringCommand(object obj)
+        private bool CanExecuteBringCommand(object obj)
         {
             return Model.CraneState.IsStartPosiotion & !Model.CraneState.IsBinOnPlatform;
         }
-        //void CanExecuteBringCommandChanged(object sender, System.EventArgs e) { }
 
         //команда "Увезти"
         private void DoTakeAwayCmd(object obj)
         {
             bool rack = _selectedRack == Model.Settings.RightRackName;
             Model.Crane.BringOrTakeAway(rack, _selectedRow, _selectedFloor, false);
+            //MessageBox.Show("Row = "+_selectedRow.ToString()+" Floor = "+_selectedFloor.ToString());
         }
         private bool CanExecuteTakeAwayCmd(object arg)
         {
