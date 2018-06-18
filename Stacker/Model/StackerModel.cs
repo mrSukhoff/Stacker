@@ -96,7 +96,9 @@ namespace Stacker.Model
         //выдает по адресу ячейки её координаты и доступность
         public void GetCell(char r, uint row, uint floor, out uint x, out uint y, out bool isNotAvailable)
         {
-            //при старте значение символа не определено, поэтому вначале выводим доступность для левой стойки
+
+            //В MVVM ViewModel первоначально не определно сотояние комбобокса выбора ряда,
+            //и для этого случая пустой символ считаем левым рядом
             if (r == '\0') r = Settings.LeftRackName;
             if (r != Settings.LeftRackName & r != Settings.RightRackName) throw new ArgumentException("Неправильное имя стойки");
             if (row < 1) row = 1;
