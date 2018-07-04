@@ -210,13 +210,13 @@ namespace Stacker.ViewModels
             OnPropertyChahged("IsStartPosition");
             OnPropertyChahged("IsRowMark");
             OnPropertyChahged("IsFloorMark");
-
         }
 
         //оповещение о выполнении команды
         private void UpdateButtonState(object sender, EventArgs e)
         {
             //неплохо бы тут апдейтить CanExecute, но пока не знаю как
+            CommandManager.InvalidateRequerySuggested();
         }
 
         //управления движением крана
@@ -263,7 +263,6 @@ namespace Stacker.ViewModels
         {
             bool rack = _selectedRack == Model.Settings.RightRackName;
             Model.Crane.BringOrTakeAway(rack, _selectedRow, _selectedFloor, true);
-            //MessageBox.Show("Row = " + _selectedRow.ToString() + " Floor = " + _selectedFloor.ToString());
         }
         private bool CanExecuteBringCommand(object obj)
         {

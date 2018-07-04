@@ -12,15 +12,14 @@ namespace Stacker.Model
         public ObservableCollection<string> ErrorList { get; private set; } = new ObservableCollection<string>();
 
         //События
-        public delegate void StackerModelEventHandler(object sender, EventArgs e);
         //появился флаг завершения выполнения команды
-        public event StackerModelEventHandler CommandDone = ((sender,e) => { });
+        public event EventHandler CommandDone = ((sender,e) => { });
         //флаг ошибки
-        public event StackerModelEventHandler ErrorAppeared = ((sender, e) => { });
+        public event EventHandler ErrorAppeared = ((sender, e) => { });
         //происходит после очередного считывания текущих координат крана
-        public event StackerModelEventHandler CoordinateReaded = ((sender, e) => { });
+        public event EventHandler CoordinateReaded = ((sender, e) => { });
         //изменилось слово состояния контроллера
-        public event StackerModelEventHandler StateWordChanged = ((sender, e) => { });
+        public event EventHandler StateWordChanged = ((sender, e) => { });
 
         //Актуальные координаты крана
         public int ActualX { get; private set; }

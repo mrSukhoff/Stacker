@@ -30,5 +30,7 @@ namespace Stacker.ViewModels
         {
             this.execute(parameter);
         }
+
+        //public void Raise() { this. CanExecuteChanged; }
     }
 }
