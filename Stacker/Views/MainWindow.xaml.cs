@@ -65,8 +65,9 @@ namespace Stacker
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             //Создаем модель
-            Model = new StackerModel();
-            
+            //Model = new StackerModel();
+            Model = (this.DataContext as ViewModels.ViewModel).Model;
+
             //инициализируем менеджер заявок
             OrderManager = Model.OrderManager;
             //Определяем его источником данных для списка
@@ -85,8 +86,6 @@ namespace Stacker
                 //подписываемся на события модели
                 Model.CraneState.CommandDone += CommandDone;
                 Model.CraneState.ErrorAppeared += ErrorAppeared;
-                Model.CraneState.CoordinateReaded += UpdateCoordinate;
-                Model.CraneState.StateWordChanged += SomethingChanged;
                 //источник данных для списка ошибок
                 ErrorListBox.ItemsSource = Model.CraneState.ErrorList;
                 //проверяем при старте наличие ящика на платформе и устанавливаем активные кнопки
@@ -107,6 +106,7 @@ namespace Stacker
         //Настраиваем визуальные компоненты
         private void SetUpComponents()
         {
+            /*
             //Подписываем кнопки
             ManPlatformLeftButton.Content = Settings.LeftRackName;
             ManPlatformRightButton.Content = Settings.RightRackName;
@@ -136,10 +136,15 @@ namespace Stacker
             RackSemiAutoComboBox.Items.Add(Settings.LeftRackName);
             RackSemiAutoComboBox.Items.Add(Settings.RightRackName);
             RackSemiAutoComboBox.SelectedIndex = 0;
-
+            
+            //Кнопка "увезти" активируется только при работе с заявкой
+            TakeAwayAutoButton.IsEnabled = false;
+            //Кнопка "отмена" активируется при выборе заявки
+            CancelAutoButton.IsEnabled = false;
+            
             //при необходимости прячем вкладку "взвесить"
             if (!Settings.ShowWeightTab) WeightTabItem.Visibility = System.Windows.Visibility.Hidden;
-            
+            */
             //настройка графика веса
             WeightPolyline.Stroke = Brushes.AliceBlue;
             WeightPolyline.StrokeThickness = 2;
@@ -158,11 +163,6 @@ namespace Stacker
             MeasuredWeightPolyline2.FillRule = FillRule.EvenOdd;
             MeasuredWeightPolyline2.Points = MeasuredWeight2PointCollection;
             WeightGrid.Children.Add(MeasuredWeightPolyline2);
-
-            //Кнопка "увезти" активируется только при работе с заявкой
-            TakeAwayAutoButton.IsEnabled = false;
-            //Кнопка "отмена" активируется при выборе заявки
-            CancelAutoButton.IsEnabled = false;
         }
 
         //Настройки вида списка заявок
@@ -252,35 +252,6 @@ namespace Stacker
         {
             Dispatcher.Invoke( () => { StatusPlane.Background = new SolidColorBrush(Colors.DarkRed); } );
             Dispatcher.Invoke( () => { ErrorTabItem.Background = new SolidColorBrush(Colors.DarkRed); } );
-        }
-
-        //Обновление координат и слова состояния
-        private void UpdateCoordinate(object sender, EventArgs e)
-        {
-            string r = Model.CraneState.ActualRow.ToString();
-            r = r.Length == 1 ? "0" + r : r;
-            Dispatcher.Invoke( () => RowLabel.Content = "Ряд : " + r);
-
-            string f = Model.CraneState.ActualFloor.ToString();
-            f = f.Length == 1 ? "0" + f : f;
-            Dispatcher.Invoke( () => FloorLabel.Content = "Этаж : " + f );
-
-            string x = Model.CraneState.ActualX.ToString();
-            while (x.Length < 5) x = "0" + x;
-            Dispatcher.Invoke( () => XLabel.Content = "X : " +  x);
-
-            string y = Model.CraneState.ActualY.ToString();
-            while (y.Length < 5) y = "0" + y;
-            Dispatcher.Invoke( () => YLabel.Content = "Y : " + y );
-        }
-        
-        //обработка изменений в слове состояния контроллера крана
-        private void SomethingChanged(object sender, EventArgs e)
-        {
-            //устанавливаем индикатор начальной позиции
-            Dispatcher.Invoke(() => SPLabel.IsEnabled = Model.CraneState.IsStartPosiotion);
-            Dispatcher.Invoke(() => RLabel.IsEnabled = Model.CraneState.IsRowMark);
-            Dispatcher.Invoke(() => FLabel.IsEnabled = Model.CraneState.IsFloorMark);
         }
 
         //при изменении размеров окна меняем размеры колонок

@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:Model="clr-namespace:Stacker.Model"
+        xmlns:ViewModels="clr-namespace:Stacker.ViewModels"
         x:Name="Stacker"
         x:Class="Stacker.MainWindow"
         mc:Ignorable="d"
@@ -15,7 +15,9 @@
         WindowStartupLocation="CenterScreen"    
         Loaded="Window_Loaded">
 
-
+    <Window.DataContext>
+        <ViewModels:ViewModel/>
+    </Window.DataContext>
 
     <Grid Margin="1,1,1,3" Background="{DynamicResource Color5}">
         <Grid.RowDefinitions>
@@ -25,13 +27,13 @@
 
         <!--Status Bar-->
         <StatusBar x:Name="StatusPlane"  Height="35" Grid.Row="1" Margin="3,1" VerticalAlignment="Bottom" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="14" Background="{DynamicResource Color4}">
-            <Label x:Name="RowLabel"   Content="Ряд : 00"/>
-            <Label x:Name="FloorLabel" Content="Этаж : 00"/>
-            <Label x:Name="XLabel"     Content="X : 000000"/>
-            <Label x:Name="YLabel"     Content="Y : 000000"/>
-            <Label x:Name="SPLabel"    Content="Нач.Поз." IsEnabled="False"/>
-            <Label x:Name="RLabel"     Content="Ряд"/>
-            <Label x:Name="FLabel"     Content="Этаж"/>
+            <Label x:Name="RowLabel"   Content="{Binding CurrentRow}"/>
+            <Label x:Name="FloorLabel" Content="{Binding CurrentFloor}"/>
+            <Label x:Name="XLabel"     Content="{Binding CurrentX}"/>
+            <Label x:Name="YLabel"     Content="{Binding CurrentY}"/>
+            <Label x:Name="SPLabel"    Content="Нач.Поз." IsEnabled="{Binding IsStartPosition}"/>
+            <Label x:Name="RLabel"     Content="Ряд"      IsEnabled="{Binding IsRowMark}"/>
+            <Label x:Name="FLabel"     Content="Этаж"     IsEnabled="{Binding IsFloorMark}"/>
         </StatusBar>
 
         <!--TabControl-->

@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Windows;
 using System.Windows.Input;
 using Stacker.Model;
 
@@ -26,6 +24,16 @@ namespace Stacker.ViewModels
         public bool IsStartPosition
         {
             get => Model.CraneState.IsStartPosiotion;
+        }
+
+        public string CurrentX
+        {
+            get => String.Concat("X: ", Model.CraneState.ActualX.ToString().PadLeft(5, '0'));
+        }
+
+        public string CurrentY
+        {
+            get => String.Concat("Y: ", Model.CraneState.ActualY.ToString().PadLeft(5, '0'));
         }
 
         public bool IsRowMark
@@ -112,7 +120,7 @@ namespace Stacker.ViewModels
 
         //Внутренние поля класса-----------------------------------------------------------------------------
         //Модель штабелёра
-        StackerModel Model;
+        public StackerModel Model;
         ErrorWindow ErrorWindow;
 
         //Наборы значений для комбобоксов
@@ -210,6 +218,8 @@ namespace Stacker.ViewModels
             OnPropertyChahged("IsStartPosition");
             OnPropertyChahged("IsRowMark");
             OnPropertyChahged("IsFloorMark");
+            OnPropertyChahged("CurrentX");
+            OnPropertyChahged("CurrentY");
         }
 
         //оповещение о выполнении команды
