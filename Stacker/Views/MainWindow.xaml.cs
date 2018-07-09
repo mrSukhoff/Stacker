@@ -398,6 +398,7 @@ namespace Stacker
         //в зависимости от доступности ячейки и формируем строку адреса выбранной ячейки
         private void SemiAutoComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            /*
             //получаем из базы координаты и доступность ячеек
             char stack = (char)RackComboBox.SelectedItem;
             uint r = (uint)(RowSemiAutoComboBox.SelectedIndex + 1);
@@ -413,17 +414,20 @@ namespace Stacker
             //Формируем адрес ячейки для индикации
             char rack = RackSemiAutoComboBox.SelectedIndex == 0 ? Settings.LeftRackName : Settings.RightRackName;
             SemiAutoAddressLabel.Content = rack + " - " + r.ToString() + " - " + f.ToString();
+            */
         }
 
         //в разделе "движение по координатам" при выборе ячейки записываем её координаты в поля ввода
         private void XYComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            /*
             uint r = (uint)(RowXComboBox.SelectedIndex + 1);
             uint f = (uint)(FloorYComboBox.SelectedIndex + 1);
             if (r < 1 | f < 1) return;
             Model.GetCell(Settings.LeftRackName, r, f, out uint x, out uint y, out bool z);
             GotoXTextBox.Text = x.ToString();
             GotoYTextBox.Text = y.ToString();
+            */
         }
 
         //кнопки сброса значений в TextBox на ноль

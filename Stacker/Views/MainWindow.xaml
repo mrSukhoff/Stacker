@@ -72,15 +72,16 @@
                 <Grid Margin="0" Background="{DynamicResource Color5}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="1*"/>
-                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="0.5*"/>
+                        <RowDefinition Height="3*"/>
                         <RowDefinition Height="70"/>
                     </Grid.RowDefinitions>
 
                     <!--Title Labels-->
-                    <Label x:Name="SemiAutoAddressLabel" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 0" FontSize="72" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="{DynamicResource Color2}" FontWeight="Bold"  Content="{Binding SelectedCellAdsress}"/>
-                    <Label x:Name="IsNotAvailableLabel"  Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0 0 0 0" FontSize="48" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="{DynamicResource StopLightColor}"  FontWeight="Bold" Content="!!!" />
+                    <Label x:Name="SemiAutoAddressLabel" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 0"  FontSize="72" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="{DynamicResource Color1}"          FontWeight="Bold" Content="{Binding SelectedAddress, Mode=OneWay}" Background="{DynamicResource Color5}"/>
+                    <Label x:Name="IsNotAvailableLabel"  Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,33" FontSize="48" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="{DynamicResource StopLightColor}"  FontWeight="Bold" Content="{Binding SelectedAddress}" />
 
-                    <Grid Grid.Row="1">
+                    <Grid Grid.Row="2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition/>
@@ -88,18 +89,18 @@
                         </Grid.ColumnDefinitions>
 
                         <!--Comboboxes Labels-->
-                        <Label Content="Стеллаж" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 200" Width="125" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Bold" Foreground="{DynamicResource Color2}"/>
-                        <Label Content="Ряд"     Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 200"   Width="125" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Bold" Foreground="{DynamicResource Color2}"/>
-                        <Label Content="Этаж"    Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 200" Width="125" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Bold" Foreground="{DynamicResource Color2}"/>
+                        <Label Content="Стеллаж" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 0" Width="125" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Bold" Foreground="{DynamicResource Color2}"/>
+                        <Label Content="Ряд"     Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 0"   Width="125" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Bold" Foreground="{DynamicResource Color2}"/>
+                        <Label Content="Этаж"    Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 0" Width="125" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Bold" Foreground="{DynamicResource Color2}"/>
 
                         <!--ComboBoxes-->
-                        <ComboBox x:Name="RackSemiAutoComboBox"  Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 30" Width="125" Height="100" FontSize="36"/>
-                        <ComboBox x:Name="RowSemiAutoComboBox"   Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 30" Width="125" Height="100" FontSize="36"/>
-                        <ComboBox x:Name="FloorSemiAutoCombobox" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 30" Width="125" Height="100" FontSize="36"/>
+                        <ComboBox x:Name="RackSemiAutoComboBox"  Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 30" Width="125" Height="100" FontSize="36" ItemsSource="{Binding RackItems}" SelectedIndex="0" SelectedItem="{Binding SelectedRack}"/>
+                        <ComboBox x:Name="RowSemiAutoComboBox"   Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 30" Width="125" Height="100" FontSize="36" ItemsSource="{Binding RowItems}" SelectedIndex="0" SelectedItem="{Binding SelectedRow}"/>
+                        <ComboBox x:Name="FloorSemiAutoCombobox" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 30" Width="125" Height="100" FontSize="36" ItemsSource="{Binding FloorItems}" SelectedIndex="0" SelectedItem="{Binding SelectedFloor}"/>
                     </Grid>
 
                     <!--Buttons-->
-                    <Grid Grid.Row="2">
+                    <Grid Grid.Row="3">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
@@ -111,7 +112,7 @@
                     </Grid>
 
                     <!--Stop Button-->
-                    <Button x:Name="SemiAutoStopButton" Content="_СТОП!" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0 0 10 0" Height="50" Width="100" Style="{DynamicResource StopButtonStyle}" Click="StopButton_Click"/>
+                    <Button x:Name="SemiAutoStopButton" Content="_СТОП!" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0 0 10 0" Height="50" Width="100" Style="{DynamicResource StopButtonStyle}" Click="StopButton_Click"/>
 
                 </Grid>
             </TabItem>
@@ -140,7 +141,7 @@
                                 <ColumnDefinition Width="126*"/>
                                 <ColumnDefinition Width="126*"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox x:Name="RackComboBox" HorizontalAlignment="Left" Margin="63,0,0,22" Width="70" Grid.ColumnSpan="2" VerticalContentAlignment="Center" VerticalAlignment="Bottom" Height="36" FontSize="24" Background="#FFCBDBB7"/>
+                            <ComboBox x:Name="RackComboBox" HorizontalAlignment="Left" Margin="63,0,0,22" Width="70" Grid.ColumnSpan="2" VerticalContentAlignment="Center" VerticalAlignment="Bottom" Height="36" FontSize="24" Background="#FFCBDBB7" ItemsSource="{Binding RackItems}" SelectedIndex="0"/>
                             <TextBox x:Name="CoordinateXTextBox" HorizontalAlignment="Left" TextWrapping="Wrap" Width="100" Margin="91,0,0,22" Height="36" Grid.Column="3" Grid.ColumnSpan="2" VerticalAlignment="Bottom" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="24" AllowDrop="False" Text="0" PreviewTextInput="TextBox_PreviewTextInput" Background="#FFCBDBB7"/>
                             <TextBox x:Name="CoordinateYTextBox" HorizontalAlignment="Left" TextWrapping="Wrap" Text="0" Width="100" Margin="91,0,0,22" Height="36" Grid.Column="4" Grid.ColumnSpan="2" VerticalAlignment="Bottom" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="24" PreviewTextInput="TextBox_PreviewTextInput" Background="#FFCBDBB7"/>
                             <CheckBox x:Name="IsNOTAvailableCheckBox" Content="Ячейка отсутствует" Grid.Column="5" HorizontalAlignment="Left" Height="36" Margin="74,0,0,22" VerticalAlignment="Bottom" Width="195" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" FontSize="20" Foreground="#FFFCFFF5"/>
@@ -149,8 +150,8 @@
                             <Label Content="Этаж" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="2" Margin="55,-4,0,75" Grid.ColumnSpan="2" Width="85" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" Height="36" Foreground="#FFFCFFF5"/>
                             <Label Content="X" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="3" Margin="107,-4,0,75" Grid.ColumnSpan="2" Width="67" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" Height="36" Foreground="#FFFCFFF5"/>
                             <Label Content="Y" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="4" Margin="111,-4,0,75" Grid.ColumnSpan="2" Width="59" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" Height="36" Foreground="#FFFCFFF5"/>
-                            <ComboBox x:Name="RowComboBox" Grid.ColumnSpan="2" Grid.Column="1" Margin="63,0,0,22" VerticalContentAlignment="Center" Height="36" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="70" FontSize="24" Background="#FFCBDBB7"/>
-                            <ComboBox x:Name="FloorComboBox" Grid.ColumnSpan="2" Grid.Column="2" Margin="63,0,0,22" VerticalContentAlignment="Center" Height="36" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="70" FontSize="24" Background="#FFCBDBB7"/>
+                            <ComboBox x:Name="RowComboBox" Grid.ColumnSpan="2" Grid.Column="1" Margin="63,0,0,22" VerticalContentAlignment="Center" Height="36" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="70" FontSize="24" Background="#FFCBDBB7" ItemsSource="{Binding RowItems}" SelectedIndex="0"/>
+                            <ComboBox x:Name="FloorComboBox" Grid.ColumnSpan="2" Grid.Column="2" Margin="63,0,0,22" VerticalContentAlignment="Center" Height="36" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="70" FontSize="24" Background="#FFCBDBB7" ItemsSource="{Binding FloorItems}" SelectedIndex="0"/>
                             <Button x:Name="SaveButton" Content="Записать" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="150" Margin="133,0,10,9" Height="50" Grid.Column="5" Click="SaveButton_Click" Grid.ColumnSpan="2" Grid.Row="1" Style="{DynamicResource RegularButtonStyle}"/>
                         </Grid>
                     </GroupBox>
@@ -181,13 +182,13 @@
                                     </Grid.ColumnDefinitions>
 
                                     <Label    Content="Ряд"         Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="40 0 0 40" Width="70"  Height="36" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24"  Foreground="{DynamicResource Color2}" />
-                                    <ComboBox x:Name="RowXComboBox" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="40 40 0 0" Width="70"  Height="36" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" SelectionChanged="XYComboBox_SelectionChanged"/>
+                                    <ComboBox x:Name="RowXComboBox" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="40 40 0 0" Width="70"  Height="36" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" SelectionChanged="XYComboBox_SelectionChanged" ItemsSource="{Binding RowItems}" SelectedIndex="0"/>
                                     <Button   x:Name="XResButton"   Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 40 0 0"  Width="60"  Height="36" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="XResButton_Click" FontSize="24" Style="{DynamicResource RegularButtonStyle}" Content="&gt;0&lt;"/>
                                     <Label    Content="X"           Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 30 40" Width="80" Height="36" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" Foreground="{DynamicResource Color2}"/>
                                     <TextBox  x:Name="GotoXTextBox" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 40 30 0" Width="80" Height="36" HorizontalContentAlignment="Right"  VerticalContentAlignment="Center" FontSize="24" PreviewTextInput="TextBox_PreviewTextInput" Background="{DynamicResource Color2}"  Text="{Binding GotoXTextBoxValue, UpdateSourceTrigger=PropertyChanged}"/>
 
                                     <Label    Content="Этаж"          Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="40 0 0 40" Width="70"  Height="36" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" Foreground="{DynamicResource Color2}" />
-                                    <ComboBox x:Name="FloorYComboBox" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="40 40 0 0" Width="70"  Height="36" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" SelectionChanged="XYComboBox_SelectionChanged"/>
+                                    <ComboBox x:Name="FloorYComboBox" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="40 40 0 0" Width="70"  Height="36" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" SelectionChanged="XYComboBox_SelectionChanged" ItemsSource="{Binding FloorItems}" SelectedIndex="0"/>
                                     <Button   x:Name="YResButton"     Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 40 0 0"  Width="60"  Height="36" HorizontalContentAlignment="Center" Click="YResButton_Click" FontSize="24" Content="&gt;0&lt;"  Style="{DynamicResource RegularButtonStyle}"/>
                                     <Label    Content="Y"             Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 30 40" Width="80" Height="36" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" Foreground="{DynamicResource Color2}" />
                                     <TextBox  x:Name="GotoYTextBox"   Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 40 30 0" Width="80" Height="36" HorizontalContentAlignment="Right"  VerticalContentAlignment="Center" FontSize="24" Background="{DynamicResource Color2}" Text="{Binding GotoYTextBoxValue}"  PreviewTextInput="TextBox_PreviewTextInput"/>
@@ -223,8 +224,8 @@
                                 
                                 <Button x:Name="StopButton"    Content="СТОП!" Grid.Column="3" Margin="0,0,1,1" Grid.Row="3" BorderBrush="{DynamicResource Color2}" Background="#FF9E2E2E" FontSize="24" HorizontalAlignment="Right" Width="100" Height="50" VerticalAlignment="Bottom" Foreground="Black" Style="{DynamicResource StopButtonStyle}" ClickMode="Press" IsCancel="True" Click="StopButton_Click" Grid.ColumnSpan="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
                                 
-                                <Button x:Name="ManPlatformLeftButton" Content="X" Margin="10,29,0,0" FontSize="20" Click="ManPlatformLeftButton_Checked" Height="35" HorizontalAlignment="Left" Width="35" Foreground="Black" VerticalAlignment="Top" Style="{DynamicResource RegularButtonStyle}"/>
-                                <Button x:Name="ManPlatformRightButton" Content="Y" Margin="78,29,0,0" HorizontalAlignment="Left" Width="35" FontSize="20" Click="ManPlatformRightButton_Checked" Height="35" Foreground="Black" VerticalAlignment="Top" Style="{DynamicResource RegularButtonStyle}" RenderTransformOrigin="0.487,-0.076"/>
+                                <Button x:Name="ManPlatformLeftButton" Content="{Binding LeftPlatformButtonName}" Margin="10,29,0,0" FontSize="20" Click="ManPlatformLeftButton_Checked" Height="35" HorizontalAlignment="Left" Width="35" Foreground="Black" VerticalAlignment="Top" Style="{DynamicResource RegularButtonStyle}"/>
+                                <Button x:Name="ManPlatformRightButton" Content="{Binding RightPlatformButtonName}" Margin="78,29,0,0" HorizontalAlignment="Left" Width="35" FontSize="20" Click="ManPlatformRightButton_Checked" Height="35" Foreground="Black" VerticalAlignment="Top" Style="{DynamicResource RegularButtonStyle}" RenderTransformOrigin="0.487,-0.076"/>
                                 
                                 <CheckBox x:Name="LineMotionCheckbox" Content="По рядам" Grid.Column="3" HorizontalAlignment="Right" Margin="0,16,10,0" VerticalAlignment="Top" Height="32" Checked="LineMotionCheckbox_Checked" Foreground="#FFFCFFF5" Unchecked="LineMotionCheckbox_Unchecked" Grid.ColumnSpan="2" FontSize="20"/>
                                 
