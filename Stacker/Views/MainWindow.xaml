@@ -59,7 +59,7 @@
                     </Grid>
 
                     <!--Stop Button-->
-                    <Button x:Name="AutoStopButton" Content="СТОП!"  Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0 0 10 0" Height="50" Width="100" Style="{DynamicResource StopButtonStyle}" Click="StopButton_Click"/>
+                    <Button x:Name="AutoStopButton" Content="СТОП!"  Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0 0 10 0" Height="50" Width="100" Style="{DynamicResource StopButtonStyle}" Click="StopButton_Click" Command="{Binding StopCmd}"/>
 
                     <!--ListView-->
                     <ListView x:Name="OrdersLitsView" Grid.Row="0" GridViewColumnHeader.Click="SortListView" FontSize="24" Background="{DynamicResource Color3}" BorderBrush="{DynamicResource Color4}" Margin="0" Foreground="Black" SelectionChanged="OrdersLitsView_SelectionChanged" SizeChanged="OrdersLitsView_SizeChanged"/>
@@ -79,7 +79,7 @@
 
                     <!--Title Labels-->
                     <Label x:Name="SemiAutoAddressLabel" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 0"  FontSize="72" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="{DynamicResource Color1}"          FontWeight="Bold" Content="{Binding SelectedAddress, Mode=OneWay}" Background="{DynamicResource Color5}"/>
-                    <Label x:Name="IsNotAvailableLabel"  Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,33" FontSize="48" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="{DynamicResource StopLightColor}"  FontWeight="Bold" Content="{Binding SelectedAddress}" />
+                    <Label x:Name="IsNotAvailableLabel"  Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,33" FontSize="48" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="{DynamicResource StopLightColor}"  FontWeight="Bold" Content="{Binding IsCellNotAvailable}" />
 
                     <Grid Grid.Row="2">
                         <Grid.ColumnDefinitions>
@@ -107,12 +107,12 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Button x:Name="BringSemiAutoButton"    Content="_Привезти" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0 0 0 0" Height="50"  Width="150" FontSize="24" Style="{DynamicResource RegularButtonStyle}" Click="BringOrTakeAwaySemiAutoButton_Click"/>
-                        <Button x:Name="TakeAwaySemiAutoButton" Content="_Увезти"   Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0 0 0 0" Height="50"  Width="150" FontSize="24" Style="{DynamicResource RegularButtonStyle}" Click="BringOrTakeAwaySemiAutoButton_Click"/>
+                        <Button x:Name="BringSemiAutoButton"    Content="_Привезти" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0 0 0 0" Height="50"  Width="150" FontSize="24" Style="{DynamicResource RegularButtonStyle}" Click="BringOrTakeAwaySemiAutoButton_Click" Command="{Binding BringCmd}"/>
+                        <Button x:Name="TakeAwaySemiAutoButton" Content="_Увезти"   Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0 0 0 0" Height="50"  Width="150" FontSize="24" Style="{DynamicResource RegularButtonStyle}" Click="BringOrTakeAwaySemiAutoButton_Click" Command="{Binding TakeAwayCmd}"/>
                     </Grid>
 
                     <!--Stop Button-->
-                    <Button x:Name="SemiAutoStopButton" Content="_СТОП!" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0 0 10 0" Height="50" Width="100" Style="{DynamicResource StopButtonStyle}" Click="StopButton_Click"/>
+                    <Button x:Name="SemiAutoStopButton" Content="_СТОП!" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0 0 10 0" Height="50" Width="100" Style="{DynamicResource StopButtonStyle}" Click="StopButton_Click" Command="{Binding StopCmd}"/>
 
                 </Grid>
             </TabItem>
@@ -222,7 +222,7 @@
                                 <Button x:Name="UpButton"      Content="ВВЕРХ"  HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="52,4,52,3.5"   Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="2"              Height="100" FontSize="20" ClickMode="Press" Foreground="{DynamicResource Color1}" Style="{DynamicResource RegularButtonStyle}" />
                                 <Button x:Name="FartherButton" Content="ДАЛЬШЕ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Margin="52,4,52,3"     Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="2"                 Height="100" FontSize="20" ClickMode="Press" Foreground="{DynamicResource Color1}" Style="{DynamicResource RegularButtonStyle}"/>
                                 
-                                <Button x:Name="StopButton"    Content="СТОП!" Grid.Column="3" Margin="0,0,1,1" Grid.Row="3" BorderBrush="{DynamicResource Color2}" Background="#FF9E2E2E" FontSize="24" HorizontalAlignment="Right" Width="100" Height="50" VerticalAlignment="Bottom" Foreground="Black" Style="{DynamicResource StopButtonStyle}" ClickMode="Press" IsCancel="True" Click="StopButton_Click" Grid.ColumnSpan="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                                <Button x:Name="StopButton"    Content="СТОП!" Grid.Column="3" Margin="0,0,1,1" Grid.Row="3" BorderBrush="{DynamicResource Color2}" Background="#FF9E2E2E" FontSize="24" HorizontalAlignment="Right" Width="100" Height="50" VerticalAlignment="Bottom" Foreground="Black" Style="{DynamicResource StopButtonStyle}" ClickMode="Press" IsCancel="True" Click="StopButton_Click" Grid.ColumnSpan="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Command="{Binding StopCmd}"/>
                                 
                                 <Button x:Name="ManPlatformLeftButton" Content="{Binding LeftPlatformButtonName}" Margin="10,29,0,0" FontSize="20" Click="ManPlatformLeftButton_Checked" Height="35" HorizontalAlignment="Left" Width="35" Foreground="Black" VerticalAlignment="Top" Style="{DynamicResource RegularButtonStyle}"/>
                                 <Button x:Name="ManPlatformRightButton" Content="{Binding RightPlatformButtonName}" Margin="78,29,0,0" HorizontalAlignment="Left" Width="35" FontSize="20" Click="ManPlatformRightButton_Checked" Height="35" Foreground="Black" VerticalAlignment="Top" Style="{DynamicResource RegularButtonStyle}" RenderTransformOrigin="0.487,-0.076"/>
@@ -244,8 +244,8 @@
                         <RowDefinition Height="70"/>
                     </Grid.RowDefinitions>
 
-                    <ListBox x:Name="ErrorListBox"      Grid.Row="0" Margin="0 0 0 0"  FontSize="24" Background="{DynamicResource Color3}" Foreground="{DynamicResource StopLightColor}" ItemsSource="{Binding ErrorList}"/>
-                    <Button  x:Name="SubmitErrorButton" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 0" Style="{DynamicResource RegularButtonStyle}" Click="SubmitErrorButton_Click" Content=" Сбросить " />
+                    <ListBox x:Name="ErrorListBox"      Grid.Row="0" Margin="0 0 0 0"  FontSize="24" Background="{DynamicResource Color3}" Foreground="{DynamicResource StopLightColor}"/>
+                    <Button  x:Name="SubmitErrorButton" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 0" Style="{DynamicResource RegularButtonStyle}" Click="SubmitErrorButton_Click" Content=" Сбросить " Command="{Binding CloseErrorWindowCmd}" />
 
                 </Grid>
             </TabItem>
